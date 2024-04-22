@@ -11,7 +11,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { dashboardConfig } from "@/config/dashboard";
 
 export function BreadCrumb() {
   const pathname = usePathname();
