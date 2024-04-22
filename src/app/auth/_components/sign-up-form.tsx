@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useState, useTransition } from "react";
 
 import { Button } from "@/components/ui/button";

@@ -1,5 +1,4 @@
 import { db } from "@/server/db";
-import { users } from "../schema";
 
 export async function getUserByEmail(email: string) {
   return db.query.users.findFirst({

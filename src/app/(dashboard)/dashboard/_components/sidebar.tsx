@@ -7,7 +7,6 @@ import {
 import {
   Settings,
   Package,
-  Package2,
   Home,
   ShoppingCart,
   Users2,

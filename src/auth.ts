@@ -3,10 +3,6 @@ import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import authConfig from "@/auth.config";
 
 import { db } from "@/server/db";
-import { eq } from "drizzle-orm";
-import { getUserById } from "./server/db/data/user";
-import { users } from "./server/db/schema";
-
 declare module "next-auth" {
   /**
    * Returned by `auth`, `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
