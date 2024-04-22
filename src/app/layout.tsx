@@ -2,6 +2,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { auth } from "@/auth";
 import { SessionProvider } from "next-auth/react";
+import { cn } from "@/lib/utils";
 import "@/styles/globals.css";
 
 import { Inter } from "next/font/google";
@@ -27,10 +28,15 @@ export default async function RootLayout({
   return (
     <SessionProvider session={session}>
       <html lang="en">
-        <body className={`font-sans ${inter.variable}`}>
+        <body
+          className={cn(
+            inter.variable,
+            "font-sans antialiased selection:bg-foreground selection:text-background",
+          )}
+        >
           <ThemeProvider
             attribute="class"
-            defaultTheme="dark"
+            defaultTheme="light"
             enableSystem
             disableTransitionOnChange
           >
