@@ -1,13 +1,16 @@
 "use client";
 
+import { useTheme } from "next-themes";
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { HashLoader } from "react-spinners";
 import { newVerification } from "@/server/actions/new-verification";
 import { FormError } from "./form-error";
 import { FormSuccess } from "./form-success";
+import Link from "next/link";
 
 export function NewVerificationForm() {
+  const { theme } = useTheme();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const searchParams = useSearchParams();
@@ -42,9 +45,14 @@ export function NewVerificationForm() {
             Confirming your email
           </p>
         </div>
-        {!success && !error && <HashLoader />}
+        {!success && !error && (
+          <HashLoader color={theme === "dark" ? "white" : "black"} />
+        )}
         {error && <FormError message={error} />}
         {success && <FormSuccess message={success} />}
+        <p className="underline">
+          <Link href="/auth/sign-in">Back to Sign In</Link>
+        </p>
       </div>
     </>
   );

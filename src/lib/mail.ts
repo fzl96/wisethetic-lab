@@ -1,4 +1,6 @@
 import { Resend } from "resend";
+import { PasswordResetEmail } from "@/components/password-reset-email";
+import { ConfirmEmailTemplate } from "@/components/confirm-email-template";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -11,7 +13,9 @@ export const sendVerificationEmail = async (email: string, token: string) => {
     from: "mail@wisetheticlab.store",
     to: email,
     subject: "Confirm your email",
-    html: `<p>Click <a href="${confirmLink}">here</a> to confirm email.</p>`,
+    react: ConfirmEmailTemplate({
+      link: confirmLink,
+    }),
   });
 };
 
@@ -22,6 +26,8 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
     from: "mail@wisetheticlab.store",
     to: email,
     subject: "Reset Password",
-    html: `<p>Click <a href="${confirmLink}">here</a> to reset your password.</p>`,
+    react: PasswordResetEmail({
+      link: confirmLink,
+    }),
   });
 };
