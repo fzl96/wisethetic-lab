@@ -11,6 +11,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { reverseSlug } from "@/lib/utils";
 
 export function BreadCrumb() {
   const pathname = usePathname();
@@ -20,8 +21,10 @@ export function BreadCrumb() {
     <Breadcrumb className="hidden md:flex">
       <BreadcrumbList>
         {pathnames.map((path, index) => {
-          const href = `/${path}`;
+          const href =
+            path === "dashboard" ? "/dashboard" : `/dashboard/${path}`;
           const linkName = path[0]?.toUpperCase() + path.slice(1, path.length);
+          const name = reverseSlug(linkName);
           const isLast = pathnames.length === index + 1;
           return (
             <Fragment key={path}>
@@ -31,7 +34,7 @@ export function BreadCrumb() {
                     <Link href={href}>{linkName}</Link>
                   </BreadcrumbLink>
                 ) : (
-                  <BreadcrumbPage>{linkName}</BreadcrumbPage>
+                  <BreadcrumbPage>{name}</BreadcrumbPage>
                 )}
               </BreadcrumbItem>
               {!isLast && <BreadcrumbSeparator />}

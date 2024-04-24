@@ -4,7 +4,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { auth } from "@/auth";
 import { SessionProvider } from "next-auth/react";
 import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/sonner";
 import "@/styles/globals.css";
+import "@uploadthing/react/styles.css";
 
 import { Inter } from "next/font/google";
 import { siteConfig } from "@/config/site";
@@ -43,10 +45,6 @@ export const metadata: Metadata = {
     },
   ],
   creator: "Naufal Hadi",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "gray" },
-  ],
   openGraph: {
     type: "website",
     locale: "id_ID",
@@ -68,7 +66,6 @@ export const metadata: Metadata = {
     shortcut: "/favicon-16x16.png",
     apple: "/apple-touch-icon.png",
   },
-  manifest: `${siteConfig.url}/site.webmanifest`,
 };
 
 export default async function RootLayout({
@@ -93,7 +90,15 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <TooltipProvider>{children}</TooltipProvider>
+            <TooltipProvider>
+              <div
+                vaul-drawer-wrapper=""
+                className="min-h-screen bg-background"
+              >
+                {children}
+              </div>
+            </TooltipProvider>
+            <Toaster closeButton richColors position="top-center" />
           </ThemeProvider>
         </body>
       </html>
