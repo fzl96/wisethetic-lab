@@ -11,7 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import { format } from "date-fns";
 import { getCategoryByName } from "@/server/api/categories/queries";
-import { DeleteCategory, UpdateCategory } from "../_components/actions";
+import { CategoryMenu } from "../_components/actions";
 
 export default async function CategoryPage({
   params,
@@ -32,10 +32,7 @@ export default async function CategoryPage({
           <CardDescription>{category?.description}</CardDescription>
         </div>
         <div className="ml-auto flex items-center gap-1">
-          <div className="flex gap-2">
-            {category?.id && <DeleteCategory categoryId={category.id} />}
-            {category && <UpdateCategory category={category} />}
-          </div>
+          {category && <CategoryMenu category={category} />}
         </div>
       </CardHeader>
       <Separator />

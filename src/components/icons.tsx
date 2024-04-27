@@ -8,6 +8,8 @@ import {
   Loader2,
   Pen,
   Trash2,
+  PlusCircle,
+  MoreVertical,
 } from "lucide-react";
 
 export const Icons = {
@@ -20,4 +22,6 @@ export const Icons = {
   spinner: Loader2,
   trash: Trash2,
   pen: Pen,
+  plusCircle: PlusCircle,
+  moreVertical: MoreVertical,
 };
