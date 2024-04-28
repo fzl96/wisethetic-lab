@@ -3,7 +3,6 @@ import { currentUser } from "@/lib/auth";
 import {
   packages,
   type PackageId,
-  type CategoryId,
   categories,
 } from "@/server/db/schema/product";
 import { type SearchParams } from "@/lib/validations";

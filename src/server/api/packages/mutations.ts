@@ -4,9 +4,7 @@ import { eq } from "drizzle-orm";
 import {
   packages,
   insertPackageSchema,
-  packageIdSchema,
   type PackageId,
-  type CategoryId,
   type NewPackageParams,
   type UpdateCategoryParams,
 } from "@/server/db/schema/product";
