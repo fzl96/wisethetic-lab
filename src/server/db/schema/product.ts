@@ -59,6 +59,18 @@ export const packageIdSchema = packageBaseSchema.pick({ id: true });
 
 // Types for package - used to type API request params and within components
 export type Package = typeof packages.$inferSelect;
+export type PackageWithCategory = {
+  id: string;
+  name: string;
+  description: string | null;
+  image: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  category: {
+    id: string;
+    name: string;
+  };
+};
 export type PackageId = z.infer<typeof packageIdSchema>["id"];
 export type NewPackageParams = z.infer<typeof insertPackageParams>;
 export type UpdatePackageParams = z.infer<typeof updatePackageSchema>;
