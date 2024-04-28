@@ -7,15 +7,27 @@ import {
 } from "@/components/ui/card";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
-import { getPackages } from "@/server/api/packages/queries";
+import { getPackagesWithCategory } from "@/server/api/packages/queries";
 import { getCategories } from "@/server/api/categories/queries";
+import { CreatePackage } from "./actions";
+import { reverseSlug } from "@/lib/utils";
 
-export async function PackagesTable() {
-  const packages = await getPackages({});
+interface PackagesTableProps {
+  categoryName?: string;
+}
+
+export async function PackagesTable({ categoryName }: PackagesTableProps) {
+  const name = reverseSlug(categoryName ?? "");
+  const packages = await getPackagesWithCategory(name);
   const categories = await getCategories({});
 
   return (
-    <div className="">
+    <div className="grid gap-2">
+      <div className="flex-end flex items-center justify-between">
+        <div className="ml-auto">
+          {categories && <CreatePackage categories={categories} />}
+        </div>
+      </div>
       <Card>
         <CardHeader className="px-7">
           <CardTitle>Packages</CardTitle>
@@ -28,6 +40,7 @@ export async function PackagesTable() {
             columns={columns}
             data={packages}
             categories={categories}
+            categoryName={reverseSlug(categoryName ?? "")}
           />
         </CardContent>
       </Card>

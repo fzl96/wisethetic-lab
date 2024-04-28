@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import {
@@ -15,12 +16,11 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
 import {
   Table,
   TableBody,
@@ -39,18 +39,22 @@ import {
   SearchIcon,
 } from "lucide-react";
 import { type Category } from "@/server/db/schema/product";
+import { convertToSlug } from "@/lib/utils";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   categories: Category[];
+  categoryName?: string;
   data: TData[];
 }
 
 export function DataTable<TData, TValue>({
   columns,
   categories,
+  categoryName,
   data,
 }: DataTableProps<TData, TValue>) {
+  const router = useRouter();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const table = useReactTable({
     data,
@@ -60,14 +64,7 @@ export function DataTable<TData, TValue>({
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     state: {
-      columnFilters: columnFilters.length
-        ? columnFilters
-        : [
-            {
-              id: "categoryId",
-              value: categories[0]?.id,
-            },
-          ],
+      columnFilters: columnFilters,
     },
     initialState: {
       columnVisibility: {
@@ -78,8 +75,6 @@ export function DataTable<TData, TValue>({
       },
     },
   });
-
-  const categoryId = table.getColumn("categoryId")?.getFilterValue() as string;
 
   return (
     <div className="space-y-2">
@@ -99,26 +94,22 @@ export function DataTable<TData, TValue>({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              {categories.find((category) => category.id === categoryId)?.name}
+              {categoryName}
               <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            defaultValue={
-              table.getColumn("categoryId")?.getFilterValue() as string
-            }
-          >
-            <DropdownMenuLabel>Category</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuRadioGroup
-              value={table.getColumn("categoryId")?.getFilterValue() as string}
-              onValueChange={(value) => {
-                table.getColumn("categoryId")?.setFilterValue(value);
-              }}
-            >
+          <DropdownMenuContent align="end" defaultValue={categoryName}>
+            <DropdownMenuRadioGroup>
               {categories.map((category) => (
-                <DropdownMenuRadioItem key={category.id} value={category.id}>
+                <DropdownMenuRadioItem
+                  key={category.id}
+                  value={category.name}
+                  onClick={() =>
+                    router.push(
+                      `/dashboard/packages/${convertToSlug(category.name)}`,
+                    )
+                  }
+                >
                   {category.name}
                 </DropdownMenuRadioItem>
               ))}
@@ -126,7 +117,6 @@ export function DataTable<TData, TValue>({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
