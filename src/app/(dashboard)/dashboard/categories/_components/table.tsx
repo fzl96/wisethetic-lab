@@ -5,8 +5,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { CategoryTableRender } from "./table-render";
 import { getCategories } from "@/server/api/categories/queries";
+import { DataTable } from "./data-table";
+import { columns } from "./columns";
 
 export async function CategoriesTable() {
   const categories = await getCategories({});
@@ -21,7 +22,7 @@ export async function CategoriesTable() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <CategoryTableRender categories={categories} />
+          <DataTable columns={columns} data={categories} />
         </CardContent>
       </Card>
     </div>

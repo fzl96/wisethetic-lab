@@ -21,6 +21,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -49,8 +50,13 @@ export function CategoryForm({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [files, setFiles] = useState<File[]>([]);
+  const [progress, setProgress] = useState(0);
 
-  const { startUpload, isUploading } = useUploadThing("imageUploader");
+  const { startUpload, isUploading } = useUploadThing("imageUploader", {
+    onUploadProgress: (progress) => {
+      setProgress(progress);
+    },
+  });
 
   const form = useForm<NewCategoryParams>({
     resolver: zodResolver(insertCategoryParams),
@@ -195,6 +201,7 @@ export function CategoryForm({
                 </FormItem>
               )}
             />
+            <Progress value={progress} />
           </div>
           <div className="flex-end flex">
             <Button
