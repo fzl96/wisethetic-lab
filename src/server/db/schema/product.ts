@@ -36,7 +36,7 @@ export const packages = pgTable("package", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => createId()),
-  name: text("name"),
+  name: text("name").notNull(),
   description: text("description"),
   image: text("image"),
   categoryId: text("categoryId")
@@ -59,7 +59,9 @@ export const packageIdSchema = packageBaseSchema.pick({ id: true });
 
 // Types for package - used to type API request params and within components
 export type Package = typeof packages.$inferSelect;
-export type PackageId = z.infer<typeof packageIdSchema>;
+export type PackageId = z.infer<typeof packageIdSchema>["id"];
+export type NewPackageParams = z.infer<typeof insertPackageParams>;
+export type UpdatePackageParams = z.infer<typeof updatePackageSchema>;
 
 // Products
 export const products = pgTable("product", {
