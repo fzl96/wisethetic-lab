@@ -24,8 +24,8 @@ export const dashboardConfig: DashboardConfig = {
       icon: "grid",
     },
     {
-      title: "Products",
-      href: "/dashboard/products",
+      title: "Packages",
+      href: "/dashboard/packages",
       icon: "package",
     },
     {
