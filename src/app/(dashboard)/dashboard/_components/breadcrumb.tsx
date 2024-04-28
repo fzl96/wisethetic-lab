@@ -31,7 +31,7 @@ export function BreadCrumb() {
               <BreadcrumbItem>
                 {!isLast ? (
                   <BreadcrumbLink asChild>
-                    <Link href={href}>{linkName}</Link>
+                    <Link href={href}>{name}</Link>
                   </BreadcrumbLink>
                 ) : (
                   <BreadcrumbPage>{name}</BreadcrumbPage>
