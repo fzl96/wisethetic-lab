@@ -8,13 +8,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PlusCircle } from "lucide-react";
 
 export function Loader() {
   return (
     <div className="grid gap-2">
       <div className="flex-end flex items-center justify-between">
         <div className="ml-auto">
-          <Skeleton className="h-7 w-24" />
+          {/* <Skeleton className="h-7 w-24" /> */}
+          <Button size="sm" className="h-7 gap-1">
+            <PlusCircle className="h-3.5 w-3.5" />
+            <span className="sm:not-sr-only sm:whitespace-nowrap ">
+              Add Package
+            </span>
+          </Button>
         </div>
       </div>
       <Card>
