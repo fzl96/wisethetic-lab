@@ -22,6 +22,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Progress } from "@/components/ui/progress";
 import {
   Select,
   SelectContent,
@@ -63,8 +64,13 @@ export function PackageForm({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [files, setFiles] = useState<File[]>([]);
+  const [progress, setProgress] = useState(0);
 
-  const { startUpload, isUploading } = useUploadThing("imageUploader");
+  const { startUpload, isUploading } = useUploadThing("imageUploader", {
+    onUploadProgress: (progress) => {
+      setProgress(progress);
+    },
+  });
 
   const form = useForm<NewPackageParams>({
     resolver: zodResolver(insertPackageParams),
@@ -239,6 +245,7 @@ export function PackageForm({
                 </FormItem>
               )}
             />
+            {isUploading && <Progress value={progress} className="w-full" />}
           </div>
           <div className="flex-end flex">
             <Button
