@@ -96,6 +96,22 @@ export const getPackageByNameWithProducts = async (
     throw new Error("Unauthorized");
   }
 
+  console.log(`category: ${category}`);
+  console.log(`pkgName: ${pkgName}`);
+
+  // const [res] = await db
+  //   .select({
+  //     id: packages.id,
+  //     name: packages.name,
+  //     description: packages.description,
+  //     image: packages.image,
+  //     createdAt: packages.createdAt,
+  //     updatedAt: packages.updatedAt,
+  //   })
+  //   .from(packages)
+  //   .innerJoin(categories, eq(packages.categoryId, categories.id))
+  //   .where(eq(categories.name, category));
+
   const sq = db.$with("sq").as(
     db
       .select({
@@ -110,48 +126,45 @@ export const getPackageByNameWithProducts = async (
       })
       .from(packages)
       .innerJoin(categories, eq(packages.categoryId, categories.id))
-      .where(eq(categories.name, category))
-      .orderBy(desc(packages.updatedAt)),
+      .where(eq(categories.name, category)),
   );
 
-  const pkg = await db
-    .with(sq)
-    .select()
-    .from(sq)
-    .where(eq(sq.name, pkgName))
-    .innerJoin(products, eq(sq.id, products.packageId));
+  const [pkg] = await db.with(sq).select().from(sq).where(eq(sq.name, pkgName));
+  // .innerJoin(products, eq(sq.id, products.packageId));
 
-  const res = pkg.reduce<
-    Record<number, { package: Package; products: Product[] }>
-  >((acc, row) => {
-    const pkg = row.sq;
-    const product = row.product;
+  return pkg;
 
-    // @ts-expect-error - TS doesn't know that the key is not number
-    if (!acc[pkg.id]) {
-      // @ts-expect-error - TS doesn't know that the key is not number
-      acc[pkg.id] = { package: pkg, products: [] };
-    }
+  // const res = pkg.reduce<
+  //   Record<number, { package: Package; products: Product[] }>
+  // >((acc, row) => {
+  //   const pkg = row.sq;
+  //   const product = row.product;
 
-    if (product) {
-      // @ts-expect-error - TS doesn't know that the key is not number
-      acc[pkg.id].products.push(product);
-    }
+  //   // @ts-expect-error - TS doesn't know that the key is not number
+  //   if (!acc[pkg.id]) {
+  //     // @ts-expect-error - TS doesn't know that the key is not number
+  //     acc[pkg.id] = { package: pkg, products: [] };
+  //   }
 
-    return acc;
-  }, {});
+  //   if (product) {
+  //     // @ts-expect-error - TS doesn't know that the key is not number
+  //     acc[pkg.id].products.push(product);
+  //   }
 
-  const [result] = Object.values(res);
+  //   return acc;
+  // }, {});
 
-  return {
-    id: result?.package.id,
-    name: result?.package.name,
-    description: result?.package.description,
-    image: result?.package.image,
-    createdAt: result?.package.createdAt,
-    updatedAt: result?.package.updatedAt,
-    products: result?.products,
-  };
+  // const [result] = Object.values(res);
+
+  // return {
+  //   id: result?.package.id,
+  //   name: result?.package.name,
+  //   description: result?.package.description,
+  //   image: result?.package.image,
+  //   createdAt: result?.package.createdAt,
+  //   updatedAt: result?.package.updatedAt,
+  //   products: result?.products,
+  // };
 };
 
 export const getPackageById = async (id: PackageId) => {
