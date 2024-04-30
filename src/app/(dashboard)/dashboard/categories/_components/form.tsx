@@ -159,7 +159,12 @@ export function CategoryForm({
                 <FormItem>
                   <FormLabel htmlFor={field.name}>Name</FormLabel>
                   <FormControl>
-                    <Input {...field} id="name" placeholder="Category name" />
+                    <Input
+                      {...field}
+                      id="name"
+                      placeholder="Category name"
+                      disabled={isPending}
+                    />
                   </FormControl>
                   <FormMessage {...field} />
                 </FormItem>
@@ -177,6 +182,7 @@ export function CategoryForm({
                       id="description"
                       placeholder="Description"
                       value={field.value ?? ""}
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormMessage {...field} />
@@ -195,6 +201,7 @@ export function CategoryForm({
                       files={files}
                       imgUrl={field.value ?? ""}
                       setFiles={setFiles}
+                      disabled={isUploading}
                     />
                   </FormControl>
                   <FormMessage {...field} />

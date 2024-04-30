@@ -178,6 +178,7 @@ export function PackageForm({
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
+                    disabled={isPending}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -203,7 +204,12 @@ export function PackageForm({
                 <FormItem>
                   <FormLabel htmlFor={field.name}>Name</FormLabel>
                   <FormControl>
-                    <Input {...field} id="name" placeholder="Package name" />
+                    <Input
+                      {...field}
+                      id="name"
+                      placeholder="Package name"
+                      disabled={isPending}
+                    />
                   </FormControl>
                   <FormMessage {...field} />
                 </FormItem>
@@ -221,6 +227,7 @@ export function PackageForm({
                       id="description"
                       placeholder="Description"
                       value={field.value ?? ""}
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormMessage {...field} />
@@ -235,6 +242,7 @@ export function PackageForm({
                   <FormLabel htmlFor={field.name}>Image</FormLabel>
                   <FormControl>
                     <FileUploader
+                      disabled={isPending}
                       onFieldChange={field.onChange}
                       files={files}
                       imgUrl={field.value ?? ""}
