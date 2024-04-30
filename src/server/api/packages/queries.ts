@@ -121,7 +121,7 @@ export const getPackageByNameWithProducts = async (
         image: packages.image,
         createdAt: packages.createdAt,
         updatedAt: packages.updatedAt,
-        // categoryId: packages.categoryId,
+        categoryId: packages.categoryId,
         // categoryName: categories.name,
       })
       .from(packages)
