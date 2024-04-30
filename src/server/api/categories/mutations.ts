@@ -26,7 +26,6 @@ export const createCategory = async (category: NewCategoryParams) => {
       .insert(categories)
       .values(newCategory.data)
       .returning();
-    console.log("res: ", res);
     return { success: "Category created successfully" };
   } catch (error) {
     const message = (error as Error).message ?? "Category creation failed";

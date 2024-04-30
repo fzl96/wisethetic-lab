@@ -30,7 +30,6 @@ export const columns: ColumnDef<PackageWithCategory>[] = [
       const category = convertToSlug(row.original.category.name ?? "");
       const pkg = convertToSlug(row.original.name ?? "");
       const description = row.original.description;
-      console.log("description", description);
 
       return (
         <Link href={`/dashboard/packages/${category}/${pkg}`}>

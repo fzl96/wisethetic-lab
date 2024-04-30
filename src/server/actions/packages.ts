@@ -38,7 +38,6 @@ export const createPackageAction = async (input: NewPackageParams) => {
     revalidatePackage();
     return { message: "Package created successfully" };
   } catch (e) {
-    console.log("error: ", e);
     return handleErrors(e);
   }
 };

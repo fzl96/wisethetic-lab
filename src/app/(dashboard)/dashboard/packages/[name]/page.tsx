@@ -6,7 +6,6 @@ export default async function CategoryName({
   params: { name: string };
 }) {
   const packages = await getPackagesWithCategory();
-  console.log(packages);
   return (
     <div>
       <h1>{params.name}</h1>

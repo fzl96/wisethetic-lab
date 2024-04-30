@@ -30,7 +30,6 @@ export default auth((req) => {
 
   if (isAuthRoute) {
     if (isLoggedIn) {
-      console.log(req.auth?.user);
       const redirectUrl =
         req.auth?.user.role === "ADMIN" ? "/dashboard" : DEFAULT_LOGIN_REDIRECT;
       return Response.redirect(new URL(redirectUrl, nextUrl));

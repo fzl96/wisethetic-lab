@@ -38,7 +38,6 @@ export const createCategoryAction = async (input: NewCategoryParams) => {
     revalidateCategory();
     return { message: "Category created successfully" };
   } catch (e) {
-    console.log("error: ", e);
     return handleErrors(e);
   }
 };
