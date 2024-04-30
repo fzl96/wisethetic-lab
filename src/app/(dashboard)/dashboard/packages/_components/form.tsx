@@ -45,9 +45,10 @@ import { FileUploader } from "../../_components/file-uploader";
 interface PackageFormProps {
   pkg?: Package;
   packageId?: PackageId;
-  categories: Category[];
+  categories?: Category[];
   action: "create" | "update" | "delete";
   close?: () => void;
+  redirectUrl: string;
 }
 
 export function PackageForm({
@@ -56,6 +57,7 @@ export function PackageForm({
   categories,
   action,
   close,
+  redirectUrl,
 }: PackageFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -69,7 +71,7 @@ export function PackageForm({
       name: "",
       image: "",
       description: "",
-      categoryId: categories[0]?.id,
+      categoryId: categories ? categories[0]?.id : "",
     },
   });
 
@@ -83,7 +85,7 @@ export function PackageForm({
     }
 
     if (close) close();
-    router.push("/dashboard/packages");
+    router.push(`/dashboard/packages/${redirectUrl}`);
     router.refresh();
     toast.success(
       `Package ${action === "create" ? "created" : action === "update" ? "updated" : "deleted"}`,
@@ -174,7 +176,7 @@ export function PackageForm({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {categories.map((category) => (
+                      {categories?.map((category) => (
                         <SelectItem key={category.id} value={category.id}>
                           {category.name}
                         </SelectItem>

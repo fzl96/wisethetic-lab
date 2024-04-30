@@ -25,7 +25,12 @@ export async function PackagesTable({ categoryName }: PackagesTableProps) {
     <div className="grid gap-2">
       <div className="flex-end flex items-center justify-between">
         <div className="ml-auto">
-          {categories && <CreatePackage categories={categories} />}
+          {categories && (
+            <CreatePackage
+              categories={categories}
+              redirectUrl={categoryName ?? ""}
+            />
+          )}
         </div>
       </div>
       <Card>
