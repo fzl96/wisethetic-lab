@@ -12,6 +12,8 @@ import {
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import { format } from "date-fns";
+import { PackageMenu } from "../../_components/actions";
+import { getCategories } from "@/server/api/categories/queries";
 
 export default async function PackageNamePage({
   params,
@@ -24,6 +26,8 @@ export default async function PackageNamePage({
   const categoryName = reverseSlug(params.name);
   const pkgName = reverseSlug(params.packageName);
   const pkg = await getPackageByNameWithProducts(categoryName, pkgName);
+  const categories = await getCategories({});
+
   return (
     <Card className="overflow-hidden">
       <CardHeader className="flex flex-row items-start gap-5">
@@ -35,6 +39,13 @@ export default async function PackageNamePage({
         </div>
         <div className="ml-auto flex items-center gap-1">
           {/* {category && <CategoryMenu category={category} />} */}
+          {pkg && (
+            <PackageMenu
+              pkg={pkg}
+              categories={categories}
+              redirectUrl={params.name}
+            />
+          )}
         </div>
       </CardHeader>
       <Separator />
