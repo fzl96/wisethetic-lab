@@ -1,5 +1,11 @@
 import { users, accounts, verificationToken, passwordResetToken } from "./user";
-import { categories, products, packages } from "./product";
+import {
+  categories,
+  products,
+  packages,
+  packagesRelations,
+  productsRelations,
+} from "./product";
 
 export {
   users,
@@ -9,4 +15,6 @@ export {
   categories,
   products,
   packages,
+  packagesRelations,
+  productsRelations,
 };

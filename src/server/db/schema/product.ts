@@ -3,6 +3,7 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 import { timestamps } from "@/lib/utils";
 import { createId } from "@paralleldrive/cuid2";
+import { relations } from "drizzle-orm";
 
 export const categories = pgTable("category", {
   id: text("id")
@@ -45,6 +46,10 @@ export const packages = pgTable("package", {
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
 });
+
+export const packagesRelations = relations(packages, ({ many }) => ({
+  products: many(products),
+}));
 
 const packageBaseSchema = createSelectSchema(packages).omit(timestamps);
 
@@ -91,6 +96,13 @@ export const products = pgTable("product", {
   updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
 });
 
+export const productsRelations = relations(products, ({ one }) => ({
+  package: one(packages, {
+    fields: [products.packageId],
+    references: [packages.id],
+  }),
+}));
+
 const productBaseSchema = createSelectSchema(products).omit(timestamps);
 
 export const insertProductSchema =
@@ -104,4 +116,6 @@ export const productIdSchema = productBaseSchema.pick({ id: true });
 
 // Types for product - used to type API request params and within components
 export type Product = typeof products.$inferSelect;
-export type ProductId = z.infer<typeof productIdSchema>;
+export type ProductId = z.infer<typeof productIdSchema>["id"];
+export type NewProductParams = z.infer<typeof insertProductParams>;
+export type UpdateProductParams = z.infer<typeof updateProductSchema>;
