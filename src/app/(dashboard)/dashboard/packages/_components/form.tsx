@@ -41,6 +41,7 @@ import {
 } from "@/server/actions/packages";
 import { useUploadThing } from "@/lib/utils/uploadthing";
 import { FileUploader } from "../../_components/file-uploader";
+import { reverseSlug } from "@/lib/utils";
 
 interface PackageFormProps {
   pkg?: Package;
@@ -71,7 +72,9 @@ export function PackageForm({
       name: "",
       image: "",
       description: "",
-      categoryId: categories ? categories[0]?.id : "",
+      categoryId: categories
+        ? categories.find((c) => c.name === reverseSlug(redirectUrl))?.id
+        : "",
     },
   });
 
