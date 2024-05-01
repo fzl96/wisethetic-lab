@@ -9,7 +9,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function CategoryLoading() {
+export function CardLoader() {
   return (
     <Card className="overflow-hidden">
       <CardHeader className="flex flex-row items-start">
