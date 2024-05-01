@@ -38,7 +38,7 @@ import {
   ChevronRight,
   SearchIcon,
 } from "lucide-react";
-import { type Category } from "@/server/db/schema/product";
+import { PackageWithCategory, type Category } from "@/server/db/schema/product";
 import { convertToSlug } from "@/lib/utils";
 
 interface DataTableProps<TData, TValue> {
@@ -138,18 +138,29 @@ export function DataTable<TData, TValue>({
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="cursor-pointer">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
+            table.getRowModel().rows.map((row) => {
+              const pkg = row.original as PackageWithCategory;
+              const category = convertToSlug(pkg.category.name ?? "");
+              const pkgName = convertToSlug(pkg.name ?? "");
+              return (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                  onClick={() =>
+                    router.push(`/dashboard/packages/${category}/${pkgName}`)
+                  }
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id} className="cursor-pointer">
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              );
+            })
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
