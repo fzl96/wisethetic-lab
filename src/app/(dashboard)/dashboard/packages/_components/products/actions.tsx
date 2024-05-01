@@ -15,7 +15,6 @@ import {
 
 export function CreateProduct({
   packageId,
-  redirectUrl,
 }: {
   packageId: PackageId;
   redirectUrl: string;

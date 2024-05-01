@@ -10,7 +10,6 @@ import {
   type ProductId,
   type NewProductParams,
   type UpdateProductParams,
-  productIdSchema,
   insertProductParams,
   updateProductParams,
 } from "@/server/db/schema/product";

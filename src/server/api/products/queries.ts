@@ -1,10 +1,6 @@
 import { db } from "@/server/db";
 import { currentUser } from "@/lib/auth";
-import {
-  products,
-  type ProductId,
-  type PackageId,
-} from "@/server/db/schema/product";
+import { type PackageId } from "@/server/db/schema/product";
 import { eq } from "drizzle-orm";
 
 export const getProducts = async (packageId: PackageId) => {
