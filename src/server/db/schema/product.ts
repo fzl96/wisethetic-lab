@@ -85,13 +85,12 @@ export const products = pgTable("product", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => createId()),
-  name: text("name"),
+  name: text("name").notNull(),
   description: text("description"),
   packageId: text("packageId")
     .notNull()
     .references(() => packages.id, { onDelete: "cascade" }),
   price: integer("price").notNull(),
-  additionalPrice: integer("additionalPrice").notNull(),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
 });
@@ -107,9 +106,13 @@ const productBaseSchema = createSelectSchema(products).omit(timestamps);
 
 export const insertProductSchema =
   createInsertSchema(products).omit(timestamps);
-export const insertProductParams = productBaseSchema.extend({}).omit({
-  id: true,
-});
+export const insertProductParams = productBaseSchema
+  .extend({
+    price: z.coerce.number(),
+  })
+  .omit({
+    id: true,
+  });
 export const updateProductSchema = productBaseSchema;
 export const updateProductParams = productBaseSchema.extend({});
 export const productIdSchema = productBaseSchema.pick({ id: true });
