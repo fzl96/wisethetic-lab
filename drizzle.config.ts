@@ -8,5 +8,4 @@ export default {
   dbCredentials: {
     connectionString: env.POSTGRES_URL,
   },
-  tablesFilter: ["wisetheticlab_*"],
 } satisfies Config;
