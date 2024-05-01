@@ -16,6 +16,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { format } from "date-fns";
 import { PackageCardActions } from "./card-actions";
+import ProductContent from "./product-content";
 
 interface ContentCardProps {
   categoryName: string;
@@ -47,14 +48,27 @@ export async function ContentCard({
       </CardHeader>
       <Separator />
       <CardContent className="p-6 text-sm dark:bg-card">
-        <div className="h-80 overflow-hidden rounded-lg">
-          <Image
-            src={pkg?.image ?? "/placeholder.jpg"}
-            alt={pkg?.name ?? "Category Image"}
-            width={300}
-            height={200}
-            className="h-full w-full object-cover transition-all duration-500 hover:scale-105 dark:brightness-[0.5] dark:grayscale hover:dark:grayscale-0"
-          />
+        <div className="space-y-8">
+          <div className="h-80 overflow-hidden rounded-lg">
+            <Image
+              src={pkg?.image ?? "/placeholder.jpg"}
+              alt={pkg?.name ?? "Category Image"}
+              width={300}
+              height={200}
+              className="h-full w-full object-cover transition-all duration-500 hover:scale-105 dark:brightness-[0.5] dark:grayscale hover:dark:grayscale-0"
+            />
+          </div>
+          <Suspense
+            fallback={
+              <div className="space-y-2">
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-8 w-full" />
+              </div>
+            }
+          >
+            {pkg && <ProductContent packageId={pkg.id} />}
+          </Suspense>
         </div>
       </CardContent>
       <Separator />

@@ -27,8 +27,15 @@ export function CardLoader() {
       </CardHeader>
       <Separator />
       <CardContent className="p-6 text-sm dark:bg-card">
-        <div className="grid h-80 place-items-center overflow-hidden rounded-lg">
-          <Skeleton className="h-full w-full" />
+        <div className="space-y-8">
+          <div className="grid h-80 place-items-center overflow-hidden rounded-lg">
+            <Skeleton className="h-full w-full" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-full" />
+            <Skeleton className="h-8 w-full" />
+            <Skeleton className="h-8 w-full" />
+          </div>
         </div>
       </CardContent>
       <Separator />
