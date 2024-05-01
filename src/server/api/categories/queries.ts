@@ -5,10 +5,10 @@ import { type SearchParams } from "@/lib/validations";
 import { count, ilike } from "drizzle-orm";
 
 export const getCategories = async ({ query = "", page = 1 }: SearchParams) => {
-  const user = await currentUser();
-  if (!user || user?.role !== "ADMIN") {
-    throw new Error("Unauthorized");
-  }
+  // const user = await currentUser();
+  // if (!user || user?.role !== "ADMIN") {
+  //   throw new Error("Unauthorized");
+  // }
 
   return await db.query.categories.findMany({
     where: (categories, { ilike }) => ilike(categories.name, `%${query}%`),
