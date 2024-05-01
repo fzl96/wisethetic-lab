@@ -8,12 +8,17 @@ import { Toaster } from "@/components/ui/sonner";
 import "@/styles/globals.css";
 import "@uploadthing/react/styles.css";
 
-import { Inter } from "next/font/google";
+import { Inter, Archivo } from "next/font/google";
 import { siteConfig } from "@/config/site";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+});
+
+const archivo = Archivo({
+  subsets: ["latin"],
+  variable: "--font-accent",
 });
 
 export const metadata: Metadata = {
@@ -81,6 +86,7 @@ export default async function RootLayout({
         <body
           className={cn(
             inter.variable,
+            archivo.variable,
             "font-sans antialiased selection:bg-foreground selection:text-background",
           )}
         >
