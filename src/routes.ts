@@ -3,7 +3,7 @@
  * These routes will be accessible to all users
  * @type {string[]}
  */
-export const publicRoutes = ["/", "/auth/new-verification"];
+export const publicRoutes = ["/", "/products", "/auth/new-verification"];
 
 /**
  * List of admin routes

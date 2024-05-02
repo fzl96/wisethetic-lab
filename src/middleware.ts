@@ -20,8 +20,22 @@ export default auth((req) => {
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isApiUploadthingRoute =
     nextUrl.pathname.startsWith(apiUploadthingPrefix);
-  const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
+  // const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+  let isPublicRoute;
+  console.log(`pathname: ${nextUrl.pathname}`);
+  if (nextUrl.pathname === "/") {
+    isPublicRoute = true;
+  } else if (
+    nextUrl.pathname !== "/" &&
+    publicRoutes
+      .filter((route) => route !== "/")
+      .some((route) => nextUrl.pathname.startsWith(route))
+  ) {
+    isPublicRoute = true;
+  } else {
+    isPublicRoute = false;
+  }
   const isAdminRoute = adminRoutes.includes(nextUrl.pathname);
 
   if (isApiAuthRoute || isApiUploadthingRoute) {
