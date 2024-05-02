@@ -1,10 +1,10 @@
 import Link from "next/link";
 
 const links: { href: string; title: string }[] = [
-  { href: "#", title: "Email" },
-  { href: "#", title: "WhatsApp" },
-  { href: "#", title: "Instagram" },
-  { href: "#", title: "Twitter" },
+  { href: "https://mail.google.com", title: "Email" },
+  { href: "https://whatsapp.com", title: "WhatsApp" },
+  { href: "https://www.instagram.com/mr.wisethetic", title: "Instagram" },
+  { href: "https://twitter.com/MrWisethetic", title: "Twitter" },
 ];
 export function Footer() {
   return (
