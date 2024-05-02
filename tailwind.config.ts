@@ -33,6 +33,10 @@ const config = {
         "home-border": "hsl(var(--home-border))",
         "home-card-background": "hsl(var(--home-card-background))",
         "home-card-background-hover": "hsl(var(--home-card-background-hover))",
+        "home-footer": {
+          DEFAULT: "hsl(var(--home-footer-background))",
+          foreground: "hsl(var(--home-footer-foreground))",
+        },
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",

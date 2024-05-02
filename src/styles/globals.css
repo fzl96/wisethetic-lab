@@ -9,6 +9,8 @@
       --home-border: 0 0% 90%;
       --home-card-background: 45 100% 99%;
       --home-card-background-hover: 45 100% 97%;
+      --home-footer-background: 0 0% 8%;
+      --home-footer-foreground: 0 0% 90%;
       
       --background: 0 0% 100%;
       --foreground: 222.2 84% 4.9%;
@@ -47,6 +49,8 @@
       --home-border: 0 0% 15%;
       --home-card-background: 0 0% 8%;
       --home-card-background-hover: 0 0% 10%;
+      --home-footer-background: 0 0% 8%;
+      --home-footer-foreground: 0 100% 99%;
       
       --background: 0 0% 10%;
       --foreground: 0 0% 85%;

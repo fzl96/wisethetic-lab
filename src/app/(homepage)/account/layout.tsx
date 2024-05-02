@@ -1,5 +1,4 @@
 import { MaxWidthWrapper } from "../_components/max-width-wrapper";
-import Link from "next/link";
 import { Nav } from "./_components/nav";
 
 export default function AccountLayout({
