@@ -2,11 +2,23 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ModeToggle } from "@/components/mode-toggle";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { useTheme } from "next-themes";
+import { useCurrentUser } from "@/hooks/use-current-user";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+// import { Button } from "@/components/ui/button";
+import { ModeToggle } from "@/components/mode-toggle";
 
 export function Navbar() {
+  const user = useCurrentUser();
   const { scrollY } = useScroll();
   const { theme } = useTheme();
   const [hidden, setHidden] = useState(false);
@@ -43,7 +55,7 @@ export function Navbar() {
       }}
       animate={hidden ? "hidden" : "visible"}
       transition={{ duration: 0.2 }}
-      className="sticky top-6 w-full px-5"
+      className="sticky top-6 z-30 w-full px-5"
     >
       <motion.div
         variants={{
@@ -65,12 +77,33 @@ export function Navbar() {
         </div>
         <nav className="flex items-center gap-4">
           <ul className="flex items-center gap-4">
-            <li>About</li>
-            <li>Products</li>
-            <li>Portfolio</li>
+            <li>
+              <Link href="/">Home</Link>
+            </li>
+            <li>
+              <Link href="/products">Products</Link>
+            </li>
+            <li>
+              <Link href="/portfolio">Portfolio</Link>
+            </li>
           </ul>
+          {!user && <Link href="/auth/sign-in">Login</Link>}
+          {user && (
+            <DropdownMenu>
+              <DropdownMenuTrigger className="border-none outline-none">
+                Account
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Settings</DropdownMenuItem>
+                <DropdownMenuItem>Support</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Sign Out</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
           <span>|</span>
-          <Link href="/auth/sign-in">Login</Link>
           <ModeToggle />
         </nav>
       </motion.div>
