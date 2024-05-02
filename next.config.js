@@ -6,8 +6,6 @@ await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
 
-import withPlaceholder from "@plaiceholder/next"
-
 const config = {
   eslint: {
     ignoreDuringBuilds: true,
@@ -30,4 +28,4 @@ const config = {
   }
 };
 
-export default withPlaceholder(config);
+export default config;
