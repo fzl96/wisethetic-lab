@@ -96,20 +96,20 @@ export function Navbar() {
                 className="mt-2 w-40 rounded-lg border-none bg-home-card-background p-0 "
               >
                 <DropdownMenuItem
-                  className="cursor-pointer rounded-none rounded-t-lg px-5 py-3"
+                  className="cursor-pointer rounded-none rounded-t-lg border-b px-5 py-3"
                   asChild
                 >
                   <Link href="/account">Settings</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  className="cursor-pointer rounded-none px-5 py-3"
+                  className="cursor-pointer rounded-none border-b px-5 py-3"
                   asChild
                 >
                   <Link href="/account/orders">Orders</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => signOut()}
-                  className="cursor-pointer rounded-none rounded-b-lg px-5 py-3 text-red-500"
+                  className="cursor-pointer rounded-none rounded-b-lg px-5 py-3 text-[#FF453A] hover:text-[#FF453A]"
                 >
                   Sign out
                 </DropdownMenuItem>
