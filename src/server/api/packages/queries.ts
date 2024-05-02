@@ -6,7 +6,7 @@ import {
   categories,
 } from "@/server/db/schema/product";
 import { type SearchParams } from "@/lib/validations";
-import { count, eq, ilike, desc } from "drizzle-orm";
+import { count, eq, ilike, desc, asc } from "drizzle-orm";
 
 export const getPackages = async ({ query = "", page = 1 }: SearchParams) => {
   const user = await currentUser();
@@ -20,6 +20,28 @@ export const getPackages = async ({ query = "", page = 1 }: SearchParams) => {
     limit: 6,
     offset: (page - 1) * 6,
   });
+};
+
+export const getPackagesByCategory = async (categoryName: string) => {
+  const pkgs = await db
+    .select({
+      id: packages.id,
+      name: packages.name,
+      description: packages.description,
+      image: packages.image,
+      createdAt: packages.createdAt,
+      updatedAt: packages.updatedAt,
+      category: {
+        id: categories.id,
+        name: categories.name,
+      },
+    })
+    .from(packages)
+    .innerJoin(categories, eq(packages.categoryId, categories.id))
+    .where(eq(categories.name, categoryName))
+    .orderBy(asc(packages.updatedAt));
+
+  return pkgs;
 };
 
 export const getPackagesWithCategory = async (categoryName = "") => {
