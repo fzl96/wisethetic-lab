@@ -10,11 +10,9 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-// import { Button } from "@/components/ui/button";
+import { signOut } from "next-auth/react";
 import { ModeToggle } from "@/components/mode-toggle";
 
 export function Navbar() {
@@ -93,13 +91,28 @@ export function Navbar() {
               <DropdownMenuTrigger className="border-none outline-none">
                 Account
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Settings</DropdownMenuItem>
-                <DropdownMenuItem>Support</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Sign Out</DropdownMenuItem>
+              <DropdownMenuContent
+                align="end"
+                className="mt-2 w-40 rounded-lg border-none bg-home-card-background p-0 "
+              >
+                <DropdownMenuItem
+                  className="cursor-pointer rounded-none rounded-t-lg px-5 py-3"
+                  asChild
+                >
+                  <Link href="/account">Settings</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="cursor-pointer rounded-none px-5 py-3"
+                  asChild
+                >
+                  <Link href="/account/orders">Orders</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => signOut()}
+                  className="cursor-pointer rounded-none rounded-b-lg px-5 py-3 text-red-500"
+                >
+                  Sign out
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           )}
