@@ -3,7 +3,6 @@ import Image from "next/image";
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,7 +20,6 @@ import {
   Users2,
   Home,
   ShoppingCart,
-  Search,
 } from "lucide-react";
 import { ModeToggle } from "@/components/mode-toggle";
 import { signOut } from "@/auth";
