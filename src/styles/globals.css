@@ -4,6 +4,12 @@
 
   @layer base {
     :root {
+      --home-background: 40 8% 93%;
+      --home-foreground: 0 0% 8%;  
+      --home-border: 0 0% 90%;
+      --home-card-background: 45 100% 99%;
+      --home-card-background-hover: 45 100% 97%;
+      
       --background: 0 0% 100%;
       --foreground: 222.2 84% 4.9%;
 
@@ -36,6 +42,12 @@
     }
 
     .dark {
+      --home-background: 0 0% 5%;
+      --home-foreground: 0 100% 99%;
+      --home-border: 0 0% 15%;
+      --home-card-background: 0 0% 8%;
+      --home-card-background-hover: 0 0% 10%;
+      
       --background: 0 0% 10%;
       --foreground: 0 0% 85%;
 

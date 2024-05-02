@@ -28,6 +28,11 @@ const config = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        "home-background": "hsl(var(--home-background))",
+        "home-foreground": "hsl(var(--home-foreground))",
+        "home-border": "hsl(var(--home-border))",
+        "home-card-background": "hsl(var(--home-card-background))",
+        "home-card-background-hover": "hsl(var(--home-card-background-hover))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
