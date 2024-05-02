@@ -12,7 +12,7 @@ export default async function ProductsPage() {
   return (
     <MaxWidthWrapper className="mt-28 flex flex-col items-center justify-center px-5 pb-12  text-center sm:mt-32">
       <div className="grid gap-20">
-        <h1 className="">Categories</h1>
+        <h1 className="font-accent text-2xl">Categories</h1>
         <div className="grid w-full gap-5 lg:grid-cols-3 lg:gap-8">
           {categories.map((category) => {
             const link = convertToSlug(category.name);
