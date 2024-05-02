@@ -8,8 +8,8 @@ export function CategoryCard({ category }: { category: Category }) {
         <Image
           src={category.image ?? "/placeholder.jpg"}
           alt={category.name}
-          width={300}
-          height={384}
+          width={1000}
+          height={800}
           className="h-full w-full object-cover transition-all duration-500 hover:scale-105"
         />
       </div>
