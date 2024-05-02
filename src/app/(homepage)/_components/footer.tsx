@@ -8,7 +8,7 @@ const links: { href: string; title: string }[] = [
 ];
 export function Footer() {
   return (
-    <footer className="bg-home-footer bottom-0 grid w-full gap-20 px-10 pb-4 pt-10">
+    <footer className="bg-home-footer bottom-0 mt-40 grid w-full gap-20 px-10 pb-4 pt-10">
       <div className="flex flex-col items-start md:flex-row md:gap-40">
         <div>
           <span className="font-accent text-lg">Wisethetic Lab</span>
@@ -25,16 +25,16 @@ export function Footer() {
         </ul>
         <ul className="space-y-2 text-sm text-muted-foreground">
           <li className="text-base text-primary">Site</li>
-          <li>
+          <li className="hover:text-primary">
             <Link href="/about">About us</Link>
           </li>
-          <li>
+          <li className="hover:text-primary">
             <Link href="/portfolio">Gallery</Link>
           </li>
-          <li>
+          <li className="hover:text-primary">
             <Link href="/products">Products</Link>
           </li>
-          <li>
+          <li className="hover:text-primary">
             <Link href="/contact">Contact</Link>
           </li>
         </ul>
