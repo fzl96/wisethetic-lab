@@ -31,6 +31,7 @@ export const getPackagesByCategory = async (categoryName: string) => {
       image: packages.image,
       createdAt: packages.createdAt,
       updatedAt: packages.updatedAt,
+      additionalContentPrice: packages.additionalContentPrice,
       category: {
         id: categories.id,
         name: categories.name,
@@ -60,6 +61,7 @@ export const getPackagesWithCategory = async (categoryName = "") => {
         image: packages.image,
         createdAt: packages.createdAt,
         updatedAt: packages.updatedAt,
+        additionalContentPrice: packages.additionalContentPrice,
         category: {
           id: categories.id,
           name: categories.name,
@@ -78,6 +80,7 @@ export const getPackagesWithCategory = async (categoryName = "") => {
         image: packages.image,
         createdAt: packages.createdAt,
         updatedAt: packages.updatedAt,
+        additionalContentPrice: packages.additionalContentPrice,
         category: {
           id: categories.id,
           name: categories.name,
@@ -91,18 +94,7 @@ export const getPackagesWithCategory = async (categoryName = "") => {
   return pkgs;
 };
 
-export const getPackageByNameWithProducts = async (
-  category: string,
-  pkgName: string,
-) => {
-  const user = await currentUser();
-  if (!user || user?.role !== "ADMIN") {
-    throw new Error("Unauthorized");
-  }
-
-  console.log(`category: ${category}`);
-  console.log(`pkgName: ${pkgName}`);
-
+export async function getPkgWithProducts(category: string, pkgName: string) {
   const sq = db.$with("sq").as(
     db
       .select({
@@ -113,6 +105,44 @@ export const getPackageByNameWithProducts = async (
         createdAt: packages.createdAt,
         updatedAt: packages.updatedAt,
         categoryId: packages.categoryId,
+        // categoryName: categories.name,
+      })
+      .from(packages)
+      .innerJoin(categories, eq(packages.categoryId, categories.id))
+      .where(eq(categories.name, category)),
+  );
+
+  const [pkg] = await db.with(sq).select().from(sq).where(eq(sq.name, pkgName));
+
+  if (!pkg) {
+    return null;
+  }
+
+  const pkgWithProducts = await db.query.packages.findFirst({
+    where: (packages, { eq }) => eq(packages.id, pkg.id),
+    with: {
+      products: true,
+    },
+  });
+
+  return pkgWithProducts;
+}
+
+export const getPackageByNameWithProducts = async (
+  category: string,
+  pkgName: string,
+) => {
+  const sq = db.$with("sq").as(
+    db
+      .select({
+        id: packages.id,
+        name: packages.name,
+        description: packages.description,
+        image: packages.image,
+        createdAt: packages.createdAt,
+        updatedAt: packages.updatedAt,
+        categoryId: packages.categoryId,
+        additionalContentPrice: packages.additionalContentPrice,
         // categoryName: categories.name,
       })
       .from(packages)

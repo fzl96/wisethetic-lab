@@ -43,6 +43,9 @@ export const packages = pgTable("package", {
   categoryId: text("categoryId")
     .notNull()
     .references(() => categories.id, { onDelete: "cascade" }),
+  additionalContentPrice: integer("additionalContentPrice")
+    .notNull()
+    .default(0),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
 });
@@ -55,9 +58,13 @@ const packageBaseSchema = createSelectSchema(packages).omit(timestamps);
 
 export const insertPackageSchema =
   createInsertSchema(packages).omit(timestamps);
-export const insertPackageParams = packageBaseSchema.extend({}).omit({
-  id: true,
-});
+export const insertPackageParams = packageBaseSchema
+  .extend({
+    additionalContentPrice: z.coerce.number(),
+  })
+  .omit({
+    id: true,
+  });
 export const updatePackageSchema = packageBaseSchema;
 export const updatePackageParams = packageBaseSchema.extend({});
 export const packageIdSchema = packageBaseSchema.pick({ id: true });
@@ -71,6 +78,7 @@ export type PackageWithCategory = {
   image: string | null;
   createdAt: Date;
   updatedAt: Date;
+  additionalContentPrice: number;
   category: {
     id: string;
     name: string;

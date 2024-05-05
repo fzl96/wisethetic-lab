@@ -4,12 +4,19 @@ import { CreateProduct, ProductMenu } from "./products/actions";
 
 interface ProductContentProps {
   packageId: PackageId;
+  additionalContentPrice: number;
 }
 
 export default async function ProductContent({
   packageId,
+  additionalContentPrice,
 }: ProductContentProps) {
   const products = await getProducts(packageId);
+  const currencyFormatter = new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+  });
 
   return (
     <div className="space-y-4">
@@ -28,6 +35,10 @@ export default async function ProductContent({
             packageId={product.packageId}
           />
         ))}
+        <div className="flex items-center justify-between">
+          <p>Additional Content</p>
+          <p>{currencyFormatter.format(additionalContentPrice)}</p>
+        </div>
       </div>
     </div>
   );

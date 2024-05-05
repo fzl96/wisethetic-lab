@@ -78,6 +78,7 @@ export function PackageForm({
       name: "",
       image: "",
       description: "",
+      additionalContentPrice: 0,
       categoryId: categories
         ? categories.find((c) => c.name === reverseSlug(redirectUrl))?.id
         : "",
@@ -228,6 +229,28 @@ export function PackageForm({
                       placeholder="Description"
                       value={field.value ?? ""}
                       disabled={isPending}
+                    />
+                  </FormControl>
+                  <FormMessage {...field} />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="additionalContentPrice"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor={field.name}>
+                    Additional Content Price
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      id="additionalContentPrice"
+                      placeholder="Additional Content Price"
+                      value={field.value ?? ""}
+                      disabled={isPending}
+                      type="number"
                     />
                   </FormControl>
                   <FormMessage {...field} />

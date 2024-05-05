@@ -67,7 +67,12 @@ export async function ContentCard({
               </div>
             }
           >
-            {pkg && <ProductContent packageId={pkg.id} />}
+            {pkg && (
+              <ProductContent
+                packageId={pkg.id}
+                additionalContentPrice={pkg.additionalContentPrice}
+              />
+            )}
           </Suspense>
         </div>
       </CardContent>
