@@ -94,7 +94,7 @@ export function ProductForm({
     });
   };
 
-  const onDelete = async (id: PackageId) => {
+  const onDelete = async (id: ProductId) => {
     startTransition(async () => {
       const res = await deleteProductAction(id);
       after("delete", res);
@@ -102,7 +102,7 @@ export function ProductForm({
   };
 
   if (action === "delete") {
-    if (!packageId) return null;
+    if (!product?.id) return null;
     return (
       <div className="space-y-2">
         <Button
@@ -110,7 +110,7 @@ export function ProductForm({
           variant="destructive"
           className="w-full"
           disabled={isPending}
-          onClick={() => onDelete(packageId)}
+          onClick={() => onDelete(product?.id)}
         >
           {isPending && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
           Delete
