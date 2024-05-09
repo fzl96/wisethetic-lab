@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { signOut } from "next-auth/react";
-import { ModeToggle } from "@/components/mode-toggle";
+import { ShoppingCart } from "lucide-react";
 
 export function Navbar() {
   const user = useCurrentUser();
@@ -44,8 +44,6 @@ export function Navbar() {
       variants={{
         visible: {
           y: 0,
-          backgroundColor: "transparent",
-          backdropFilter: "blur(15px)",
         },
         hidden: {
           y: "-100%",
@@ -53,20 +51,21 @@ export function Navbar() {
       }}
       animate={hidden ? "hidden" : "visible"}
       transition={{ duration: 0.2 }}
-      className="sticky top-6 z-30 w-full px-5"
+      className="sticky top-6 z-30 w-full bg-transparent px-5"
     >
       <motion.div
         variants={{
           visibleChild: {
             // opacity: 1,
             backgroundColor: dark ? bgDark : bgLight,
+            backdropFilter: "blur(15px)",
           },
           hiddenChild: {
             // opacity: 0,
           },
         }}
         animate={hidden ? "hiddenChild" : "visibleChild"}
-        className="flex items-center justify-between rounded-lg px-5 py-5"
+        className="flex items-center justify-between rounded-lg px-5 py-5 "
       >
         <div className="hidden md:block">
           <span className="font-accent text-xl tracking-wide text-[#ce9651]">
@@ -117,7 +116,9 @@ export function Navbar() {
             </DropdownMenu>
           )}
           <span>|</span>
-          <ModeToggle />
+          <Link href="/cart">
+            <ShoppingCart className="h-5 w-5" />
+          </Link>
         </nav>
       </motion.div>
     </motion.header>

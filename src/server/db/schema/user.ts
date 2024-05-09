@@ -7,7 +7,9 @@ import {
   integer,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "next-auth/adapters";
+import { relations } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
+import { carts } from "./cart";
 
 export const roleEnum = pgEnum("role", ["USER", "ADMIN"]);
 
@@ -22,6 +24,10 @@ export const users = pgTable("user", {
   password: text("password"),
   role: roleEnum("role").default("USER").notNull(),
 });
+
+export const userRelations = relations(users, ({ one }) => ({
+  cart: one(carts),
+}));
 
 export const accounts = pgTable(
   "account",

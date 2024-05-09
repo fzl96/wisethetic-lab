@@ -4,6 +4,7 @@ import { z } from "zod";
 import { timestamps } from "@/lib/utils";
 import { createId } from "@paralleldrive/cuid2";
 import { relations } from "drizzle-orm";
+import { cartItems } from "./cart";
 
 export const categories = pgTable("category", {
   id: text("id")
@@ -84,6 +85,26 @@ export type PackageWithCategory = {
     name: string;
   };
 };
+export type PackageWithProducts = {
+  id: string;
+  name: string;
+  image: string | null;
+  description: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  categoryId: string;
+  additionalContentPrice: number;
+  products: {
+    id: string;
+    name: string;
+    description: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+    packageId: string;
+    price: number;
+  }[];
+};
+
 export type PackageId = z.infer<typeof packageIdSchema>["id"];
 export type NewPackageParams = z.infer<typeof insertPackageParams>;
 export type UpdatePackageParams = z.infer<typeof updatePackageSchema>;
@@ -103,11 +124,12 @@ export const products = pgTable("product", {
   updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
 });
 
-export const productsRelations = relations(products, ({ one }) => ({
+export const productsRelations = relations(products, ({ one, many }) => ({
   package: one(packages, {
     fields: [products.packageId],
     references: [packages.id],
   }),
+  cartItems: many(cartItems),
 }));
 
 const productBaseSchema = createSelectSchema(products).omit(timestamps);

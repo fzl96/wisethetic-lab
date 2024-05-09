@@ -8,7 +8,7 @@ import { getUserByEmail } from "./server/db/data/user";
 import { db } from "@/server/db";
 import { eq } from "drizzle-orm";
 import { getUserById } from "./server/db/data/user";
-import { users } from "./server/db/schema";
+import { carts, users } from "./server/db/schema";
 
 import bcrypt from "bcryptjs";
 
@@ -49,6 +49,7 @@ export default {
           emailVerified: new Date(),
         })
         .where(eq(users.id, user.id));
+      await db.insert(carts).values({ userId: user.id });
     },
   },
   callbacks: {
@@ -71,6 +72,10 @@ export default {
         session.user.role = token.role as "ADMIN" | "USER";
       }
 
+      if (token.cartId && session.user) {
+        session.user.cartId = token.cartId as string;
+      }
+
       return session;
     },
     async jwt({ token }) {
@@ -81,6 +86,7 @@ export default {
       if (!existingUser) return token;
 
       token.role = existingUser.role;
+      token.cartId = existingUser.cartId;
 
       return token;
     },

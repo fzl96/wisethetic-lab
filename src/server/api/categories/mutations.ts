@@ -22,10 +22,7 @@ export const createCategory = async (category: NewCategoryParams) => {
   }
 
   try {
-    const res = await db
-      .insert(categories)
-      .values(newCategory.data)
-      .returning();
+    await db.insert(categories).values(newCategory.data).returning();
     return { success: "Category created successfully" };
   } catch (error) {
     const message = (error as Error).message ?? "Category creation failed";

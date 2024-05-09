@@ -10,6 +10,7 @@ import "@uploadthing/react/styles.css";
 
 import { Inter, Archivo } from "next/font/google";
 import { siteConfig } from "@/config/site";
+import { ReactQueryProvider } from "@/components/react-query-provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -90,22 +91,24 @@ export default async function RootLayout({
             "font-sans antialiased selection:bg-foreground selection:text-background",
           )}
         >
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <TooltipProvider>
-              <div
-                vaul-drawer-wrapper=""
-                className="min-h-screen bg-background"
-              >
-                {children}
-              </div>
-            </TooltipProvider>
-            <Toaster closeButton richColors position="top-center" />
-          </ThemeProvider>
+          <ReactQueryProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="dark"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <TooltipProvider>
+                <div
+                  vaul-drawer-wrapper=""
+                  className="min-h-screen bg-background"
+                >
+                  {children}
+                </div>
+              </TooltipProvider>
+              <Toaster closeButton richColors position="top-center" />
+            </ThemeProvider>
+          </ReactQueryProvider>
         </body>
       </html>
     </SessionProvider>

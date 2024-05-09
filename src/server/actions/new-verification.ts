@@ -4,7 +4,7 @@ import { db } from "@/server/db";
 import { eq } from "drizzle-orm";
 import { getUserByEmail } from "@/server/db/data/user";
 import { getVerificationTokenByToken } from "@/server/db/data/verification-token";
-import { users, verificationToken } from "@/server/db/schema";
+import { carts, users, verificationToken } from "@/server/db/schema";
 
 export const newVerification = async (token: string) => {
   const existingToken = await getVerificationTokenByToken(token);
@@ -29,6 +29,8 @@ export const newVerification = async (token: string) => {
     .update(users)
     .set({ emailVerified: new Date(), email: existingToken.email })
     .where(eq(users.id, existingUser.id));
+
+  await db.insert(carts).values({ userId: existingUser.id });
 
   await db
     .delete(verificationToken)
