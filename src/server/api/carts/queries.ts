@@ -15,7 +15,11 @@ export const getCart = async () => {
         with: {
           product: {
             with: {
-              package: true,
+              package: {
+                with: {
+                  category: true,
+                },
+              },
             },
           },
         },
@@ -31,6 +35,7 @@ export const getCart = async () => {
       id: item.product.package.id,
       name: item.product.package.name,
       image: item.product.package.image,
+      categoryName: item.product.package.category.name,
       additionalContentPrice: item.product.package.additionalContentPrice,
       additionalContentQuantity: item.additionalContentQuantity ?? 0,
       product: {
@@ -43,6 +48,6 @@ export const getCart = async () => {
 
   return {
     id: cart?.id,
-    items: cartItems,
+    items: cartItems ?? [],
   };
 };
