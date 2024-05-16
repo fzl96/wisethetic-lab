@@ -15,8 +15,6 @@ export async function POST(req: NextRequest) {
     gross_amount,
   } = await req.json();
 
-  console.log(order_id);
-
   if (!order_id || typeof order_id !== "string")
     return NextResponse.json({ status: "error", message: "Invalid order_id" });
 
@@ -30,10 +28,6 @@ export async function POST(req: NextRequest) {
           status: "error",
           message: "Order not found",
         });
-
-      console.log(
-        `transaction_status: ${transaction_status}, fraud_status: ${fraud_status}`,
-      );
 
       const hash = crypto
         .createHash("sha512")
@@ -49,9 +43,7 @@ export async function POST(req: NextRequest) {
         });
 
       if (transaction_status == "capture") {
-        console.log("capture");
         if (fraud_status == "accept") {
-          console.log("fraud");
           await db
             .update(payments)
             .set({ status: "completed", method: payment_type })
@@ -62,6 +54,7 @@ export async function POST(req: NextRequest) {
             .where(eq(orders.id, order_id));
         }
       } else if (transaction_status == "settlement") {
+        console.log("settled");
         await db
           .update(payments)
           .set({ status: "completed", method: payment_type })
