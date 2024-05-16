@@ -13,6 +13,14 @@ import {
   productsRelations,
 } from "./product";
 import { carts, cartItems, cartsRelations, cartItemsRelations } from "./cart";
+import {
+  orders,
+  orderItems,
+  payments,
+  ordersRelations,
+  orderItemsRelations,
+  paymentRelations,
+} from "./orders";
 
 export {
   users,
@@ -29,4 +37,10 @@ export {
   cartItems,
   cartsRelations,
   cartItemsRelations,
+  orders,
+  orderItems,
+  ordersRelations,
+  orderItemsRelations,
+  payments,
+  paymentRelations,
 };
