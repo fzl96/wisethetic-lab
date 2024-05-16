@@ -109,14 +109,15 @@ export const orderItems = pgTable("order_item", {
   productId: text("productId")
     .notNull()
     .references(() => products.id),
-  productName: text("product_name"),
-  productPrice: integer("product_price"),
+  productName: text("product_name").notNull(),
+  productPrice: integer("product_price").notNull(),
   packageId: text("packageId")
     .notNull()
     .references(() => packages.id),
-  packageName: text("package_name"),
-  packagePrice: integer("package_additional_price"),
+  packageName: text("package_name").notNull(),
+  packagePrice: integer("package_additional_price").notNull(),
   packageImg: text("package_imd"),
+  categoryName: text("category_name").notNull(),
   additionalContentQuantity: integer("additional_quantity")
     .notNull()
     .default(1),

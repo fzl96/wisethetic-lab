@@ -58,6 +58,7 @@ export const createOrder = async (
       packageName: item.package.name,
       packagePrice: item.package.additionalContentPrice,
       packageImg: item.package.image,
+      categoryName: item.package.categoryName,
       additionalContentQuantity: item.package.additionalContentQuantity,
     }));
 
