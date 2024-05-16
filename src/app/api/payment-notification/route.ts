@@ -15,6 +15,8 @@ export async function POST(req: NextRequest) {
     gross_amount,
   } = await req.json();
 
+  console.log("status: ", transaction_status);
+
   if (!order_id || typeof order_id !== "string")
     return NextResponse.json({ status: "error", message: "Invalid order_id" });
 
@@ -31,8 +33,8 @@ export async function POST(req: NextRequest) {
       message: "Invalid signature",
     });
 
-  if (transaction_status == "capture") {
-    if (fraud_status == "accept") {
+  if (transaction_status === "capture") {
+    if (fraud_status === "accept") {
       await db
         .update(payments)
         .set({ status: "completed", method: payment_type })
@@ -42,7 +44,7 @@ export async function POST(req: NextRequest) {
         .set({ status: "process" })
         .where(eq(orders.id, order_id));
     }
-  } else if (transaction_status == "settlement") {
+  } else if (transaction_status === "settlement") {
     console.log("settled");
     await db
       .update(payments)
@@ -53,9 +55,9 @@ export async function POST(req: NextRequest) {
       .set({ status: "process" })
       .where(eq(orders.id, order_id));
   } else if (
-    transaction_status == "cancel" ||
-    transaction_status == "deny" ||
-    transaction_status == "expire"
+    transaction_status === "cancel" ||
+    transaction_status === "deny" ||
+    transaction_status === "expire"
   ) {
     await db
       .update(payments)
@@ -65,7 +67,7 @@ export async function POST(req: NextRequest) {
       .update(orders)
       .set({ status: "cancelled" })
       .where(eq(orders.id, order_id));
-  } else if (transaction_status == "pending") {
+  } else if (transaction_status === "pending") {
     // TODO set transaction status on your database to 'pending' / waiting payment
     // and response with 200 OK
     console.log("pending");
