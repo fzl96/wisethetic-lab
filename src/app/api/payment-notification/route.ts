@@ -15,6 +15,8 @@ export async function POST(req: NextRequest) {
     gross_amount,
   } = await req.json();
 
+  console.log(order_id);
+
   if (!order_id || typeof order_id !== "string")
     return NextResponse.json({ status: "error", message: "Invalid order_id" });
 
@@ -35,6 +37,8 @@ export async function POST(req: NextRequest) {
           `${order_id}${status_code}${gross_amount}${process.env.MIDTRANS_SERVER_KEY}`,
         )
         .digest("hex");
+
+      console.log(`hash: ${hash}\n signature_key: ${signature_key}`);
 
       if (!hash !== signature_key)
         return NextResponse.json({
