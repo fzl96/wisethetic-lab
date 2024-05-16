@@ -49,7 +49,9 @@ export async function POST(req: NextRequest) {
         `transaction_status: ${transaction_status}, fraud_status: ${fraud_status}`,
       );
       if (transaction_status == "capture") {
+        console.log("capture");
         if (fraud_status == "accept") {
+          console.log("fraud");
           await db
             .update(payments)
             .set({ status: "completed", method: payment_type })
