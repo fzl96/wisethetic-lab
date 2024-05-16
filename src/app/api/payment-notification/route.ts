@@ -15,8 +15,10 @@ export async function POST(req: NextRequest) {
     gross_amount,
   } = await req.json();
 
-  if (!order_id || typeof order_id !== "string")
+  if (!order_id || typeof order_id !== "string") {
+    console.log("order id problem");
     return NextResponse.json({ status: "error", message: "Invalid order_id" });
+  }
 
   const hash = crypto
     .createHash("sha512")
@@ -25,11 +27,13 @@ export async function POST(req: NextRequest) {
     )
     .digest("hex");
 
-  if (!hash !== signature_key)
+  if (!hash !== signature_key) {
+    console.log("signature problem");
     return NextResponse.json({
       status: "error",
       message: "Invalid signature",
     });
+  }
 
   console.log("status: ", transaction_status);
 
