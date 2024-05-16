@@ -7,6 +7,7 @@ import {
   authRoutes,
   apiAuthPrefix,
   apiUploadthingPrefix,
+  apiTestPrefix,
   adminRoutes,
 } from "@/routes";
 
@@ -18,6 +19,7 @@ export default auth((req) => {
   const isLoggedIn = !!req.auth;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
+  const isApiTestRoute = nextUrl.pathname.startsWith(apiTestPrefix);
   const isApiUploadthingRoute =
     nextUrl.pathname.startsWith(apiUploadthingPrefix);
   // const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
@@ -38,7 +40,7 @@ export default auth((req) => {
   }
   const isAdminRoute = adminRoutes.includes(nextUrl.pathname);
 
-  if (isApiAuthRoute || isApiUploadthingRoute) {
+  if (isApiAuthRoute || isApiUploadthingRoute || isApiTestRoute) {
     return null;
   }
 
