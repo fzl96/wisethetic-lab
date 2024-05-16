@@ -31,6 +31,10 @@ export async function POST(req: NextRequest) {
           message: "Order not found",
         });
 
+      console.log(
+        `transaction_status: ${transaction_status}, fraud_status: ${fraud_status}`,
+      );
+
       const hash = crypto
         .createHash("sha512")
         .update(
@@ -38,16 +42,12 @@ export async function POST(req: NextRequest) {
         )
         .digest("hex");
 
-      console.log(`hash: ${hash}\n signature_key: ${signature_key}`);
-
       if (!hash !== signature_key)
         return NextResponse.json({
           status: "error",
           message: "Invalid signature",
         });
-      console.log(
-        `transaction_status: ${transaction_status}, fraud_status: ${fraud_status}`,
-      );
+
       if (transaction_status == "capture") {
         console.log("capture");
         if (fraud_status == "accept") {
