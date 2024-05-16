@@ -13,6 +13,14 @@ export default async function OrderPaymentPage({
     return <div>Order not found</div>;
   }
 
+  if (order.payment?.status === "completed") {
+    return <div>Payment has been completed</div>;
+  }
+
+  if (order.payment?.status === "cancelled") {
+    return <div>Payment has been cancelled</div>;
+  }
+
   const token = await getPaymentToken(order);
 
   return <RenderPayment order={order} token={token} />;
