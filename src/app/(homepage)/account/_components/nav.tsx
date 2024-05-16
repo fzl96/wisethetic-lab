@@ -15,7 +15,7 @@ const Links: { href: string; title: string }[] = [
 export function Nav() {
   return (
     <nav
-      className="sticky top-10 grid gap-4 text-sm text-muted-foreground"
+      className="grid gap-4 text-sm text-muted-foreground md:sticky md:top-10"
       x-chunk="dashboard-04-chunk-0"
     >
       {Links.map((link) => {
@@ -27,11 +27,15 @@ export function Nav() {
 
 export function NavLink({ href, title }: { href: string; title: string }) {
   const pathname = usePathname();
+  const active =
+    (pathname.startsWith(href) && href !== "/account") ||
+    (pathname === href && href === "/account");
+
   return (
     <Link
       href={href}
       className={cn(
-        pathname === href && "font-semibold text-primary",
+        active && "font-semibold text-primary",
         "hover:text-primary",
       )}
     >
