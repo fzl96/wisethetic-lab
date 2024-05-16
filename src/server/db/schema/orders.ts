@@ -49,6 +49,7 @@ export const ordersRelations = relations(orders, ({ one, many }) => ({
     fields: [orders.userId],
     references: [users.id],
   }),
+  payment: one(payments),
   orderItems: many(orderItems),
 }));
 
@@ -92,10 +93,10 @@ export const payments = pgTable("payment", {
 });
 
 export const paymentRelations = relations(payments, ({ one }) => ({
-  order: one(orders, {
-    fields: [payments.orderId],
-    references: [orders.id],
-  }),
+  // order: one(orders, {
+  //   fields: [payments.orderId],
+  //   references: [orders.id],
+  // }),
 }));
 
 export const orderItems = pgTable("order_item", {

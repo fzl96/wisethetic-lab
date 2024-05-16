@@ -11,8 +11,14 @@ export const getUserOrders = async () => {
 
   const orders = await db.query.orders.findMany({
     where: (orders, { eq }) => eq(orders.userId, user.id ?? ""),
+    columns: {
+      id: true,
+      total: true,
+      status: true,
+      createdAt: true,
+    },
     with: {
-      orderItems: true,
+      payment: true,
     },
   });
 
@@ -31,6 +37,9 @@ export const getOrderById = async (id: OrderId) => {
       id: true,
       createdAt: true,
       total: true,
+    },
+    with: {
+      payment: true,
     },
   });
 
