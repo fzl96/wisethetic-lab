@@ -23,6 +23,7 @@ import { FormSuccess } from "./form-success";
 
 import { signUp } from "@/server/actions/sign-up";
 import { Social } from "./social";
+import { siteConfig } from "@/config/site";
 
 export function SignupForm() {
   const [error, setError] = useState("");
@@ -53,7 +54,7 @@ export function SignupForm() {
   return (
     <>
       <div className="grid gap-2 text-center">
-        <h1 className="text-3xl font-medium">Wisethetic Lab</h1>
+        <h1 className="text-3xl font-medium">{siteConfig.name}</h1>
         <p className="text-balance text-muted-foreground">
           Enter your email below to create your account
         </p>

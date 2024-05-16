@@ -1,5 +1,5 @@
 export const siteConfig = {
-  name: "Wisethetic Lab",
+  name: "House of Zama",
   description:
     "Your dedicated creative partner in shaping an exceptional online presence.",
   url: "https://wisetheticlab.store",

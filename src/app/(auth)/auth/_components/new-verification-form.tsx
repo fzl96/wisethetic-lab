@@ -8,6 +8,7 @@ import { newVerification } from "@/server/actions/new-verification";
 import { FormError } from "./form-error";
 import { FormSuccess } from "./form-success";
 import Link from "next/link";
+import { siteConfig } from "@/config/site";
 
 export function NewVerificationForm() {
   const { theme } = useTheme();
@@ -40,7 +41,7 @@ export function NewVerificationForm() {
     <>
       <div className="flex flex-col items-center gap-10">
         <div className="grid gap-2 text-center">
-          <h1 className="text-3xl font-medium">Wisethetic Lab</h1>
+          <h1 className="text-3xl font-medium">{siteConfig.name}</h1>
           <p className="text-balance text-muted-foreground">
             Confirming your email
           </p>

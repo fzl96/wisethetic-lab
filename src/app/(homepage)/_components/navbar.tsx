@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { signOut } from "next-auth/react";
 import { ShoppingCart } from "lucide-react";
+import { siteConfig } from "@/config/site";
 
 export function Navbar() {
   const user = useCurrentUser();
@@ -69,7 +70,7 @@ export function Navbar() {
       >
         <div className="hidden md:block">
           <span className="font-accent text-xl tracking-wide text-[#ce9651]">
-            Wisethetic Lab
+            {siteConfig.name}
           </span>
         </div>
         <nav className="flex items-center gap-4">

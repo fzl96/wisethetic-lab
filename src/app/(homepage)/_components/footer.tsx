@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import Link from "next/link";
 
 const links: { href: string; title: string }[] = [
@@ -8,7 +9,7 @@ const links: { href: string; title: string }[] = [
 ];
 export function Footer() {
   return (
-    <footer className="bg-home-footer bottom-0 mt-40 grid w-full gap-20 px-10 pb-4 pt-10">
+    <footer className="bottom-0 mt-40 grid w-full gap-20 bg-home-footer px-10 pb-4 pt-10">
       <div className="flex flex-col items-start md:flex-row md:gap-40">
         <div>
           <span className="font-accent text-lg">Wisethetic Lab</span>
@@ -41,7 +42,7 @@ export function Footer() {
       </div>
       <div className="text-center">
         <p className="text-sm text-muted-foreground">
-          &copy; 2024 Wisethetic Lab. All rights reserved
+          &copy; 2024 {siteConfig.name}. All rights reserved
         </p>
       </div>
     </footer>
