@@ -7,7 +7,7 @@ export default function AccountLayout({
   children: React.ReactNode;
 }) {
   return (
-    <MaxWidthWrapper className="mt-20">
+    <MaxWidthWrapper className="mt-20 min-h-screen">
       <div className="mx-auto grid w-full max-w-6xl gap-2">
         <h1 className="text-3xl font-semibold">Account</h1>
       </div>

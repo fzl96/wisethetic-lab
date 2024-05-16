@@ -15,7 +15,7 @@ const Links: { href: string; title: string }[] = [
 export function Nav() {
   return (
     <nav
-      className="grid gap-4 text-sm text-muted-foreground"
+      className="sticky top-10 grid gap-4 text-sm text-muted-foreground"
       x-chunk="dashboard-04-chunk-0"
     >
       {Links.map((link) => {
