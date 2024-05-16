@@ -45,6 +45,9 @@ export async function POST(req: NextRequest) {
           status: "error",
           message: "Invalid signature",
         });
+      console.log(
+        `transaction_status: ${transaction_status}, fraud_status: ${fraud_status}`,
+      );
       if (transaction_status == "capture") {
         if (fraud_status == "accept") {
           await db
