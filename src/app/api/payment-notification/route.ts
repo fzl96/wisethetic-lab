@@ -14,8 +14,6 @@ export async function POST(req: NextRequest) {
     signature_key,
     gross_amount,
   } = await req.json();
-  const data = await req.json();
-  console.log(data);
 
   if (!order_id || typeof order_id !== "string")
     return NextResponse.json({ status: "error", message: "Invalid order_id" });
