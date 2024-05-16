@@ -9,7 +9,6 @@ import {
 import type { AdapterAccount } from "next-auth/adapters";
 import { relations } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
-import { carts } from "./cart";
 import { orders } from "./orders";
 
 export const roleEnum = pgEnum("role", ["USER", "ADMIN"]);
@@ -26,7 +25,7 @@ export const users = pgTable("user", {
   role: roleEnum("role").default("USER").notNull(),
 });
 
-export const userRelations = relations(users, ({ one, many }) => ({
+export const userRelations = relations(users, ({ many }) => ({
   orders: many(orders),
 }));
 

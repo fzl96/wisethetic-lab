@@ -1,6 +1,6 @@
 import { db } from "@/server/db";
 import { currentUser } from "@/lib/auth";
-import { Order, OrderId, payments } from "@/server/db/schema/orders";
+import { OrderId, payments } from "@/server/db/schema/orders";
 import { MidtransClient } from "midtrans-node-client";
 
 export const getUserOrders = async () => {
