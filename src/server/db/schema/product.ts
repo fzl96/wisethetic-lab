@@ -51,8 +51,12 @@ export const packages = pgTable("package", {
   updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
 });
 
-export const packagesRelations = relations(packages, ({ many }) => ({
+export const packagesRelations = relations(packages, ({ many, one }) => ({
   products: many(products),
+  category: one(categories, {
+    fields: [packages.categoryId],
+    references: [categories.id],
+  }),
 }));
 
 const packageBaseSchema = createSelectSchema(packages).omit(timestamps);
