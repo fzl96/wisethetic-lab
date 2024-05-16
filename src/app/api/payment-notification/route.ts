@@ -15,8 +15,6 @@ export async function POST(req: NextRequest) {
     gross_amount,
   } = await req.json();
 
-  console.log("status: ", transaction_status);
-
   if (!order_id || typeof order_id !== "string")
     return NextResponse.json({ status: "error", message: "Invalid order_id" });
 
@@ -32,6 +30,8 @@ export async function POST(req: NextRequest) {
       status: "error",
       message: "Invalid signature",
     });
+
+  console.log("status: ", transaction_status);
 
   if (transaction_status === "capture") {
     if (fraud_status === "accept") {
