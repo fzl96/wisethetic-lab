@@ -20,9 +20,31 @@ export const getUserOrders = async () => {
     with: {
       payment: true,
     },
+    orderBy: (orders, { desc }) => desc(orders.createdAt),
   });
 
   return orders;
+};
+
+export const getOrderByIdWithItems = async (id: OrderId) => {
+  const user = await currentUser();
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  const order = await db.query.orders.findFirst({
+    where: (orders, { eq }) => eq(orders.id, id),
+    with: {
+      orderItems: true,
+      payment: true,
+    },
+  });
+
+  if (order?.userId !== user.id && user.role !== "ADMIN") {
+    throw new Error("Unauthorized");
+  }
+
+  return order;
 };
 
 export const getOrderById = async (id: OrderId) => {
