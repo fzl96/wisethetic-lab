@@ -45,13 +45,12 @@ export function AdditionalContentForm({ item }: { item: Item }) {
         <Plus className="h-4 w-4" />
         <input
           type="number"
-          className="w-10 bg-transparent outline-none"
+          className="w-9 bg-transparent outline-none"
           value={quantity}
           onChange={(e) => setQuantity(parseInt(e.target.value))}
           min={0}
         />
-        additional
-        <span className="hidden lg:block">content(s)</span>
+        <span className="hidden lg:block">additional content(s)</span>
       </div>
       {!same && (
         <button

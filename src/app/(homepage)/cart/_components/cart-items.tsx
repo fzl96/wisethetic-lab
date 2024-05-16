@@ -21,6 +21,16 @@ export async function CartItems() {
     <div className="grid gap-5 lg:grid-cols-3">
       <div className="rounded-xl bg-home-card-background p-5 lg:col-span-2">
         <div className="space-y-10">
+          {cart.items.length === 0 && (
+            <div>
+              {/* <Image
+                src="/empty-cart.svg"
+                alt="Empty Cart"
+                width={500}
+                height={500}
+              /> */}
+            </div>
+          )}
           {cart.items
             ?.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())
             .map((item, index) => (
@@ -74,8 +84,7 @@ export async function CartItems() {
         </div>
       </div>
       <div className="w-full ">
-        {/* @ts-expect-error: a */}
-        <CartSummary cart={cart} />
+        {cart?.items?.length !== 0 && <CartSummary cart={cart} />}
       </div>
     </div>
   );

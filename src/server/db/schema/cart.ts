@@ -30,6 +30,27 @@ export const cartIdSchema = cartBaseSchema.pick({ id: true });
 export type Cart = z.infer<typeof cartBaseSchema>;
 export type CartId = z.infer<typeof cartIdSchema>["id"];
 export type NewCartParams = z.infer<typeof insertCartParams>;
+export type CartExtended = {
+  id: string | undefined;
+  items: {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    package: {
+      id: string;
+      name: string;
+      image: string | null;
+      additionalContentPrice: number;
+      additionalContentQuantity: number;
+      categoryName: string;
+      product: {
+        id: string;
+        name: string;
+        price: number;
+      };
+    };
+  }[];
+};
 
 export const cartItems = pgTable("cart_item", {
   id: text("id")

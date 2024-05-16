@@ -8,34 +8,14 @@ import {
 } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { type CartExtended } from "@/server/db/schema/cart";
 
-type Cart = {
-  id: string | undefined;
-  items: {
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
-    package: {
-      id: string;
-      name: string;
-      image: string | null;
-      additionalContentPrice: number;
-      additionalContentQuantity: number;
-      product: {
-        id: string;
-        name: string;
-        price: number;
-      };
-    };
-  }[];
-};
-
-export function CartSummary({ cart }: { cart: Cart }) {
-  const contentsTotal = cart.items.reduce(
+export function CartSummary({ cart }: { cart: CartExtended }) {
+  const contentsTotal = cart.items?.reduce(
     (acc, item) => acc + item.package.product.price,
     0,
   );
-  const additionalTotal = cart.items.reduce(
+  const additionalTotal = cart.items?.reduce(
     (acc, item) =>
       acc +
       item.package.additionalContentPrice *
