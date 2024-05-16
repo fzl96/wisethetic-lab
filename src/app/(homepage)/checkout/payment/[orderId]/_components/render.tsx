@@ -31,7 +31,6 @@ export function RenderPayment({ order, token }: RenderPaymentProps) {
     script.async = true;
 
     document.body.appendChild(script);
-    // window.snap.pay(token);
 
     return () => {
       document.body.removeChild(script);
@@ -39,7 +38,7 @@ export function RenderPayment({ order, token }: RenderPaymentProps) {
   }, []);
 
   return (
-    <MaxWidthWrapper className="mt-20 space-y-5 px-10">
+    <MaxWidthWrapper className="mt-20 min-h-screen space-y-5 px-10">
       <h1 className="font-accent text-lg">Order Payment</h1>
       <div className="grid place-items-center rounded-xl bg-home-card-background p-8">
         <div className="flex gap-5">
