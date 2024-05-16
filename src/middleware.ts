@@ -8,6 +8,7 @@ import {
   apiAuthPrefix,
   apiUploadthingPrefix,
   apiTestPrefix,
+  apiPaymentNotificationPrefix,
   adminRoutes,
 } from "@/routes";
 
@@ -20,6 +21,9 @@ export default auth((req) => {
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isApiTestRoute = nextUrl.pathname.startsWith(apiTestPrefix);
+  const isPaymentNotificationRoute = nextUrl.pathname.startsWith(
+    apiPaymentNotificationPrefix,
+  );
   const isApiUploadthingRoute =
     nextUrl.pathname.startsWith(apiUploadthingPrefix);
   // const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
@@ -40,7 +44,12 @@ export default auth((req) => {
   }
   const isAdminRoute = adminRoutes.includes(nextUrl.pathname);
 
-  if (isApiAuthRoute || isApiUploadthingRoute || isApiTestRoute) {
+  if (
+    isApiAuthRoute ||
+    isApiUploadthingRoute ||
+    isApiTestRoute ||
+    isPaymentNotificationRoute
+  ) {
     return null;
   }
 

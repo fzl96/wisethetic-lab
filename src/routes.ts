@@ -33,7 +33,9 @@ export const apiAuthPrefix = "/api/auth";
 
 export const apiUploadthingPrefix = "/api/uploadthing";
 
-export const apiTestPrefix = "/api/test"
+export const apiTestPrefix = "/api/test";
+
+export const apiPaymentNotificationPrefix = "/api/payment-notification";
 /**
  * The default redirect path after logging in
  * @type {string}
