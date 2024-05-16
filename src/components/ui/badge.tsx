@@ -19,6 +19,8 @@ const badgeVariants = cva(
         cancelled: "text-[#FF453A] border-none",
         process: "text-[#ce9651] border-none",
         completed: "text-[#6fc276] border-none",
+        accent:
+          "border-transparent bg-[#ce9651] text-primary-foreground shadow hover:bg-[#ce9651]/80",
       },
     },
     defaultVariants: {
