@@ -6,7 +6,7 @@ import { MidtransClient } from "midtrans-node-client";
 export const getUserOrders = async () => {
   const user = await currentUser();
   if (!user) {
-    return { error: "Unauthorized" };
+    throw new Error("Unauthorized");
   }
 
   const orders = await db.query.orders.findMany({
@@ -22,7 +22,7 @@ export const getUserOrders = async () => {
     },
   });
 
-  return { orders };
+  return orders;
 };
 
 export const getOrderById = async (id: OrderId) => {
