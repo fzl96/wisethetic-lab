@@ -16,7 +16,6 @@ export async function POST(req: NextRequest) {
   } = await req.json();
 
   if (!order_id || typeof order_id !== "string") {
-    console.log("order id problem");
     return NextResponse.json({ status: "error", message: "Invalid order_id" });
   }
 
@@ -27,8 +26,7 @@ export async function POST(req: NextRequest) {
     )
     .digest("hex");
 
-  if (!hash !== signature_key) {
-    console.log("signature problem");
+  if (hash !== signature_key) {
     return NextResponse.json({
       status: "error",
       message: "Invalid signature",
