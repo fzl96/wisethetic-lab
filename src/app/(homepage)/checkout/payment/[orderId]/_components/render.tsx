@@ -41,7 +41,7 @@ export function RenderPayment({ order, token }: RenderPaymentProps) {
     <MaxWidthWrapper className="mt-20 min-h-screen space-y-5 px-10">
       <h1 className="font-accent text-lg">Order Payment</h1>
       <div className="grid place-items-center rounded-xl bg-home-card-background p-8">
-        <div className="flex gap-5">
+        <div className="flex flex-col gap-5 md:flex-row">
           <div className="flex flex-col items-center">
             <span className="text-sm text-muted-foreground">ORDER ID:</span>
             <span className="uppercase">{order.id}</span>
