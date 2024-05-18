@@ -7,6 +7,8 @@ import {
   type NewOrderParams,
   type OrderId,
   insertOrderParams,
+  UpdateOrderParams,
+  updateOrderParams,
 } from "@/server/db/schema/orders";
 import { type CartExtended } from "@/server/db/schema/cart";
 import { cartItems } from "@/server/db/schema/cart";
@@ -69,5 +71,37 @@ export const createOrder = async (
     return order;
   } catch (error) {
     return { error: "Error creating order" };
+  }
+};
+
+export const updateOrder = async (
+  orderId: OrderId,
+  order: UpdateOrderParams,
+) => {
+  const user = await currentUser();
+  if (user?.role !== "ADMIN") {
+    return { error: "Unauthorized" };
+  }
+
+  const updateOrder = updateOrderParams.safeParse(order);
+
+  if (!updateOrder.success) {
+    return { error: "Invalid order data" };
+  }
+
+  try {
+    const updatedOrder = await db
+      .update(orders)
+      .set({ ...updateOrder.data, updatedAt: new Date() })
+      .where(eq(orders.id, orderId))
+      .returning();
+
+    if (!updatedOrder) {
+      return { error: "Error updating order" };
+    }
+
+    return updatedOrder;
+  } catch (error) {
+    return { error: "Error updating order" };
   }
 };

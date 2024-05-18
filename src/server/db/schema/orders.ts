@@ -67,10 +67,27 @@ export const insertOrderParams = insertOrderSchema
     status: true,
     contentResult: true,
   });
+export const updateOrderParams = insertOrderSchema
+  .extend({
+    contentResult: z.string().optional(),
+    notes: z.string().optional(),
+  })
+  .omit({
+    id: true,
+    userId: true,
+    total: true,
+    location: true,
+    meetingDate: true,
+    phone: true,
+    brandName: true,
+    contactName: true,
+    returnAddress: true,
+  });
 export const orderIdSchema = orderBaseSchema.pick({ id: true });
 export type Order = typeof orders.$inferSelect;
 export type OrderId = z.infer<typeof orderIdSchema>["id"];
 export type NewOrderParams = z.infer<typeof insertOrderParams>;
+export type UpdateOrderParams = z.infer<typeof updateOrderParams>;
 
 export const paymentStatusEnum = pgEnum("payment_status", [
   "pending",

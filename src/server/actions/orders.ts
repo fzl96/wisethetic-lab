@@ -1,10 +1,13 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createOrder } from "@/server/api/orders/mutations";
+import { createOrder, updateOrder } from "@/server/api/orders/mutations";
 import {
   insertOrderParams,
+  updateOrderParams,
   type NewOrderParams,
+  type UpdateOrderParams,
+  type OrderId,
 } from "@/server/db/schema/orders";
 import { type CartExtended } from "../db/schema/cart";
 
@@ -34,6 +37,23 @@ export const createOrderAction = async (
     // if (res.error) throw new Error(res.error);
     revalidateOrder();
     return res;
+  } catch (e) {
+    return handleErrors(e);
+  }
+};
+
+export const updateOrderAction = async (
+  orderId: OrderId,
+  input: UpdateOrderParams,
+) => {
+  try {
+    const payload = updateOrderParams.parse(input);
+    await updateOrder(orderId, payload);
+
+    // if (res.error) throw new Error(res.error);
+    // revalidateOrder();
+    revalidatePath("/dashboard/orders");
+    return { message: "Order updated" };
   } catch (e) {
     return handleErrors(e);
   }
