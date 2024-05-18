@@ -1,7 +1,8 @@
 import { db } from "@/server/db";
 import { currentUser } from "@/lib/auth";
-import { OrderId, payments } from "@/server/db/schema/orders";
+import { OrderId, payments, orders } from "@/server/db/schema/orders";
 import { MidtransClient } from "midtrans-node-client";
+import { sum, count, sql } from "drizzle-orm";
 
 export const getUserOrders = async () => {
   const user = await currentUser();
@@ -43,6 +44,24 @@ export const getOrderByIdWithItems = async (id: OrderId) => {
   if (order?.userId !== user.id && user.role !== "ADMIN") {
     throw new Error("Unauthorized");
   }
+
+  return order;
+};
+
+export const getOrderByIdWithItemsAndUser = async (id: OrderId) => {
+  const user = await currentUser();
+  if (user?.role !== "ADMIN") {
+    throw new Error("Unauthorized");
+  }
+
+  const order = await db.query.orders.findFirst({
+    where: (orders, { eq }) => eq(orders.id, id),
+    with: {
+      orderItems: true,
+      payment: true,
+      user: true,
+    },
+  });
 
   return order;
 };
@@ -102,4 +121,89 @@ export const getPaymentToken = async (order: {
   });
 
   return token;
+};
+
+export const getOrders = async ({ status }: { status: string[] }) => {
+  const user = await currentUser();
+  if (!user || user.role !== "ADMIN") {
+    throw new Error("Unauthorized");
+  }
+
+  try {
+    if (status.length !== 0) {
+      const orders = await db.query.orders.findMany({
+        columns: {
+          id: true,
+          total: true,
+          status: true,
+          createdAt: true,
+        },
+        with: {
+          payment: true,
+          user: {
+            columns: {
+              id: true,
+              email: true,
+              name: true,
+            },
+          },
+        },
+        where: (orders, { inArray }) =>
+          inArray(
+            orders.status,
+            status as ("pending" | "process" | "completed" | "cancelled")[],
+          ),
+        orderBy: (orders, { desc }) => desc(orders.createdAt),
+      });
+
+      return orders;
+    }
+
+    const orders = await db.query.orders.findMany({
+      columns: {
+        id: true,
+        total: true,
+        status: true,
+        createdAt: true,
+      },
+      with: {
+        payment: true,
+        user: {
+          columns: {
+            id: true,
+            email: true,
+            name: true,
+          },
+        },
+      },
+      orderBy: (orders, { desc }) => desc(orders.createdAt),
+    });
+
+    return orders;
+  } catch (err) {
+    return [];
+  }
+};
+
+export const getOrdersSummary = async () => {
+  const user = await currentUser();
+
+  if (user?.role !== "ADMIN") {
+    throw new Error("unauthorized");
+  }
+
+  const [ordersCount] = await db
+    .select({
+      total: count(),
+      sum: sum(
+        sql`CASE WHEN ${orders.status} = 'completed' THEN ${orders.total} END`,
+      ),
+      process: count(sql`CASE WHEN ${orders.status} = 'process' THEN 1 END`),
+      completed: count(
+        sql`CASE WHEN ${orders.status} = 'completed' THEN 1 END`,
+      ),
+    })
+    .from(orders);
+
+  return ordersCount;
 };
