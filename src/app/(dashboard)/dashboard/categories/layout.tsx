@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { CategoriesTable } from "./_components/table";
 import { CreateCategory } from "./_components/actions";
+import { TableLoader } from "./_components/loader";
 
 export default function CategoryLayout({
   children,
@@ -15,7 +16,7 @@ export default function CategoryLayout({
             <CreateCategory />
           </div>
         </div>
-        <Suspense fallback={<p>Loading...</p>}>
+        <Suspense fallback={<TableLoader />}>
           <CategoriesTable />
         </Suspense>
       </div>
