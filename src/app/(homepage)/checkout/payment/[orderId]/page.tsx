@@ -1,5 +1,6 @@
 import { getOrderById, getPaymentToken } from "@/server/api/orders/queries";
 import { RenderPayment } from "./_components/render";
+import { redirect } from "next/navigation";
 
 export default async function OrderPaymentPage({
   params,
@@ -13,12 +14,11 @@ export default async function OrderPaymentPage({
     return <div>Order not found</div>;
   }
 
-  if (order.payment?.status === "completed") {
-    return <div>Payment has been completed</div>;
-  }
-
-  if (order.payment?.status === "cancelled") {
-    return <div>Payment has been cancelled</div>;
+  if (
+    order.payment?.status === "cancelled" ||
+    order.payment?.status === "completed"
+  ) {
+    redirect(`/account/orders/${orderId}`);
   }
 
   const token = await getPaymentToken(order);
