@@ -84,7 +84,15 @@ export default async function OrderIdPage({
           </div>
           <div className="flex flex-col gap-5">
             <h3 className="font-accent text-2xl">Return Address</h3>
-            <span className="text-sm">{order.returnAddress}</span>
+            <span className="text-sm">
+              {!!order.returnAddress ? (
+                order.returnAddress
+              ) : (
+                <span className="text-muted-foreground">
+                  No return address provided
+                </span>
+              )}
+            </span>
           </div>
           <div className="flex flex-col gap-5">
             <h3 className="font-accent text-2xl">Payment Info</h3>
@@ -114,6 +122,29 @@ export default async function OrderIdPage({
             )}
             {order.payment?.status === "cancelled" && (
               <span className="text-sm">Payment was cancelled</span>
+            )}
+          </div>
+          <div className="flex flex-col gap-5">
+            <h3 className="font-accent text-2xl">Content Result</h3>
+            {!order.contentResult ? (
+              <>
+                {order.payment?.status === "completed" && (
+                  <span>In progress</span>
+                )}
+                {order.payment?.status === "pending" && (
+                  <span>Payment is pending</span>
+                )}
+                {order.payment?.status === "cancelled" && (
+                  <span>Payment was cancelled</span>
+                )}
+              </>
+            ) : (
+              <a
+                href={order.contentResult}
+                className="text-sm text-[#ce9651] hover:underline"
+              >
+                {order.contentResult}
+              </a>
             )}
           </div>
         </div>
