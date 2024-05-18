@@ -114,17 +114,19 @@ export async function Header() {
           <DropdownMenuItem>Settings</DropdownMenuItem>
           <DropdownMenuItem>Support</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <form
-              action={async () => {
-                "use server";
+          <form
+            action={async () => {
+              "use server";
 
-                await signOut();
-              }}
-            >
-              <button type="submit">Sign out</button>
-            </form>
-          </DropdownMenuItem>
+              await signOut();
+            }}
+          >
+            <DropdownMenuItem asChild>
+              <button type="submit" className="w-full cursor-pointer">
+                Sign out
+              </button>
+            </DropdownMenuItem>
+          </form>
         </DropdownMenuContent>
       </DropdownMenu>
     </header>
