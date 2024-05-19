@@ -10,6 +10,7 @@ import type { AdapterAccount } from "next-auth/adapters";
 import { relations } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
 import { orders } from "./orders";
+import { z } from "zod";
 
 export const roleEnum = pgEnum("role", ["USER", "ADMIN"]);
 
@@ -24,6 +25,11 @@ export const users = pgTable("user", {
   password: text("password"),
   role: roleEnum("role").default("USER").notNull(),
 });
+
+export const updateUserNameParams = z.object({
+  name: z.string().min(3).max(50),
+});
+export type UpdateUserNameParams = z.infer<typeof updateUserNameParams>;
 
 export const userRelations = relations(users, ({ many }) => ({
   orders: many(orders),
