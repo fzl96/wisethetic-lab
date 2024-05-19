@@ -23,37 +23,47 @@ export async function OrdersTable() {
   });
 
   return (
-    <div className="rounded-xl bg-home-card-background p-10">
+    <div className="rounded-xl bg-home-card-background p-5 md:p-10">
       <Table>
         <TableCaption>A list of your recent orders.</TableCaption>
         <TableHeader>
           <TableRow className="border-[#1c1c1c]">
-            <TableHead>Order</TableHead>
+            <TableHead className="hidden md:table-cell">Order</TableHead>
             <TableHead>Date</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Total</TableHead>
-            <TableHead className="sr-only">Action</TableHead>
+            <TableHead className="sr-only hidden md:table-cell">
+              Action
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {orders.map((order) => (
             <TableRow key={order.id} className="border-[#1c1c1c]">
-              <TableCell className="py-5 font-accent text-sm uppercase text-muted-foreground">
+              <TableCell className="hidden py-5 font-accent text-sm uppercase text-muted-foreground md:table-cell">
                 {order.id}
               </TableCell>
               <TableCell>
-                {format(new Date(order.createdAt), "MMM dd, yyyy")}
+                <Link href={`/account/orders/${order.id}`}>
+                  {format(new Date(order.createdAt), "MMM dd, yyyy")}
+                </Link>
               </TableCell>
               <TableCell>
                 <Badge
                   variant={order.status}
                   className="p-0 text-sm capitalize"
                 >
-                  {order.status}
+                  <Link href={`/account/orders/${order.id}`}>
+                    {order.status}
+                  </Link>
                 </Badge>
               </TableCell>
-              <TableCell>{currencyFormatter.format(order.total)}</TableCell>
               <TableCell>
+                <Link href={`/account/orders/${order.id}`}>
+                  {currencyFormatter.format(order.total)}
+                </Link>
+              </TableCell>
+              <TableCell className="hidden md:table-cell">
                 <Link
                   href={`/account/orders/${order.id}`}
                   className={buttonVariants({

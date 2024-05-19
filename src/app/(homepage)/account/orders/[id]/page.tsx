@@ -17,7 +17,7 @@ export default async function OrderIdPage({
   });
 
   return (
-    <div className="rounded-xl bg-home-card-background p-10">
+    <div className="rounded-xl bg-home-card-background p-5 md:p-10">
       {order && (
         <div className="space-y-10">
           <div className="space-y-5">
@@ -84,7 +84,7 @@ export default async function OrderIdPage({
           </div>
           <div className="flex flex-col gap-5">
             <h3 className="font-accent text-2xl">Return Address</h3>
-            <span className="text-sm">
+            <span className="break-all text-sm">
               {!!order.returnAddress ? (
                 order.returnAddress
               ) : (
@@ -96,18 +96,28 @@ export default async function OrderIdPage({
           </div>
           <div className="flex flex-col gap-5">
             <h3 className="font-accent text-2xl">Payment Info</h3>
-            <div>
+            <div className="text-muted-foreground">
               <span className="text-sm">Payment Status:</span>{" "}
-              <span className="text-sm capitalize">
+              <span className="text-sm capitalize text-home-foreground">
                 {order.payment?.status === "pending"
                   ? "Unpaid"
-                  : order.payment?.status}
+                  : order.payment?.status === "completed"
+                    ? "Paid"
+                    : "Cancelled"}
               </span>
             </div>
+            {order.payment?.method && (
+              <div className="text-muted-foreground">
+                <span className="text-sm">Payment Method:</span>{" "}
+                <span className="text-sm capitalize text-home-foreground">
+                  {order.payment.method.replace(/_/g, " ")}
+                </span>
+              </div>
+            )}
             {order.payment?.status === "completed" && (
               <a
                 href={`https://app.sandbox.midtrans.com/snap/v4/redirection/${order.payment?.snapToken}`}
-                className="text-sm text-[#ce9651] hover:underline"
+                className="text-wrap break-all text-sm text-[#ce9651] hover:underline"
               >
                 {`https://app.sandbox.midtrans.com/snap/v4/redirection/${order.payment?.snapToken}`}
               </a>
@@ -120,33 +130,26 @@ export default async function OrderIdPage({
                 Click here to pay
               </Link>
             )}
-            {order.payment?.status === "cancelled" && (
-              <span className="text-sm">Payment was cancelled</span>
-            )}
           </div>
-          <div className="flex flex-col gap-5">
-            <h3 className="font-accent text-2xl">Content Result</h3>
-            {!order.contentResult ? (
-              <>
-                {order.payment?.status === "completed" && (
-                  <span>In progress</span>
-                )}
-                {order.payment?.status === "pending" && (
-                  <span>Payment is pending</span>
-                )}
-                {order.payment?.status === "cancelled" && (
-                  <span>Payment was cancelled</span>
-                )}
-              </>
-            ) : (
-              <a
-                href={order.contentResult}
-                className="text-sm text-[#ce9651] hover:underline"
-              >
-                {order.contentResult}
-              </a>
-            )}
-          </div>
+          {order.payment?.status === "completed" ? (
+            <div className="flex flex-col gap-5">
+              <h3 className="font-accent text-2xl">Content Result</h3>
+              {!order.contentResult ? (
+                <span className="text-sm text-muted-foreground">
+                  In progress
+                </span>
+              ) : (
+                <a
+                  href={order.contentResult}
+                  className="text-wrap break-all text-sm text-[#ce9651] hover:underline"
+                >
+                  {order.contentResult}
+                </a>
+              )}
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       )}
     </div>
