@@ -4,6 +4,13 @@ import { categories, type CategoryId } from "@/server/db/schema/product";
 import { type SearchParams } from "@/lib/validations";
 import { count, ilike } from "drizzle-orm";
 
+export const getCategoriesForHome = async () => {
+  return await db.query.categories.findMany({
+    orderBy: (categories, { desc }) => desc(categories.updatedAt),
+    limit: 3,
+  });
+};
+
 export const getCategories = async ({ query = "", page = 1 }: SearchParams) => {
   // const user = await currentUser();
   // if (!user || user?.role !== "ADMIN") {

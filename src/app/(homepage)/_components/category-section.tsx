@@ -1,11 +1,11 @@
 import Link from "next/link";
 
-import { getCategories } from "@/server/api/categories/queries";
+import { getCategoriesForHome } from "@/server/api/categories/queries";
 import { CategoryCard } from "./category-card";
 import { convertToSlug } from "@/lib/utils";
 
 export async function CategorySection() {
-  const categories = await getCategories({});
+  const categories = await getCategoriesForHome();
 
   return (
     <div className="mt-40 grid w-full gap-5 lg:grid-cols-3 lg:gap-8">
