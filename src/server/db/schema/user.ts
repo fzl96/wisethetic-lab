@@ -29,7 +29,13 @@ export const users = pgTable("user", {
 export const updateUserNameParams = z.object({
   name: z.string().min(3).max(50),
 });
+export const updatePasswordParams = z.object({
+  currentPassword: z.string(),
+  newPassword: z.string().min(6).max(255),
+  confirmPassword: z.string().min(6).max(255),
+});
 export type UpdateUserNameParams = z.infer<typeof updateUserNameParams>;
+export type UpdatePasswordParams = z.infer<typeof updatePasswordParams>;
 
 export const userRelations = relations(users, ({ many }) => ({
   orders: many(orders),
