@@ -1,6 +1,6 @@
 import { db } from "@/server/db";
-import { carts, users } from "../schema";
-import { eq } from "drizzle-orm";
+import { cartItems, carts, users } from "../schema";
+import { count, eq } from "drizzle-orm";
 
 export async function getUserByEmail(email: string) {
   return db.query.users.findFirst({
@@ -24,7 +24,19 @@ export async function getUserById(id: string) {
     .from(users)
     .where(eq(users.id, id))
     .innerJoin(carts, eq(users.id, carts.userId));
+
+  if (!user) return undefined;
+
+  const [numberOfItemsInCart] = await db
+    .select({
+      count: count(),
+    })
+    .from(cartItems)
+    .where(eq(cartItems.cartId, user.cartId));
   // .innerJoin(carts, eq(users.id, carts.userId));
 
-  return user;
+  return {
+    ...user,
+    cartItemsCount: numberOfItemsInCart?.count ?? 0,
+  };
 }

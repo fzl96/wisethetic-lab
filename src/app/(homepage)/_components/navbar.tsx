@@ -117,8 +117,11 @@ export function Navbar() {
             </DropdownMenu>
           )}
           <span>|</span>
-          <Link href="/cart">
+          <Link href="/cart" className="relative">
             <ShoppingCart className="h-5 w-5" />
+            <div className="absolute -right-2.5 -top-2 grid h-5 w-5 place-items-center rounded-full  bg-[#ce9651] text-xs font-semibold">
+              {user?.cartItemsCount ?? 0}
+            </div>
           </Link>
         </nav>
       </motion.div>

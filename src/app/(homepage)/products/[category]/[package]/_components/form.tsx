@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useState, useMemo } from "react";
 import { PackageWithProducts } from "@/server/db/schema/product";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,8 @@ import { toast } from "sonner";
 import { useCurrentUser } from "@/hooks/use-current-user";
 
 export function CartForm({ pkg }: { pkg: PackageWithProducts }) {
+  const { update } = useSession();
+
   const user = useCurrentUser();
   const { mutate: addToCart, isPending } = useMutation({
     mutationKey: ["cart"],
@@ -22,7 +25,8 @@ export function CartForm({ pkg }: { pkg: PackageWithProducts }) {
     onError: () => {
       toast.error("Failed to add to cart");
     },
-    onSuccess: () => {
+    onSuccess: async () => {
+      await update();
       toast.success("Added to cart");
     },
   });
@@ -39,7 +43,7 @@ export function CartForm({ pkg }: { pkg: PackageWithProducts }) {
       ? 0
       : additionalContent;
     return productPrice + additionalContentAmount * pkg.additionalContentPrice;
-  }, [selectedProduct, additionalContent]);
+  }, [selectedProduct, additionalContent, pkg.additionalContentPrice]);
 
   return (
     <div>

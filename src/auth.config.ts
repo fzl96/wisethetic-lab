@@ -76,6 +76,15 @@ export default {
         session.user.cartId = token.cartId as string;
       }
 
+      if (token.cartItemsCount && session.user) {
+        session.user.cartItemsCount = token.cartItemsCount as number;
+      }
+
+      if (session.user) {
+        session.user.name = token.name;
+        session.user.email = token.email ?? "";
+      }
+
       return session;
     },
     async jwt({ token }) {
@@ -85,8 +94,11 @@ export default {
 
       if (!existingUser) return token;
 
+      token.name = existingUser.name;
+      token.email = existingUser.email;
       token.role = existingUser.role;
       token.cartId = existingUser.cartId;
+      token.cartItemsCount = existingUser.cartItemsCount;
 
       return token;
     },
