@@ -33,6 +33,7 @@ export async function addToCart(input: NewCartItemParams) {
     const res = await _addToCart(payload);
     if (res.error) throw new Error(res.error);
     revalidateCart();
+    return { success: "Added to cart" };
   } catch (e) {
     return handleErrors(e);
   }

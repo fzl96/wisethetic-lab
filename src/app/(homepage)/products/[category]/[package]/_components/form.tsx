@@ -15,12 +15,16 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 
 export function CartForm({ pkg }: { pkg: PackageWithProducts }) {
   const { update } = useSession();
-
   const user = useCurrentUser();
+
   const { mutate: addToCart, isPending } = useMutation({
     mutationKey: ["cart"],
     mutationFn: async (args: NewCartItemParams) => {
-      await _addToCart(args);
+      const res = await _addToCart(args);
+
+      if (res?.error) {
+        throw new Error(res?.error);
+      }
     },
     onError: () => {
       toast.error("Failed to add to cart");
@@ -64,6 +68,7 @@ export function CartForm({ pkg }: { pkg: PackageWithProducts }) {
                   {
                     "border-primary": active || checked,
                   },
+                  selectedProduct === product && "border-primary",
                 )
               }
             >
@@ -105,11 +110,21 @@ export function CartForm({ pkg }: { pkg: PackageWithProducts }) {
         <Button
           size="lg"
           className="w-full"
-          disabled={isPending}
+          disabled={isPending || !selectedProduct || !user}
           onClick={() => {
+            if (!user?.cartId) {
+              toast.error("Please sign in to add to cart");
+              return;
+            }
+
+            if (!selectedProduct) {
+              toast.error("Please select a product");
+              return;
+            }
+
             addToCart({
-              cartId: user?.cartId ?? "",
-              productId: selectedProduct?.id ?? "",
+              cartId: user.cartId,
+              productId: selectedProduct.id,
               packageId: pkg.id,
               additionalContentQuantity: additionalContent,
             });
@@ -123,6 +138,11 @@ export function CartForm({ pkg }: { pkg: PackageWithProducts }) {
           Add to Cart
         </Button>
       </div>
+      {!user && (
+        <div className="mt-5 text-center text-sm">
+          Please sign in to add to cart
+        </div>
+      )}
     </div>
   );
 }
