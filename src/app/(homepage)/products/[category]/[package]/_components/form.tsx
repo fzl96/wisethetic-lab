@@ -22,8 +22,8 @@ export function CartForm({ pkg }: { pkg: PackageWithProducts }) {
     mutationFn: async (args: NewCartItemParams) => {
       const res = await _addToCart(args);
 
-      if (res?.error) {
-        throw new Error(res?.error);
+      if ("error" in res) {
+        throw new Error(res.error);
       }
     },
     onError: () => {
