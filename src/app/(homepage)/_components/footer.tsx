@@ -10,9 +10,9 @@ const links: { href: string; title: string }[] = [
 export function Footer() {
   return (
     <footer className="bottom-0 mt-40 grid w-full gap-20 bg-home-footer px-10 pb-4 pt-10">
-      <div className="flex flex-col items-start md:flex-row md:gap-40">
-        <div>
-          <span className="font-accent text-lg">Wisethetic Lab</span>
+      <div className="grid grid-cols-2 items-start gap-5 md:grid-cols-5 md:gap-40">
+        <div className="col-span-2 md:col-span-1">
+          <span className="font-accent text-lg">{siteConfig.name}</span>
         </div>
         <ul className="space-y-2 text-sm text-muted-foreground">
           <li className="text-base text-primary">Contact Us</li>
