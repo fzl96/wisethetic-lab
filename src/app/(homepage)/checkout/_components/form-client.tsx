@@ -36,6 +36,8 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { createOrderAction } from "@/server/actions/orders";
 import { Icons } from "@/components/icons";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { useSession } from "next-auth/react";
 
 const locationOptions = [
   {
@@ -51,7 +53,7 @@ const locationOptions = [
     name: "Cafe B",
   },
   {
-    value: "cafe C",
+    value: "cafe c",
     name: "Cafe C",
   },
 ];
@@ -61,11 +63,30 @@ interface CheckoutFormClientProps {
 }
 
 export function CheckoutFormClient({ cart }: CheckoutFormClientProps) {
+  const { update } = useSession();
+  const user = useCurrentUser();
+  const brandName = localStorage.getItem("brandName");
+  const phone = localStorage.getItem("phone");
+  const location = localStorage.getItem("location") as
+    | "online"
+    | "cafe a"
+    | "cafe b"
+    | "cafe c";
+  const returnAddress = localStorage.getItem("returnAddress");
+
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<NewOrderParams>({
     resolver: zodResolver(insertOrderParams),
+    defaultValues: {
+      contactName: user?.name ?? "",
+      brandName: brandName ?? "",
+      phone: phone ?? "",
+      location: location ?? null,
+      meetingDate: undefined,
+      returnAddress: returnAddress ?? "",
+    },
   });
 
   const total = useMemo(() => {
@@ -93,8 +114,14 @@ export function CheckoutFormClient({ cart }: CheckoutFormClientProps) {
   const onSubmit = async (values: NewOrderParams) => {
     startTransition(async () => {
       const res = await createOrderAction(values, cart);
+      localStorage.setItem("brandName", values.brandName);
+      localStorage.setItem("phone", values.phone);
+      localStorage.setItem("location", values.location ?? "");
+      localStorage.setItem("returnAddress", values.returnAddress ?? "");
+
       // @ts-expect-error res is either { error: string } or { order }
       router.push(`/checkout/payment/${res.id}`);
+      await update();
     });
   };
 
