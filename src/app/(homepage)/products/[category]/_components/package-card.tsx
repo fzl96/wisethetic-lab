@@ -3,7 +3,7 @@ import { type PackageWithCategory } from "@/server/db/schema/product";
 
 export async function PackageCard({ pkg }: { pkg: PackageWithCategory }) {
   return (
-    <div className="rounded-xl border border-home-border bg-home-card-background p-3 shadow-sm transition-all duration-200 hover:bg-home-card-background-hover">
+    <div className="h-full rounded-xl border border-home-border bg-home-card-background p-3 shadow-sm transition-all duration-200 hover:bg-home-card-background-hover">
       <div className="h-96 overflow-hidden rounded-lg lg:h-[35rem]">
         <Image
           src={pkg.image ?? "/placeholder.jpg"}

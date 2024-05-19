@@ -6,6 +6,8 @@ import { ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { CategorySection } from "./_components/category-section";
+import { Suspense } from "react";
+import { CategoryCardsLoader } from "./products/_components/loader";
 
 export default function HomePage() {
   return (
@@ -37,7 +39,15 @@ export default function HomePage() {
         </span>
       </Link>
 
-      <CategorySection />
+      <Suspense
+        fallback={
+          <div className="mt-40 w-full">
+            <CategoryCardsLoader />
+          </div>
+        }
+      >
+        <CategorySection />
+      </Suspense>
     </MaxWidthWrapper>
   );
 }

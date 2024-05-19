@@ -12,8 +12,7 @@ export default async function ProductCategoryPage({
   const categoryName = reverseSlug(params.category);
 
   return (
-    // <MaxWidthWrapper className="mt-28 flex flex-col items-center justify-center px-5 pb-12  text-center sm:mt-32">
-    <MaxWidthWrapper className="mt-28 flex flex-col items-center justify-center">
+    <MaxWidthWrapper className="mt-28 flex flex-col items-center justify-center px-5">
       <h1 className="font-accent text-2xl">{categoryName}</h1>
       <div className="mt-20 w-full">
         <Suspense fallback={<PackageCardsLoader />}>
