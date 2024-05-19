@@ -23,6 +23,7 @@ import { FormSuccess } from "./form-success";
 
 import { signIn } from "@/server/actions/sign-in";
 import { Social } from "./social";
+import { siteConfig } from "@/config/site";
 
 export function SignInForm() {
   const [error, setError] = useState("");
@@ -51,7 +52,7 @@ export function SignInForm() {
   return (
     <>
       <div className="grid gap-2 text-center">
-        <h1 className="text-3xl font-medium">Wisethetic Lab</h1>
+        <h1 className="text-3xl font-medium">{siteConfig.name}</h1>
         <p className="text-balance text-muted-foreground">
           Enter your email below to sign in to your account
         </p>
@@ -70,6 +71,7 @@ export function SignInForm() {
                       id="email"
                       type="email"
                       placeholder="@example.com"
+                      autoComplete="email"
                       disabled={isPending}
                       {...field}
                     />
@@ -89,6 +91,7 @@ export function SignInForm() {
                       id="password"
                       type="password"
                       placeholder="******"
+                      autoComplete="current-password"
                       disabled={isPending}
                       {...field}
                     />
