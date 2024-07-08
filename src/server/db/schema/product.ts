@@ -20,9 +20,13 @@ export const categories = pgTable("category", {
 const baseSchema = createSelectSchema(categories).omit(timestamps);
 export const insertCategorySchema =
   createInsertSchema(categories).omit(timestamps);
-export const insertCategoryParams = baseSchema.extend({}).omit({
-  id: true,
-});
+export const insertCategoryParams = insertCategorySchema
+  .extend({
+    name: z.string().min(3, { message: "Name must be at least 3 characters" }),
+  })
+  .omit({
+    id: true,
+  });
 export const updateCategorySchema = baseSchema;
 export const updateCategoryParams = baseSchema.extend({});
 export const categoryIdSchema = baseSchema.pick({ id: true });
@@ -65,6 +69,7 @@ export const insertPackageSchema =
   createInsertSchema(packages).omit(timestamps);
 export const insertPackageParams = packageBaseSchema
   .extend({
+    name: z.string().min(3, { message: "Name must be at least 3 characters" }),
     additionalContentPrice: z.coerce.number(),
   })
   .omit({
@@ -142,6 +147,7 @@ export const insertProductSchema =
   createInsertSchema(products).omit(timestamps);
 export const insertProductParams = productBaseSchema
   .extend({
+    name: z.string().min(3, { message: "Name must be at least 3 characters" }),
     price: z.coerce.number(),
   })
   .omit({

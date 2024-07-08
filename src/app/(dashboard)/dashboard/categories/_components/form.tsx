@@ -107,6 +107,7 @@ export function CategoryForm({
           id: category.id,
           ...values,
           image: imgUrl ?? category.image,
+          description: values.description ?? "",
         });
       }
 
