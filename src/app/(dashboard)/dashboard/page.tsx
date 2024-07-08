@@ -1,7 +1,39 @@
-export default async function Dashboard() {
+import { Suspense } from "react";
+import { OrdersTable } from "./orders/_components/table";
+import { OrderCard } from "./orders/_components/order-card";
+import SummaryCards from "./orders/_components/order-summary-cards";
+import {
+  OrderCardLoader,
+  OrderSummaryCardsLoader,
+  OrdersTableLoader,
+} from "./orders/_components/loader";
+
+export default function Dashboard({
+  searchParams,
+}: {
+  searchParams?: {
+    order_id: string;
+    status: string;
+  };
+}) {
+  const orderId = searchParams?.order_id;
+  const status = searchParams?.status?.split(",") ?? [];
+
   return (
-    <div>
-      <h1>...</h1>
+    <div className="grid gap-4 md:gap-6 lg:grid-cols-3 xl:grid-cols-3">
+      <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
+        <Suspense fallback={<OrderSummaryCardsLoader />}>
+          <SummaryCards />
+        </Suspense>
+        <Suspense fallback={<OrdersTableLoader />}>
+          <OrdersTable status={status} />
+        </Suspense>
+      </div>
+      <div>
+        <Suspense fallback={<OrderCardLoader />}>
+          {orderId && <OrderCard orderId={orderId} />}
+        </Suspense>
+      </div>
     </div>
   );
 }

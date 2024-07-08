@@ -14,11 +14,6 @@ export const dashboardConfig: DashboardConfig = {
   sidebarNav: [
     { title: "Dashboard", href: "/dashboard", icon: "home" },
     {
-      title: "Orders",
-      href: "/dashboard/orders",
-      icon: "shoppingCart",
-    },
-    {
       title: "Categories",
       href: "/dashboard/categories",
       icon: "grid",
