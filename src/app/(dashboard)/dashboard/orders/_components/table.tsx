@@ -60,7 +60,7 @@ export async function OrdersTable({ status }: OrdersTableProps) {
                 <TableRow key={order.id} className="">
                   <TableCell>
                     <Link href={{ query: { order_id: order.id } }}>
-                      <div className="font-medium">{order.user.name}</div>
+                      <div className="font-medium">{order.contactName}</div>
                       <div className="hidden text-sm text-muted-foreground md:inline">
                         {order.user.email}
                       </div>

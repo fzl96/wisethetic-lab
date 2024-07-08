@@ -137,6 +137,8 @@ export const getOrders = async ({ status }: { status: string[] }) => {
           total: true,
           status: true,
           createdAt: true,
+          contactName: true,
+          brandName: true,
         },
         with: {
           payment: true,
@@ -165,6 +167,8 @@ export const getOrders = async ({ status }: { status: string[] }) => {
         total: true,
         status: true,
         createdAt: true,
+        contactName: true,
+        brandName: true,
       },
       with: {
         payment: true,
