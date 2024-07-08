@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -18,13 +19,16 @@ import { getOrders } from "@/server/api/orders/queries";
 import { format } from "date-fns";
 import Link from "next/link";
 import { TableFilter } from "./filter";
+import { TablePagination } from "./table-pagination";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface OrdersTableProps {
   status: string[];
+  page: number;
 }
 
-export async function OrdersTable({ status }: OrdersTableProps) {
-  const orders = await getOrders({ status: [...status] });
+export async function OrdersTable({ status, page }: OrdersTableProps) {
+  const orders = await getOrders({ status: [...status], page });
 
   const currencyFormatter = new Intl.NumberFormat("id-ID", {
     style: "currency",
@@ -97,6 +101,15 @@ export async function OrdersTable({ status }: OrdersTableProps) {
           </Table>
         </CardContent>
       </Card>
+      <Suspense
+        fallback={
+          <div className="grid place-items-center">
+            <Skeleton className="h-6 w-80 text-center" />
+          </div>
+        }
+      >
+        <TablePagination page={page} />
+      </Suspense>
     </div>
   );
 }

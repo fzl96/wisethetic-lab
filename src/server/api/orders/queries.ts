@@ -123,7 +123,28 @@ export const getPaymentToken = async (order: {
   return token;
 };
 
-export const getOrders = async ({ status }: { status: string[] }) => {
+export const getOrdersPage = async () => {
+  const user = await currentUser();
+  if (!user || user.role !== "ADMIN") {
+    throw new Error("Unauthorized");
+  }
+
+  const [countRes] = await db
+    .select({
+      count: sql`count(*)`.mapWith(Number).as("count"),
+    })
+    .from(orders);
+
+  return countRes?.count ? Math.ceil(countRes.count / 5) : 1;
+};
+
+export const getOrders = async ({
+  status,
+  page,
+}: {
+  status: string[];
+  page: number;
+}) => {
   const user = await currentUser();
   if (!user || user.role !== "ADMIN") {
     throw new Error("Unauthorized");
@@ -156,6 +177,8 @@ export const getOrders = async ({ status }: { status: string[] }) => {
             status as ("pending" | "process" | "completed" | "cancelled")[],
           ),
         orderBy: (orders, { desc }) => desc(orders.createdAt),
+        limit: 5,
+        offset: (page - 1) * 5,
       });
 
       return orders;
@@ -181,6 +204,8 @@ export const getOrders = async ({ status }: { status: string[] }) => {
         },
       },
       orderBy: (orders, { desc }) => desc(orders.createdAt),
+      limit: 5,
+      offset: (page - 1) * 5,
     });
 
     return orders;

@@ -7,6 +7,7 @@ import {
   OrderSummaryCardsLoader,
   OrdersTableLoader,
 } from "./orders/_components/loader";
+import { Pagination } from "@/components/ui/pagination";
 
 export default function Dashboard({
   searchParams,
@@ -14,10 +15,14 @@ export default function Dashboard({
   searchParams?: {
     order_id: string;
     status: string;
+    page: string;
   };
 }) {
   const orderId = searchParams?.order_id;
   const status = searchParams?.status?.split(",") ?? [];
+  const page = isNaN(Number(searchParams?.page))
+    ? 1
+    : Number(searchParams?.page);
 
   return (
     <div className="grid gap-4 md:gap-6 lg:grid-cols-3 xl:grid-cols-3">
@@ -26,7 +31,7 @@ export default function Dashboard({
           <SummaryCards />
         </Suspense>
         <Suspense fallback={<OrdersTableLoader />}>
-          <OrdersTable status={status} />
+          <OrdersTable status={status} page={page} />
         </Suspense>
       </div>
       <div>
