@@ -23,10 +23,5 @@ export const dashboardConfig: DashboardConfig = {
       href: "/dashboard/packages",
       icon: "package",
     },
-    {
-      title: "Customers",
-      href: "/dashboard/customers",
-      icon: "users",
-    },
   ],
 };
