@@ -21,7 +21,9 @@ export const columns: ColumnDef<Category>[] = [
       const description = row.original.description;
 
       return (
-        <div className="text-right">{description ?? "No description"}</div>
+        <div className="text-right">
+          {!description?.length ? "No description" : description}
+        </div>
       );
     },
   },
