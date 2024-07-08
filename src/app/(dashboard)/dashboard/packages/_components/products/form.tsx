@@ -81,7 +81,6 @@ export function ProductForm({
     startTransition(async () => {
       if (action === "create") {
         res = await createProductAction(values);
-        console.log(values);
       } else {
         if (!product?.id) return;
         res = await updateProductAction({

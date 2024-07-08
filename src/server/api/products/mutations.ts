@@ -25,7 +25,6 @@ export const createProduct = async (product: NewProductParams) => {
 
     return { success: "Product created successfully" };
   } catch (error) {
-    console.log(error);
     const message = (error as Error).message ?? "Product creation failed";
     if (message.includes("duplicate key value")) {
       return { error: "Product already exists" };

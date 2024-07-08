@@ -33,8 +33,6 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  console.log("status: ", transaction_status);
-
   if (transaction_status === "capture") {
     if (fraud_status === "accept") {
       await db
@@ -47,7 +45,6 @@ export async function POST(req: NextRequest) {
         .where(eq(orders.id, order_id));
     }
   } else if (transaction_status === "settlement") {
-    console.log("settled");
     await db
       .update(payments)
       .set({ status: "completed", method: payment_type })
@@ -72,7 +69,6 @@ export async function POST(req: NextRequest) {
   } else if (transaction_status === "pending") {
     // TODO set transaction status on your database to 'pending' / waiting payment
     // and response with 200 OK
-    console.log("pending");
   }
 
   return NextResponse.json({

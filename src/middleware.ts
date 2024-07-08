@@ -29,7 +29,6 @@ export default auth((req) => {
   // const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
   let isPublicRoute;
-  console.log(`pathname: ${nextUrl.pathname}`);
   if (nextUrl.pathname === "/") {
     isPublicRoute = true;
   } else if (
