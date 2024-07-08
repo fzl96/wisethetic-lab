@@ -1,6 +1,6 @@
 import { currentUser } from "@/lib/auth";
 import { db } from "@/server/db";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import {
   cartItems,
   type NewCartItemParams,
@@ -10,23 +10,32 @@ import {
 
 export const addToCart = async (cartItem: NewCartItemParams) => {
   const user = await currentUser();
-  if (!user) {
-    return { error: "Unauthorized" };
+  if (!user || !user.id) {
+    throw new Error("Unauthorized");
   }
 
   const newCartItem = insertCartItemSchema.safeParse(cartItem);
 
   if (!newCartItem.success) {
-    return { error: "Invalid cart item data" };
+    throw new Error("Invalid cart item data");
   }
 
   try {
-    const existingCartItem = await db.query.cartItems.findFirst({
-      where: (cartItems, { eq }) =>
-        eq(cartItems.packageId, newCartItem.data.packageId),
+    const existingCart = await db.query.carts.findFirst({
+      where: (carts, { eq }) => eq(carts.userId, user.id!),
     });
 
-    console.log(existingCartItem);
+    if (!existingCart) {
+      throw new Error("Cart not found");
+    }
+
+    const existingCartItem = await db.query.cartItems.findFirst({
+      where: (cartItems, { eq }) =>
+        and(
+          eq(cartItems.packageId, newCartItem.data.packageId),
+          eq(cartItems.cartId, existingCart?.id),
+        ),
+    });
 
     if (!existingCartItem) {
       await db.insert(cartItems).values(newCartItem.data);
@@ -38,7 +47,7 @@ export const addToCart = async (cartItem: NewCartItemParams) => {
       existingCartItem?.additionalContentQuantity ===
         newCartItem.data.additionalContentQuantity
     ) {
-      return { error: "Item already exists in cart" };
+      throw new Error("Item already in cart");
     }
 
     if (
@@ -59,8 +68,8 @@ export const addToCart = async (cartItem: NewCartItemParams) => {
 
     return { success: "Item added to cart" };
   } catch (error) {
-    console.log("error", error);
-    return { error: "Failed to add item to cart" };
+    const e = error as Error;
+    return { error: e.message };
   }
 };
 

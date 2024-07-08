@@ -26,8 +26,12 @@ export function CartForm({ pkg }: { pkg: PackageWithProducts }) {
         throw new Error(res.error);
       }
     },
-    onError: () => {
-      toast.error("Failed to add to cart");
+    onError: (e) => {
+      if (e instanceof Error) {
+        toast.error(e.message);
+      } else {
+        toast.error("Failed to add to cart");
+      }
     },
     onSuccess: async () => {
       await update();
