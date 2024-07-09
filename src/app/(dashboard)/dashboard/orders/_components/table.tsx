@@ -33,7 +33,7 @@ interface OrdersTableProps {
 
 export async function OrdersTable({ status, page, orderId }: OrdersTableProps) {
   const orders = await getOrders({ status: [...status], page });
-  const totalPages = await getOrdersPage();
+  const totalPages = await getOrdersPage({ status: [...status] });
 
   const currencyFormatter = new Intl.NumberFormat("id-ID", {
     style: "currency",
@@ -99,7 +99,7 @@ export async function OrdersTable({ status, page, orderId }: OrdersTableProps) {
                     </Link>
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
-                    <ViewOrderButton orderId={order.id} />
+                    <ViewOrderButton orderId={order.id} key={order.id} />
                   </TableCell>
                 </TableRow>
               ))}

@@ -2,7 +2,7 @@ import { db } from "@/server/db";
 import { currentUser } from "@/lib/auth";
 import { OrderId, payments, orders } from "@/server/db/schema/orders";
 import { MidtransClient } from "midtrans-node-client";
-import { sum, count, sql } from "drizzle-orm";
+import { sum, count, sql, inArray } from "drizzle-orm";
 
 export const getUserOrders = async () => {
   const user = await currentUser();
@@ -123,12 +123,27 @@ export const getPaymentToken = async (order: {
   return token;
 };
 
-export const getOrdersPage = async () => {
+export const getOrdersPage = async ({ status }: { status: string[] }) => {
   const user = await currentUser();
   if (!user || user.role !== "ADMIN") {
     throw new Error("Unauthorized");
   }
 
+  if (status.length !== 0) {
+    const [countRes] = await db
+      .select({
+        count: sql`count(*)`.mapWith(Number).as("count"),
+      })
+      .from(orders)
+      .where(
+        inArray(
+          orders.status,
+          status as ("pending" | "process" | "completed" | "cancelled")[],
+        ),
+      );
+
+    return countRes?.count ? Math.ceil(countRes.count / 5) : 1;
+  }
   const [countRes] = await db
     .select({
       count: sql`count(*)`.mapWith(Number).as("count"),
