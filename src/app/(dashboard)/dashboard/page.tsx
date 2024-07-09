@@ -31,7 +31,7 @@ export default function Dashboard({
           <SummaryCards />
         </Suspense>
         <Suspense fallback={<OrdersTableLoader />}>
-          <OrdersTable status={status} page={page} />
+          <OrdersTable status={status} page={page} orderId={orderId ?? ""} />
         </Suspense>
       </div>
       <div>

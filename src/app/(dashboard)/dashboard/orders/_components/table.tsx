@@ -16,19 +16,24 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getOrders } from "@/server/api/orders/queries";
+import { getOrdersPage } from "@/server/api/orders/queries";
 import { format } from "date-fns";
 import Link from "next/link";
 import { TableFilter } from "./filter";
 import { TablePagination } from "./table-pagination";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ViewOrderButton } from "./view-order-button";
+import { cn } from "@/lib/utils";
 
 interface OrdersTableProps {
   status: string[];
   page: number;
+  orderId: string;
 }
 
-export async function OrdersTable({ status, page }: OrdersTableProps) {
+export async function OrdersTable({ status, page, orderId }: OrdersTableProps) {
   const orders = await getOrders({ status: [...status], page });
+  const totalPages = await getOrdersPage();
 
   const currencyFormatter = new Intl.NumberFormat("id-ID", {
     style: "currency",
@@ -61,7 +66,10 @@ export async function OrdersTable({ status, page }: OrdersTableProps) {
             </TableHeader>
             <TableBody>
               {orders.map((order) => (
-                <TableRow key={order.id} className="">
+                <TableRow
+                  key={order.id}
+                  className={cn(orderId === order.id && "bg-muted/50")}
+                >
                   <TableCell>
                     <Link href={{ query: { order_id: order.id } }}>
                       <div className="font-medium">{order.contactName}</div>
@@ -91,9 +99,7 @@ export async function OrdersTable({ status, page }: OrdersTableProps) {
                     </Link>
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
-                    <Link href={{ query: { order_id: order.id } }}>
-                      <Badge variant="secondary">View</Badge>
-                    </Link>
+                    <ViewOrderButton orderId={order.id} />
                   </TableCell>
                 </TableRow>
               ))}
@@ -108,7 +114,7 @@ export async function OrdersTable({ status, page }: OrdersTableProps) {
           </div>
         }
       >
-        <TablePagination page={page} />
+        <TablePagination page={page} totalPages={totalPages} />
       </Suspense>
     </div>
   );

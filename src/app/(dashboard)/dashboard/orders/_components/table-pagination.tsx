@@ -1,4 +1,6 @@
-import { getOrdersPage } from "@/server/api/orders/queries";
+"use client";
+
+import { usePathname, useSearchParams } from "next/navigation";
 import {
   Pagination,
   PaginationContent,
@@ -12,11 +14,23 @@ import { ChevronsRight, ChevronsLeft } from "lucide-react";
 
 interface TablePaginationProps {
   page: number;
+  totalPages: number;
 }
 
-export async function TablePagination({ page }: TablePaginationProps) {
-  const totalPages = await getOrdersPage();
-  console.log(totalPages);
+export async function TablePagination({
+  page,
+  totalPages,
+}: TablePaginationProps) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const currentPage = Number(searchParams.get("page")) || 1;
+
+  const createPageUrl = (page: number) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", String(page));
+
+    return `${pathname}?${params.toString()}`;
+  };
 
   return (
     <Pagination>
@@ -26,7 +40,7 @@ export async function TablePagination({ page }: TablePaginationProps) {
             aria-label="Go to first page"
             className="gap-1 pr-2.5"
             size="default"
-            href={`/dashboard?page=1`}
+            href={createPageUrl(1)}
           >
             <ChevronsLeft className="h-4 w-4" />
             <span>First</span>
@@ -35,7 +49,7 @@ export async function TablePagination({ page }: TablePaginationProps) {
         {page > 1 && (
           <>
             <PaginationItem>
-              <PaginationPrevious href={`/dashboard?page=${page - 1}`} />
+              <PaginationPrevious href={createPageUrl(currentPage - 1)} />
             </PaginationItem>
 
             {page > 2 && (
@@ -47,7 +61,7 @@ export async function TablePagination({ page }: TablePaginationProps) {
             <PaginationItem>
               <PaginationLink
                 isActive={false}
-                href={`/dashboard?page=${page - 1}`}
+                href={createPageUrl(currentPage - 1)}
               >
                 {page - 1}
               </PaginationLink>
@@ -56,7 +70,7 @@ export async function TablePagination({ page }: TablePaginationProps) {
         )}
 
         <PaginationItem>
-          <PaginationLink isActive={true} href={`/dashboard?page=${page}`}>
+          <PaginationLink isActive={true} href={createPageUrl(currentPage)}>
             {page}
           </PaginationLink>
         </PaginationItem>
@@ -64,7 +78,7 @@ export async function TablePagination({ page }: TablePaginationProps) {
         {page < totalPages && (
           <>
             <PaginationItem>
-              <PaginationLink href={`/dashboard?page=${page + 1}`}>
+              <PaginationLink href={createPageUrl(currentPage + 1)}>
                 {page + 1}
               </PaginationLink>
             </PaginationItem>
@@ -76,7 +90,7 @@ export async function TablePagination({ page }: TablePaginationProps) {
             )}
 
             <PaginationItem>
-              <PaginationNext href={`/dashboard?page=${page + 1}`} />
+              <PaginationNext href={createPageUrl(currentPage + 1)} />
             </PaginationItem>
           </>
         )}
@@ -85,7 +99,7 @@ export async function TablePagination({ page }: TablePaginationProps) {
             aria-label="Go to last page"
             size="default"
             className="gap-1 pr-2.5"
-            href={`/dashboard?page=${totalPages}`}
+            href={createPageUrl(totalPages)}
           >
             <span>Last</span>
             <ChevronsRight className="h-4 w-4" />
