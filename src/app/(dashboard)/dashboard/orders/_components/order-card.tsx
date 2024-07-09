@@ -39,8 +39,13 @@ export async function OrderCard({ orderId }: { orderId: string }) {
                   <span className="sr-only">Copy Order ID</span>
                 </Button>
               </CardTitle>
-              <CardDescription>
-                Date: {format(new Date(order?.createdAt), "MMM dd, yyyy")}
+              <CardDescription className="flex flex-col">
+                <span>
+                  Date: {format(new Date(order?.createdAt), "MMM dd, yyyy")}
+                </span>
+                <span>
+                  Status: <span className="capitalize">{order.status}</span>
+                </span>
               </CardDescription>
             </div>
             <div className="ml-auto flex items-center gap-1">
