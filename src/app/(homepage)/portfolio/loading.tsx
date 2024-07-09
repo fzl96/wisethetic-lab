@@ -1,9 +1,9 @@
-import { ClipLoader } from "react-spinners";
+import { Icons } from "@/components/icons";
 
 export default function Loading() {
   return (
     <div className="grid min-h-screen w-full place-items-center">
-      <ClipLoader color="#d9d9d9" />
+      <Icons.spinner className="h-10 w-10 animate-spin" />
     </div>
   );
 }
