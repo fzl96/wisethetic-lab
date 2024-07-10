@@ -21,6 +21,7 @@ const config = {
       fontFamily: {
         sans: ["var(--font-sans)", "Inter", "sans-serif"],
         accent: ["var(--font-accent)", "Archivo", "sans-serif"],
+        firaSans: ["var(--font-fira)", "Fira Sans", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

@@ -1,19 +1,41 @@
 import { siteConfig } from "@/config/site";
 import Link from "next/link";
 import { Icons } from "@/components/icons";
+import {
+  RiInstagramFill,
+  RiWhatsappFill,
+  RiTwitterXFill,
+} from "react-icons/ri";
+import { MdEmail } from "react-icons/md";
 
-const links: { href: string; title: string; icon: string }[] = [
-  { href: "https://mail.google.com", title: "Email", icon: "mail" },
-  { href: "https://whatsapp.com", title: "WhatsApp", icon: "chat" },
+const links: { href: string; title: string; icon: React.ReactNode }[] = [
+  {
+    href: "https://mail.google.com",
+    title: "Email",
+    icon: (
+      <MdEmail className="h-5 w-5 text-muted-foreground hover:text-foreground" />
+    ),
+  },
+  {
+    href: "https://whatsapp.com",
+    title: "WhatsApp",
+    icon: (
+      <RiWhatsappFill className="h-5 w-5 text-muted-foreground hover:text-foreground" />
+    ),
+  },
   {
     href: "https://www.instagram.com/mr.wisethetic",
     title: "Instagram",
-    icon: "instagram",
+    icon: (
+      <RiInstagramFill className="h-5 w-5 text-muted-foreground hover:text-foreground" />
+    ),
   },
   {
     href: "https://twitter.com/MrWisethetic",
     title: "Twitter",
-    icon: "twitter",
+    icon: (
+      <RiTwitterXFill className="h-5 w-5 text-muted-foreground hover:text-foreground" />
+    ),
   },
 ];
 
@@ -28,7 +50,7 @@ export function Footer() {
   return (
     <footer className="bottom-0 mt-40 grid w-full place-items-center gap-6 bg-home-footer px-10 pb-4 pt-10">
       <div>
-        <span className="font-accent text-xl tracking-wide text-[#ce9651]">
+        <span className="font-firaSans text-xl uppercase tracking-[0.25em] text-[#ce9651]">
           {siteConfig.name}
         </span>
       </div>
@@ -52,7 +74,12 @@ export function Footer() {
           {links.map((link) => {
             const Icon = Icons[link.icon as keyof typeof Icons];
             return (
-              <Icon className="h-5 w-5 cursor-pointer text-muted-foreground hover:text-foreground" />
+              <div>
+                <a href={link.href}>
+                  <span className="sr-only">{link.title}</span>
+                  {link.icon}
+                </a>
+              </div>
             );
           })}
         </div>

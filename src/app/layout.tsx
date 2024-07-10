@@ -8,13 +8,19 @@ import { Toaster } from "@/components/ui/sonner";
 import "@/styles/globals.css";
 import "@uploadthing/react/styles.css";
 
-import { Inter, Archivo } from "next/font/google";
+import { Inter, Archivo, Fira_Sans } from "next/font/google";
 import { siteConfig } from "@/config/site";
 import { ReactQueryProvider } from "@/components/react-query-provider";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+});
+
+const firaSans = Fira_Sans({
+  subsets: ["latin"],
+  variable: "--font-fira",
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 const archivo = Archivo({
@@ -88,6 +94,7 @@ export default async function RootLayout({
           className={cn(
             inter.variable,
             archivo.variable,
+            firaSans.variable,
             "font-sans antialiased selection:bg-foreground selection:text-background",
           )}
         >

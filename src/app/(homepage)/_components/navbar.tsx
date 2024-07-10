@@ -69,9 +69,12 @@ export function Navbar() {
         className="flex items-center justify-between rounded-lg px-5 py-5 "
       >
         <div className="hidden md:block">
-          <span className="font-accent text-xl tracking-wide text-[#ce9651]">
+          <Link
+            href="/"
+            className="font-firaSans text-xl uppercase tracking-[0.25em] text-[#ce9651]"
+          >
             {siteConfig.name}
-          </span>
+          </Link>
         </div>
         <nav className="flex items-center gap-4">
           <ul className="flex items-center gap-4">
