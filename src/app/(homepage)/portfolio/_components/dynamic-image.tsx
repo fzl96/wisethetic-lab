@@ -1,12 +1,18 @@
 import Image from "next/image";
 import { getImage } from "@/lib/get-image";
+import Link from "next/link";
 
-export async function DynamicImage({ url }: { url: string }) {
+export async function DynamicImage({
+  url,
+  index,
+}: {
+  url: string;
+  index: number;
+}) {
   const { base64, img } = await getImage(url);
-  console.log(base64);
 
   return (
-    <div className="relative mb-4">
+    <div className="relative mb-4 overflow-hidden rounded-lg">
       <Image
         {...img}
         alt="portfolio image"
