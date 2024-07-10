@@ -7,7 +7,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { CategorySection } from "./_components/category-section";
 import { Suspense } from "react";
-import { CategoryCardsLoader } from "./products/_components/loader";
+import { CategoryCardsLoader } from "./services/_components/loader";
 
 export default function HomePage() {
   return (
@@ -27,13 +27,13 @@ export default function HomePage() {
       </p>
 
       <Link
-        href="#"
+        href="/services"
         className={cn(
           buttonVariants({ variant: "default", size: "lg" }),
           "group mt-10",
         )}
       >
-        See Offers
+        See Services
         <span className="ml-2 transition-transform group-hover:translate-x-2">
           <ArrowRight className="h-5 w-5" />
         </span>

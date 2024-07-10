@@ -79,7 +79,7 @@ export function Navbar() {
               <Link href="/">Home</Link>
             </li>
             <li>
-              <Link href="/products">Products</Link>
+              <Link href="/services">Services</Link>
             </li>
             <li>
               <Link href="/portfolio">Portfolio</Link>

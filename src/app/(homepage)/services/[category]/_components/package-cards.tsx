@@ -11,7 +11,7 @@ export async function PackageCards({ categoryName }: { categoryName: string }) {
       {packages.map((pkg) => {
         const link = convertToSlug(pkg.name);
         return (
-          <Link href={`/products/${categoryLink}/${link}`} key={pkg.id}>
+          <Link href={`/services/${categoryLink}/${link}`} key={pkg.id}>
             <PackageCard pkg={pkg} />
           </Link>
         );

@@ -20,7 +20,7 @@ const links: { href: string; title: string; icon: string }[] = [
 const internalLinks: { href: string; title: string }[] = [
   { href: "/home", title: "Home" },
   { href: "/portfolio", title: "Portfolio" },
-  { href: "/products", title: "Products" },
+  { href: "/services", title: "Services" },
   { href: "/account", title: "Account" },
 ];
 
