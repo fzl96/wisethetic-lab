@@ -10,10 +10,18 @@ import {
   Trash2,
   PlusCircle,
   MoreVertical,
+  Mail,
+  MessageCircle,
+  Instagram,
+  Twitter,
 } from "lucide-react";
 
 export const Icons = {
+  mail: Mail,
+  chat: MessageCircle,
   home: Home,
+  twitter: Twitter,
+  instagram: Instagram,
   package: Package,
   shoppingCart: ShoppingCart,
   users: Users2,

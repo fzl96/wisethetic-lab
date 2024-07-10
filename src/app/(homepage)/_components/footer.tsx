@@ -1,49 +1,62 @@
 import { siteConfig } from "@/config/site";
 import Link from "next/link";
+import { Icons } from "@/components/icons";
 
-const links: { href: string; title: string }[] = [
-  { href: "https://mail.google.com", title: "Email" },
-  { href: "https://whatsapp.com", title: "WhatsApp" },
-  { href: "https://www.instagram.com/mr.wisethetic", title: "Instagram" },
-  { href: "https://twitter.com/MrWisethetic", title: "Twitter" },
+const links: { href: string; title: string; icon: string }[] = [
+  { href: "https://mail.google.com", title: "Email", icon: "mail" },
+  { href: "https://whatsapp.com", title: "WhatsApp", icon: "chat" },
+  {
+    href: "https://www.instagram.com/mr.wisethetic",
+    title: "Instagram",
+    icon: "instagram",
+  },
+  {
+    href: "https://twitter.com/MrWisethetic",
+    title: "Twitter",
+    icon: "twitter",
+  },
 ];
+
+const internalLinks: { href: string; title: string }[] = [
+  { href: "/home", title: "Home" },
+  { href: "/portfolio", title: "Portfolio" },
+  { href: "/products", title: "Products" },
+  { href: "/account", title: "Account" },
+];
+
 export function Footer() {
   return (
-    <footer className="bottom-0 mt-40 grid w-full gap-20 bg-home-footer px-10 pb-4 pt-10">
-      <div className="grid grid-cols-2 items-start gap-5 md:grid-cols-5 md:gap-40">
-        <div className="col-span-2 md:col-span-1">
-          <span className="font-accent text-lg">{siteConfig.name}</span>
-        </div>
-        <ul className="space-y-2 text-sm text-muted-foreground">
-          <li className="text-base text-primary">Contact Us</li>
-          {links.map((link) => {
-            return (
-              <li key={link.href} className="hover:text-primary">
-                <a href={link.href}>{link.title}</a>
-              </li>
-            );
-          })}
-        </ul>
-        <ul className="space-y-2 text-sm text-muted-foreground">
-          <li className="text-base text-primary">Site</li>
-          <li className="hover:text-primary">
-            <Link href="/about">About us</Link>
-          </li>
-          <li className="hover:text-primary">
-            <Link href="/portfolio">Gallery</Link>
-          </li>
-          <li className="hover:text-primary">
-            <Link href="/products">Products</Link>
-          </li>
-          <li className="hover:text-primary">
-            <Link href="/contact">Contact</Link>
-          </li>
+    <footer className="bottom-0 mt-40 grid w-full place-items-center gap-6 bg-home-footer px-10 pb-4 pt-10">
+      <div>
+        <span className="font-accent text-xl tracking-wide text-[#ce9651]">
+          {siteConfig.name}
+        </span>
+      </div>
+      <div>
+        <ul className="flex gap-5 md:gap-10">
+          {internalLinks.map((link) => (
+            <li
+              key={link.href}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              <Link href={link.href}>{link.title}</Link>
+            </li>
+          ))}
         </ul>
       </div>
-      <div className="text-center">
-        <p className="text-sm text-muted-foreground">
-          &copy; 2024 {siteConfig.name}. All rights reserved
-        </p>
+      <div className="flex w-full max-w-[800px] flex-col items-center justify-between gap-5 md:flex-row md:gap-0">
+        <div className="text-muted-foreground">
+          &copy; 2024 {siteConfig.name}
+        </div>
+        <div className="flex gap-4">
+          {links.map((link) => {
+            const Icon = Icons[link.icon as keyof typeof Icons];
+            return (
+              <Icon className="h-5 w-5 cursor-pointer text-muted-foreground hover:text-foreground" />
+            );
+          })}
+        </div>
+        <div className="text-muted-foreground">Designed by Mr.Wisethetic</div>
       </div>
     </footer>
   );
