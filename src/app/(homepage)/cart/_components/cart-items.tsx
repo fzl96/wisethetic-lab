@@ -22,13 +22,17 @@ export async function CartItems() {
       <div className="rounded-xl bg-home-card-background p-5 lg:col-span-2">
         <div className="space-y-10">
           {cart.items.length === 0 && (
-            <div>
-              {/* <Image
-                src="/empty-cart.svg"
-                alt="Empty Cart"
-                width={500}
-                height={500}
-              /> */}
+            <div className="my-10 grid w-full place-items-center">
+              <div className="max-w-96">
+                <img
+                  src="/shopping-cart.svg"
+                  alt="shopping cart"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <span className="text-center text-lg">
+                Your cart is empty! add some items to the cart
+              </span>
             </div>
           )}
           {cart.items
