@@ -74,7 +74,7 @@ export function Footer() {
           {links.map((link) => {
             const Icon = Icons[link.icon as keyof typeof Icons];
             return (
-              <div>
+              <div key={link.href}>
                 <a href={link.href}>
                   <span className="sr-only">{link.title}</span>
                   {link.icon}
