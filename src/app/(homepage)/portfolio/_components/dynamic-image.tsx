@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { getImage } from "@/lib/get-image";
-import Link from "next/link";
 
 export async function DynamicImage({
   url,
