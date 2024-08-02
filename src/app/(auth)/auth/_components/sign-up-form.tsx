@@ -93,6 +93,7 @@ export function SignupForm() {
                       type="email"
                       placeholder="@example.com"
                       disabled={isPending}
+                      autoComplete="email"
                       {...field}
                     />
                   </FormControl>
@@ -111,6 +112,7 @@ export function SignupForm() {
                       id="password"
                       type="password"
                       placeholder="******"
+                      autoComplete="new-password"
                       disabled={isPending}
                       {...field}
                     />
@@ -130,6 +132,7 @@ export function SignupForm() {
                   <FormControl>
                     <Input
                       id="confirmPassword"
+                      autoComplete="new-password"
                       type="password"
                       placeholder="******"
                       disabled={isPending}
