@@ -145,11 +145,14 @@ export function CartForm({ pkg }: { pkg: PackageWithProducts }) {
           </span>
         </div>
       </div>
-      <div className="mt-10 flex items-center gap-5">
-        <div className="text-lg">{currencyFormatter.format(total)}</div>
+      <div className="mt-10 space-y-4">
+        <div className="flex w-full justify-between text-lg">
+          Subtotal:
+          <span>{currencyFormatter.format(total)}</span>
+        </div>
         <Button
           size="lg"
-          className="w-full"
+          className="w-full disabled:cursor-pointer"
           disabled={isPending || !selectedProduct || !user}
           onClick={() => {
             if (!user?.cartId) {
