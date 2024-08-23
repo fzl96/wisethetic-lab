@@ -12,6 +12,7 @@ import { NewCartItemParams } from "@/server/db/schema/cart";
 import { addToCart as _addToCart } from "@/server/actions/cart";
 import { toast } from "sonner";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { ChevronUp, ChevronDown } from "lucide-react";
 
 export function CartForm({ pkg }: { pkg: PackageWithProducts }) {
   const { update } = useSession();
@@ -93,7 +94,16 @@ export function CartForm({ pkg }: { pkg: PackageWithProducts }) {
       </div>
       <div className="my-5 space-y-2">
         <h3>Add additional content</h3>
-        <div className="flex items-center justify-between px-5 text-sm">
+        <div className="flex items-center justify-between  text-sm">
+          <div className="flex items-center gap-2">
+            <Button
+              size="icon"
+              variant="outline"
+              className="h-7 w-7"
+              onClick={() => setAdditionalContent((prev) => prev + 1)}
+            >
+              <ChevronUp className="h-5 w-5" />
+            </Button>
             <input
               type="number"
               id="quantity"
@@ -116,6 +126,20 @@ export function CartForm({ pkg }: { pkg: PackageWithProducts }) {
                 setAdditionalContent(parseInt(e.target.value));
               }}
             />
+            <Button
+              size="icon"
+              variant="outline"
+              className="h-7 w-7"
+              onClick={() =>
+                setAdditionalContent((prev) => {
+                  if (prev === 0) return 0;
+                  return prev - 1;
+                })
+              }
+            >
+              <ChevronDown className="h-5 w-5" />
+            </Button>
+          </div>
           <span>
             {currencyFormatter.format(pkg.additionalContentPrice)} / Content
           </span>
