@@ -1,92 +1,97 @@
 @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
+@tailwind components;
+@tailwind utilities;
 
-  @layer base {
-    :root {
-      --home-background: 40 8% 93%;
-      --home-foreground: 0 0% 8%;  
-      --home-border: 0 0% 90%;
-      --home-card-background: 45 100% 99%;
-      --home-card-background-hover: 45 100% 97%;
-      --home-footer-background: 0 0% 8%;
-      --home-footer-foreground: 0 0% 90%;
-      
-      --background: 0 0% 100%;
-      --foreground: 222.2 84% 4.9%;
+@layer base {
+  :root {
+    --home-background: 40 8% 93%;
+    --home-foreground: 0 0% 8%;
+    --home-border: 0 0% 90%;
+    --home-card-background: 45 100% 99%;
+    --home-card-background-hover: 45 100% 97%;
+    --home-footer-background: 0 0% 8%;
+    --home-footer-foreground: 0 0% 90%;
 
-      --card: 0 0% 100%;
-      --card-foreground: 222.2 84% 4.9%;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
 
-      --popover: 0 0% 100%;
-      --popover-foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
 
-      --primary: 222.2 47.4% 11.2%;
-      --primary-foreground: 210 40% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
 
-      --secondary: 210 40% 96.1%;
-      --secondary-foreground: 222.2 47.4% 11.2%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
 
-      --muted: 210 40% 96.1%;
-      --muted-foreground: 215.4 16.3% 46.9%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
-      --accent: 210 40% 96.1%;
-      --accent-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-      --destructive: 0 84.2% 60.2%;
-      --destructive-foreground: 210 40% 98%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
 
-      --border: 214.3 31.8% 91.4%;
-      --input: 214.3 31.8% 91.4%;
-      --ring: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
 
-      --radius: 0.5rem;
-    }
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
 
-    .dark {
-      --home-background: 0 0% 5%;
-      --home-foreground: 0 100% 99%;
-      --home-border: 0 0% 15%;
-      --home-card-background: 0 0% 8%;
-      --home-card-background-hover: 0 0% 10%;
-      --home-footer-background: 0 0% 8%;
-      --home-footer-foreground: 0 100% 99%;
-      
-      --background: 0 0% 10%;
-      --foreground: 0 0% 85%;
-
-      --card: 0 0% 10%;
-      --card-foreground: 0 0% 85%;
-
-      --popover: 0 0% 10%; 
-      --popover-foreground: 0 0% 85%;
-
-      --primary: 0 0% 95%;
-      --primary-foreground: 0 0% 10%;
-
-      --secondary: 0 0% 20%;
-      --secondary-foreground: 0 0% 85%;
-
-      --muted: 0 0% 15%;
-      --muted-foreground: 0 0% 50%; 
-
-      --accent: 0 0% 15%;
-      --accent-foreground: 0 0% 85%;
-
-      --destructive: 0 62.8% 35%;
-      --destructive-foreground: 210 40% 98%;
-
-      --border: 0 0% 16%;
-      --input: 0 0% 20%;
-      --ring: 0 0% 85%;
-    }
+    --radius: 0.5rem;
   }
 
-  @layer base {
-    * {
-      @apply border-border;
-    }
-    body {
-      @apply bg-background text-foreground;
-    }
+  .dark {
+    --home-background: 0 0% 5%;
+    --home-foreground: 0 100% 99%;
+    --home-border: 0 0% 15%;
+    --home-card-background: 0 0% 8%;
+    --home-card-background-hover: 0 0% 10%;
+    --home-footer-background: 0 0% 8%;
+    --home-footer-foreground: 0 100% 99%;
+
+    --background: 0 0% 10%;
+    --foreground: 0 0% 85%;
+
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 85%;
+
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 85%;
+
+    --primary: 0 0% 95%;
+    --primary-foreground: 0 0% 10%;
+
+    --secondary: 0 0% 20%;
+    --secondary-foreground: 0 0% 85%;
+
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 50%;
+
+    --accent: 0 0% 15%;
+    --accent-foreground: 0 0% 85%;
+
+    --destructive: 0 62.8% 35%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 0 0% 16%;
+    --input: 0 0% 20%;
+    --ring: 0 0% 85%;
   }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}

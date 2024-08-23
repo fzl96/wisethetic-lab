@@ -94,16 +94,28 @@ export function CartForm({ pkg }: { pkg: PackageWithProducts }) {
       <div className="my-5 space-y-2">
         <h3>Add additional content</h3>
         <div className="flex items-center justify-between px-5 text-sm">
-          <input
-            type="number"
-            id="quantity"
-            name="quantity"
-            className="border-b bg-transparent outline-none"
-            min={0}
-            max={100}
-            value={additionalContent}
-            onChange={(e) => setAdditionalContent(parseInt(e.target.value))}
-          />
+            <input
+              type="number"
+              id="quantity"
+              name="quantity"
+              className="w-8 bg-transparent text-center outline-none"
+              min={0}
+              max={100}
+              value={additionalContent}
+              onBlur={() => {
+                if (isNaN(additionalContent)) {
+                  setAdditionalContent(0);
+                }
+              }}
+              onChange={(e) => {
+                const value = parseInt(e.target.value);
+                if (value < 0) {
+                  setAdditionalContent(0);
+                  return;
+                }
+                setAdditionalContent(parseInt(e.target.value));
+              }}
+            />
           <span>
             {currencyFormatter.format(pkg.additionalContentPrice)} / Content
           </span>
