@@ -91,7 +91,7 @@ export function UpdateOrderForm({
               name="status"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor={field.name}>Category</FormLabel>
+                  <FormLabel htmlFor={field.name}>Status</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value ?? ""}
@@ -99,7 +99,7 @@ export function UpdateOrderForm({
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select category" />
+                        <SelectValue placeholder="Select status" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>

@@ -49,8 +49,8 @@ export function OrderMenu({
         </DropdownMenuContent>
       </DropdownMenu>
       <DrawerDialog
-        title="Update Category"
-        description="Update the category"
+        title="Update Order Status"
+        description="Update an Order Status"
         open={showUpdateForm}
         setOpen={setShowUpdateForm}
       >
