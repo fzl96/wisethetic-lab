@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import { PasswordResetEmail } from "@/components/password-reset-email";
 import { ConfirmEmailTemplate } from "@/components/confirm-email-template";
+import { OrderCompletedEmail } from "@/components/order-completed-email";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -28,6 +29,22 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
     subject: "Reset Password",
     react: PasswordResetEmail({
       link: confirmLink,
+    }),
+  });
+};
+
+export const sendOrderCompletedEmail = async (
+  email: string,
+  customerName: string,
+  link: string,
+) => {
+  await resend.emails.send({
+    from: "mail@wisetheticlab.store",
+    to: email,
+    subject: "Order Completed",
+    react: OrderCompletedEmail({
+      link: link,
+      customerName: customerName,
     }),
   });
 };

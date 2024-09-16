@@ -12,6 +12,8 @@ import {
 } from "@/server/db/schema/orders";
 import { type CartExtended } from "@/server/db/schema/cart";
 import { cartItems } from "@/server/db/schema/cart";
+import { sendOrderCompletedEmail } from "@/lib/mail";
+import { getOrderById } from "./queries";
 
 export const createOrder = async (
   order: NewOrderParams,
@@ -98,6 +100,28 @@ export const updateOrder = async (
 
     if (!updatedOrder) {
       return { error: "Error updating order" };
+    }
+
+    const order = await db.query.orders.findFirst({
+      where: (orders, { eq }) => eq(orders.id, orderId),
+      with: {
+        user: true,
+      },
+    });
+
+    if (!order) {
+      return { error: "Error updating order" };
+    }
+
+    if (
+      updateOrder.data.contentResult &&
+      updateOrder.data.status === "completed"
+    ) {
+      await sendOrderCompletedEmail(
+        order.user.email,
+        order.user.name ?? order.contactName,
+        updateOrder.data.contentResult,
+      );
     }
 
     return updatedOrder;
