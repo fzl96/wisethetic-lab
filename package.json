@@ -10,7 +10,8 @@
     "dev": "next dev",
     "dev:turbo": "next dev --turbo",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "email": "email dev --dir src/components/emails"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.0.0",
@@ -86,6 +87,7 @@
     "postcss": "^8.4.34",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.11",
+    "react-email": "3.0.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.4.2"
   },
