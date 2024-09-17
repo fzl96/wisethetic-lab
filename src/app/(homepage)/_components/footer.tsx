@@ -1,6 +1,5 @@
 import { siteConfig } from "@/config/site";
 import Link from "next/link";
-import { Icons } from "@/components/icons";
 import {
   RiInstagramFill,
   RiWhatsappFill,
@@ -72,7 +71,6 @@ export function Footer() {
         </div>
         <div className="flex gap-4">
           {links.map((link) => {
-            const Icon = Icons[link.icon as keyof typeof Icons];
             return (
               <div key={link.href}>
                 <a href={link.href}>

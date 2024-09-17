@@ -11,15 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  PanelLeft,
-  Package,
-  Package2,
-  LineChart,
-  User,
-  Home,
-  Grid,
-} from "lucide-react";
+import { PanelLeft, Package, Package2, User, Home, Grid } from "lucide-react";
 import { ModeToggle } from "@/components/mode-toggle";
 import { signOut } from "@/auth";
 import { currentUser } from "@/lib/auth";

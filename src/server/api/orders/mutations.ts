@@ -12,6 +12,7 @@ import {
 } from "@/server/db/schema/orders";
 import { type CartExtended } from "@/server/db/schema/cart";
 import { cartItems } from "@/server/db/schema/cart";
+import { sendNewOrderEmail, sendOrderCompletedEmail } from "@/lib/mail";
 
 export const createOrder = async (
   order: NewOrderParams,
@@ -67,7 +68,26 @@ export const createOrder = async (
     await db.insert(orderItems).values(items);
     await db.delete(cartItems).where(eq(cartItems.cartId, user.cartId));
 
-    // return { success: "Order created" };
+    const orderEmail = {
+      id: order.id,
+      contactName: order.contactName,
+      brandName: order.brandName,
+    };
+
+    const newOrderItems = items.map((item) => ({
+      packageName: item.packageName,
+      categoryName: item.categoryName,
+      productName: item.productName,
+      additionalContentQuantity: item.additionalContentQuantity,
+      total:
+        item.packagePrice * item.additionalContentQuantity + item.productPrice,
+    }));
+
+    // TODO: use background jobs to send email notification
+
+    console.log(total);
+    await sendNewOrderEmail(orderEmail, newOrderItems, total);
+
     return order;
   } catch (error) {
     return { error: "Error creating order" };
@@ -98,6 +118,28 @@ export const updateOrder = async (
 
     if (!updatedOrder) {
       return { error: "Error updating order" };
+    }
+
+    const order = await db.query.orders.findFirst({
+      where: (orders, { eq }) => eq(orders.id, orderId),
+      with: {
+        user: true,
+      },
+    });
+
+    if (!order) {
+      return { error: "Error updating order" };
+    }
+
+    if (
+      updateOrder.data.contentResult &&
+      updateOrder.data.status === "completed"
+    ) {
+      await sendOrderCompletedEmail(
+        order.user.email,
+        order.user.name ?? order.contactName,
+        updateOrder.data.contentResult,
+      );
     }
 
     return updatedOrder;
