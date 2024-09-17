@@ -12,8 +12,7 @@ import {
 } from "@/server/db/schema/orders";
 import { type CartExtended } from "@/server/db/schema/cart";
 import { cartItems } from "@/server/db/schema/cart";
-import { sendOrderCompletedEmail } from "@/lib/mail";
-import { getOrderById } from "./queries";
+import { sendNewOrderEmail, sendOrderCompletedEmail } from "@/lib/mail";
 
 export const createOrder = async (
   order: NewOrderParams,
@@ -69,7 +68,26 @@ export const createOrder = async (
     await db.insert(orderItems).values(items);
     await db.delete(cartItems).where(eq(cartItems.cartId, user.cartId));
 
-    // return { success: "Order created" };
+    const orderEmail = {
+      id: order.id,
+      contactName: order.contactName,
+      brandName: order.brandName,
+    };
+
+    const newOrderItems = items.map((item) => ({
+      packageName: item.packageName,
+      categoryName: item.categoryName,
+      productName: item.productName,
+      additionalContentQuantity: item.additionalContentQuantity,
+      total:
+        item.packagePrice * item.additionalContentQuantity + item.productPrice,
+    }));
+
+    // TODO: use background jobs to send email notification
+
+    console.log(total);
+    await sendNewOrderEmail(orderEmail, newOrderItems, total);
+
     return order;
   } catch (error) {
     return { error: "Error creating order" };
