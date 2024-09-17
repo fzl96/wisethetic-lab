@@ -7,7 +7,6 @@ import {
   OrderSummaryCardsLoader,
   OrdersTableLoader,
 } from "./orders/_components/loader";
-import { Pagination } from "@/components/ui/pagination";
 
 export default function Dashboard({
   searchParams,

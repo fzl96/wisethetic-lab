@@ -1,4 +1,3 @@
-import { NewOrderParams } from "@/server/db/schema/orders";
 import {
   Body,
   Button,
@@ -6,7 +5,6 @@ import {
   Head,
   Hr,
   Html,
-  Img,
   Preview,
   Section,
   Text,
