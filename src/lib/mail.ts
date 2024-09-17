@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 import { PasswordResetEmail } from "@/components/password-reset-email";
 import { ConfirmEmailTemplate } from "@/components/confirm-email-template";
-import { OrderCompletedEmail } from "@/components/order-completed-email";
+import OrderCompletedEmail from "@/components/emails/order-completed-email";
 import NewOrderEmail from "@/components/emails/new-order";
 import type { OrderItemEmail, OrderEmail } from "@/components/emails/new-order";
 

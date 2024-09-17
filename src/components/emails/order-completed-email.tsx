@@ -12,15 +12,12 @@ import {
 } from "@react-email/components";
 import { Tailwind } from "@react-email/tailwind";
 import * as React from "react";
+import { siteConfig } from "@/config/site";
 
 interface OrderCompletedEmailProps {
   link: string;
   customerName: string;
 }
-
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.NEXT_PUBLIC_APP_URL}`
-  : "";
 
 export const OrderCompletedEmail = ({
   link,
@@ -31,16 +28,15 @@ export const OrderCompletedEmail = ({
       <Head />
       <Preview>Your order is completed! Download your photos</Preview>
       <Tailwind>
-        <Body className="mx-auto my-auto bg-white px-2 font-sans">
-          <Container className="mx-auto my-[40px] max-w-[465px] rounded border border-solid border-[#eaeaea] p-[20px]">
-            <Section className="mt-[32px]">
-              <Img
-                src={`${baseUrl}/vercel-logo.png`}
-                width="40"
-                height="37"
-                alt="Vercel"
-                className="mx-auto my-0"
-              />
+        <Body className="mx-auto my-auto bg-white px-2 py-4 font-firaSans">
+          <Container
+            style={{ border: "1px solid #cccccc" }}
+            className="rounded-lg bg-white px-8 py-4"
+          >
+            <Section className="">
+              <Text className="font-firaSans text-xl uppercase tracking-[0.25em] text-[#ce9651]">
+                {siteConfig.name}
+              </Text>
             </Section>
             <Text className="text-xl font-bold text-gray-800">
               Hi {customerName},
@@ -69,3 +65,5 @@ export const OrderCompletedEmail = ({
     </Html>
   );
 };
+
+export default OrderCompletedEmail;

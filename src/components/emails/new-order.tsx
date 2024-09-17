@@ -56,12 +56,7 @@ export const NewOrderEmail = ({ order, items, total }: NewOrderEmailProps) => {
         We have a new order! New order received from {order.contactName}
       </Preview>
       <Tailwind>
-        <Body
-          style={{
-            fontFamily: "Fira Sans, sans-serif",
-          }}
-          className="mx-auto my-auto bg-white px-2 py-4"
-        >
+        <Body className="mx-auto my-auto bg-white px-2 py-4 font-firaSans">
           <Container
             style={{ border: "1px solid #cccccc" }}
             className="rounded-lg bg-white px-8 py-4"
