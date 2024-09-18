@@ -2,7 +2,7 @@
 "use client";
 
 import { useCallback, Dispatch, SetStateAction } from "react";
-import { useDropzone } from "@uploadthing/react/hooks";
+import { useDropzone } from "@uploadthing/react";
 import { generateClientDropzoneAccept } from "uploadthing/client";
 
 import { convertFileToUrl, truncateString } from "@/lib/utils";
