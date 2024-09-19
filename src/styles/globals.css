@@ -6,13 +6,14 @@
   :root {
     --primary-accent: 33 56% 56%;
 
-    --home-background: 40 8% 93%;
-    --home-foreground: 0 0% 8%;
+    /* --home-background: 42 31% 94%; */
+    --home-background: 0 0% 100%;
+    --home-foreground: 25 16% 30%;
     --home-border: 0 0% 90%;
-    --home-card-background: 45 100% 99%;
-    --home-card-background-hover: 45 100% 97%;
-    --home-footer-background: 0 0% 8%;
-    --home-footer-foreground: 0 0% 90%;
+    --home-card-background: 0 0% 100%;
+    --home-card-background-hover: 0 0% 95%;
+    --home-footer-background: 0 0% 26%;
+    --home-footer-foreground: 42 31% 94%;
 
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
@@ -23,16 +24,16 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 25 16% 30%;
+    --primary-foreground: 42 31% 94%;
 
-    --secondary: 210 40% 96.1%;
+    --secondary: 42 31% 94%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 42 31% 94%;
+    --muted-foreground: 25 16% 53%;
 
-    --accent: 210 40% 96.1%;
+    --accent: 42 31% 94%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
@@ -40,7 +41,7 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 25 16% 30%;
 
     --radius: 0.5rem;
   }
@@ -54,7 +55,7 @@
     --home-card-background: 0 0% 8%;
     --home-card-background-hover: 0 0% 10%;
     --home-footer-background: 0 0% 8%;
-    --home-footer-foreground: 0 100% 99%;
+    --home-footer-foreground: 0 0% 50%;
 
     --background: 0 0% 10%;
     --foreground: 0 0% 85%;

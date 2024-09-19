@@ -51,7 +51,7 @@ export function SignInForm() {
 
   return (
     <>
-      <div className="grid gap-2 text-center">
+      <div className="grid gap-2 text-center text-home-foreground">
         <h1 className="text-3xl font-medium">{siteConfig.name}</h1>
         <p className="text-balance text-muted-foreground">
           Enter your email below to sign in to your account
