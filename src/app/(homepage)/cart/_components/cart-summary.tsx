@@ -44,9 +44,9 @@ export function CartSummary({ cart }: { cart: CartExtended }) {
             {currencyFormatter.format(contentsTotal + additionalTotal)}
           </span>
         </div>
-        <Link href="/checkout" className={cn(buttonVariants(), "w-full py-6")}>
+        <a href="/checkout" className={cn(buttonVariants(), "w-full py-6")}>
           Checkout
-        </Link>
+        </a>
       </div>
     </div>
   );
