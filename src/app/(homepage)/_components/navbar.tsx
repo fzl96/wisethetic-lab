@@ -17,6 +17,7 @@ import { ShoppingCart } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { MobileNav } from "./mobile-nav";
 import { MobileNavToggle } from "./mobile-nav-toggle";
+import { ModeToggle } from "@/components/mode-toggle";
 
 export function Navbar() {
   const user = useCurrentUser();
@@ -122,6 +123,7 @@ export function Navbar() {
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
+            <ModeToggle variant="ghost" />
             <span>|</span>
             <Link href="/cart" className="relative">
               <ShoppingCart className="h-5 w-5" />
