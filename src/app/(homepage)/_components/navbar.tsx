@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useState } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
-import { useTheme } from "next-themes";
 import { useCurrentUser } from "@/hooks/use-current-user";
 
 import {
@@ -22,20 +21,10 @@ import { ModeToggle } from "@/components/mode-toggle";
 export function Navbar() {
   const user = useCurrentUser();
   const { scrollY } = useScroll();
-  const { theme } = useTheme();
   const [hidden, setHidden] = useState(false);
-  const [top, setTop] = useState(true);
-  const dark = theme === "dark";
-  const bgLight = top ? "rgba(218, 217, 215, 0)" : "rgba(218, 217, 215, 0.2)";
-  const bgDark = top ? "rgba(75, 75, 75, 0)" : "rgba(75, 75, 75, 0.2)";
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() ?? 0;
-    if (latest < 10) {
-      setTop(true);
-    } else {
-      setTop(false);
-    }
     if (latest > previous) {
       setHidden(true);
     } else {
@@ -56,22 +45,9 @@ export function Navbar() {
         }}
         animate={hidden ? "hidden" : "visible"}
         transition={{ duration: 0.2 }}
-        className="sticky top-6 z-30 w-full bg-transparent px-2 md:px-5"
+        className="sticky top-0 z-30 w-full bg-home-background"
       >
-        <motion.div
-          variants={{
-            visibleChild: {
-              // opacity: 1,
-              backgroundColor: dark ? bgDark : bgLight,
-              backdropFilter: "blur(15px)",
-            },
-            hiddenChild: {
-              // opacity: 0,
-            },
-          }}
-          animate={hidden ? "hiddenChild" : "visibleChild"}
-          className="flex items-center justify-between rounded-lg px-5 py-5 "
-        >
+        <div className="flex items-center justify-between px-8 py-6">
           <div className="">
             <Link
               href="/"
@@ -135,7 +111,7 @@ export function Navbar() {
           <div className="block md:hidden">
             <MobileNavToggle />
           </div>
-        </motion.div>
+        </div>
       </motion.header>
       <MobileNav />
     </>
