@@ -135,21 +135,31 @@ export default async function OrderIdPage({
               )}
             </div>
             {order.payment?.status === "completed" ? (
-              <div className="flex flex-col gap-5">
-                <h3 className="font-accent text-2xl">Content Result</h3>
-                {!order.contentResult ? (
-                  <span className="text-sm text-muted-foreground">
-                    In progress
-                  </span>
-                ) : (
-                  <a
-                    href={order.contentResult}
-                    className="text-wrap break-all text-sm text-primary-accent hover:underline"
-                  >
-                    {order.contentResult}
-                  </a>
-                )}
-              </div>
+              <>
+                <div className="flex flex-col gap-5">
+                  <h3 className="font-accent text-2xl">Content Result</h3>
+                  {!order.contentResult ? (
+                    <span className="text-sm text-muted-foreground">
+                      In progress
+                    </span>
+                  ) : (
+                    <a
+                      href={order.contentResult}
+                      className="text-wrap break-all text-sm text-primary-accent hover:underline"
+                    >
+                      {order.contentResult}
+                    </a>
+                  )}
+                </div>
+                <div className="flex flex-col gap-5">
+                  <h3 className="font-accent text-2xl">Note</h3>
+                  {order.notes && (
+                    <span className="text-sm text-muted-foreground">
+                      {order.notes}
+                    </span>
+                  )}
+                </div>
+              </>
             ) : (
               ""
             )}
