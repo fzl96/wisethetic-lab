@@ -19,7 +19,7 @@ export function Nav() {
       {Links.map((link) => {
         return <NavLink key={link.href} href={link.href} title={link.title} />;
       })}
-      <SignOutButton />
+      <SignOutButton className="mt-5" />
     </nav>
   );
 }
