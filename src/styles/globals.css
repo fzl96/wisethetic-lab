@@ -4,6 +4,8 @@
 
 @layer base {
   :root {
+    --primary-accent: 33 56% 56%;
+
     --home-background: 40 8% 93%;
     --home-foreground: 0 0% 8%;
     --home-border: 0 0% 90%;
@@ -44,6 +46,8 @@
   }
 
   .dark {
+    --primary-accent: 33 56% 56%;
+
     --home-background: 0 0% 5%;
     --home-foreground: 0 100% 99%;
     --home-border: 0 0% 15%;

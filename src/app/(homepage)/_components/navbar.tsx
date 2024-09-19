@@ -75,7 +75,7 @@ export function Navbar() {
           <div className="">
             <Link
               href="/"
-              className="font-firaSans uppercase tracking-[0.25em] text-[#ce9651] md:text-xl"
+              className="font-firaSans uppercase tracking-[0.25em] text-primary-accent md:text-xl"
             >
               {siteConfig.name}
             </Link>
@@ -127,7 +127,7 @@ export function Navbar() {
             <span>|</span>
             <Link href="/cart" className="relative">
               <ShoppingCart className="h-5 w-5" />
-              <div className="absolute -right-2.5 -top-2 grid h-5 w-5 place-items-center rounded-full  bg-[#ce9651] text-xs font-semibold">
+              <div className="absolute -right-2.5 -top-2 grid h-5 w-5 place-items-center rounded-full  bg-primary-accent text-xs font-semibold">
                 {user?.cartItemsCount ?? 0}
               </div>
             </Link>

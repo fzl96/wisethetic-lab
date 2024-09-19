@@ -58,7 +58,7 @@ export const NewOrderEmail = ({ order, items, total }: NewOrderEmailProps) => {
             className="rounded-lg bg-white px-8 py-4"
           >
             <Section className="">
-              <Text className="font-firaSans text-xl uppercase tracking-[0.25em] text-[#ce9651]">
+              <Text className="font-firaSans text-xl uppercase tracking-[0.25em] text-primary-accent">
                 {siteConfig.name}
               </Text>
             </Section>

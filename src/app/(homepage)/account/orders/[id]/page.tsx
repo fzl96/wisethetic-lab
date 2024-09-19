@@ -117,7 +117,7 @@ export default async function OrderIdPage({
             {order.payment?.status === "completed" && (
               <a
                 href={`https://app.sandbox.midtrans.com/snap/v4/redirection/${order.payment?.snapToken}`}
-                className="text-wrap break-all text-sm text-[#ce9651] hover:underline"
+                className="text-logo text-wrap break-all text-sm hover:underline"
               >
                 {`https://app.sandbox.midtrans.com/snap/v4/redirection/${order.payment?.snapToken}`}
               </a>
@@ -125,7 +125,7 @@ export default async function OrderIdPage({
             {order.payment?.status === "pending" && (
               <Link
                 href={`/checkout/payment/${order.id}`}
-                className="text-sm text-[#ce9651] hover:underline"
+                className="text-sm text-primary-accent hover:underline"
               >
                 Click here to pay
               </Link>
@@ -141,7 +141,7 @@ export default async function OrderIdPage({
               ) : (
                 <a
                   href={order.contentResult}
-                  className="text-wrap break-all text-sm text-[#ce9651] hover:underline"
+                  className="text-wrap break-all text-sm text-primary-accent hover:underline"
                 >
                   {order.contentResult}
                 </a>

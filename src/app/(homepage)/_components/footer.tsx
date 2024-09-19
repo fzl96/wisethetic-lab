@@ -49,7 +49,7 @@ export function Footer() {
   return (
     <footer className="bottom-0 mt-40 grid w-full place-items-center gap-6 bg-home-footer px-10 pb-4 pt-10">
       <div>
-        <span className="font-firaSans text-xl uppercase tracking-[0.25em] text-[#ce9651]">
+        <span className="font-firaSans text-xl uppercase tracking-[0.25em] text-primary-accent">
           {siteConfig.name}
         </span>
       </div>

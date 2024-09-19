@@ -152,7 +152,7 @@ export function CartForm({ pkg }: { pkg: PackageWithProducts }) {
         </div>
         <Button
           size="lg"
-          className="w-full disabled:cursor-pointer"
+          className="w-full py-6 disabled:cursor-pointer"
           disabled={isPending || !selectedProduct || !user}
           onClick={() => {
             if (!user?.cartId) {
