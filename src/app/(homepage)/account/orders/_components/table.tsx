@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Card, CardTitle, CardHeader, CardContent } from "@/components/ui/card";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
@@ -23,61 +24,66 @@ export async function OrdersTable() {
   });
 
   return (
-    <div className="rounded-xl bg-home-card-background p-5 md:p-10">
-      <Table>
-        <TableCaption>A list of your recent orders.</TableCaption>
-        <TableHeader>
-          <TableRow className="border-[#1c1c1c]">
-            <TableHead className="hidden md:table-cell">Order</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Total</TableHead>
-            <TableHead className="sr-only hidden md:table-cell">
-              Action
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {orders.map((order) => (
-            <TableRow key={order.id} className="border-[#1c1c1c]">
-              <TableCell className="hidden py-5 font-accent text-sm uppercase text-muted-foreground md:table-cell">
-                {order.id}
-              </TableCell>
-              <TableCell>
-                <Link href={`/account/orders/${order.id}`}>
-                  {format(new Date(order.createdAt), "MMM dd, yyyy")}
-                </Link>
-              </TableCell>
-              <TableCell>
-                <Badge
-                  variant={order.status}
-                  className="p-0 text-sm capitalize"
-                >
-                  <Link href={`/account/orders/${order.id}`}>
-                    {order.status}
-                  </Link>
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <Link href={`/account/orders/${order.id}`}>
-                  {currencyFormatter.format(order.total)}
-                </Link>
-              </TableCell>
-              <TableCell className="hidden md:table-cell">
-                <Link
-                  href={`/account/orders/${order.id}`}
-                  className={buttonVariants({
-                    size: "xs",
-                    variant: "secondary",
-                  })}
-                >
-                  View
-                </Link>
-              </TableCell>
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-home-foreground">Recent Orders</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Table>
+          <TableCaption>A list of your recent orders.</TableCaption>
+          <TableHeader>
+            <TableRow className="border-home-border">
+              <TableHead className="hidden md:table-cell">Order</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Total</TableHead>
+              <TableHead className="sr-only hidden md:table-cell">
+                Action
+              </TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+          </TableHeader>
+          <TableBody>
+            {orders.map((order) => (
+              <TableRow key={order.id} className="border-home-border">
+                <TableCell className="hidden py-5 font-accent text-sm uppercase text-muted-foreground md:table-cell">
+                  {order.id}
+                </TableCell>
+                <TableCell>
+                  <Link href={`/account/orders/${order.id}`}>
+                    {format(new Date(order.createdAt), "MMM dd, yyyy")}
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  <Badge
+                    variant={order.status}
+                    className="p-0 text-sm capitalize"
+                  >
+                    <Link href={`/account/orders/${order.id}`}>
+                      {order.status}
+                    </Link>
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  <Link href={`/account/orders/${order.id}`}>
+                    {currencyFormatter.format(order.total)}
+                  </Link>
+                </TableCell>
+                <TableCell className="hidden md:table-cell">
+                  <Link
+                    href={`/account/orders/${order.id}`}
+                    className={buttonVariants({
+                      size: "xs",
+                      variant: "secondary",
+                    })}
+                  >
+                    View
+                  </Link>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
   );
 }
