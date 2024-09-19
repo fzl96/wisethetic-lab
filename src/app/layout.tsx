@@ -99,22 +99,15 @@ export default async function RootLayout({
           )}
         >
           <ReactQueryProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="dark"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <TooltipProvider>
-                <div
-                  vaul-drawer-wrapper=""
-                  className="min-h-screen bg-background"
-                >
-                  {children}
-                </div>
-              </TooltipProvider>
-              <Toaster closeButton richColors position="top-center" />
-            </ThemeProvider>
+            <TooltipProvider>
+              <div
+                vaul-drawer-wrapper=""
+                className="min-h-screen bg-background"
+              >
+                {children}
+              </div>
+            </TooltipProvider>
+            <Toaster closeButton richColors position="top-center" />
           </ReactQueryProvider>
         </body>
       </html>
