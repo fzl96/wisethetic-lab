@@ -15,6 +15,8 @@
     --home-footer-background: 0 0% 26%;
     --home-footer-foreground: 42 31% 94%;
 
+    --home-cart-banner: 47 29% 94%;
+
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -56,6 +58,8 @@
     --home-card-background-hover: 0 0% 10%;
     --home-footer-background: 0 0% 8%;
     --home-footer-foreground: 0 0% 50%;
+
+    --home-cart-banner: 0 0% 8%;
 
     --background: 0 0% 10%;
     --foreground: 0 0% 85%;

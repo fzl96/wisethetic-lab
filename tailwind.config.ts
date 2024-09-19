@@ -38,6 +38,7 @@ const config = {
           DEFAULT: "hsl(var(--home-footer-background))",
           foreground: "hsl(var(--home-footer-foreground))",
         },
+        "home-cart-banner": "hsl(var(--home-cart-banner))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
