@@ -2,9 +2,11 @@ import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { ShoppingBag } from "lucide-react";
 import { Input } from "./ui/input";
+import { CheckoutFormClient } from "./form";
 import { getCart } from "@/server/api/carts/queries";
 import { redirect } from "next/navigation";
 import { OrderSummary } from "./order-summary";
+
 export async function ClientLayout() {
   const cart = await getCart();
 
@@ -28,6 +30,7 @@ export async function ClientLayout() {
             </Link>
           </header>
           <main>
+            <CheckoutFormClient cart={cart} />
           </main>
           <footer></footer>
         </div>
