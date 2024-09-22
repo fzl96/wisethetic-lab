@@ -73,6 +73,89 @@ export function CheckoutFormClient({ cart }: CheckoutFormClientProps) {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="">
         {/* TODO: Add the form components */}
+        <div className="grid gap-8">
+          <section className="grid grid-cols-1 gap-4">
+            <h2 className="text-xl font-bold">Contact</h2>
+            <CustomInput
+              label="Email"
+              htmlFor="email"
+              value={user?.email ?? "t@t.com"}
+              disabled
+            />
+            <FormField
+              control={form.control}
+              name="contactName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <CustomInput
+                      id="contactName"
+                      htmlFor={field.name}
+                      label="Name"
+                      placeholder="Name"
+                      {...field}
+                      disabled={isPending}
+                      value={field.value}
+                    />
+                  </FormControl>
+                  <FormMessage {...field} />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="brandName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <CustomInput
+                      id="brandName"
+                      htmlFor={field.name}
+                      label="Brand name"
+                      placeholder="Brand name"
+                      {...field}
+                      disabled={isPending}
+                      value={field.value}
+                    />
+                  </FormControl>
+                  <FormMessage {...field} />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <CustomInput
+                      id="phone"
+                      htmlFor={field.name}
+                      label="Phone"
+                      placeholder="Phone"
+                      {...field}
+                      disabled={isPending}
+                      value={field.value}
+                      icon={
+                        <Tooltip delayDuration={0}>
+                          <TooltipTrigger type="button">
+                            <Icons.help className="h-4 w-4" />
+                          </TooltipTrigger>
+                          <TooltipContent
+                            className="max-w-40 text-center"
+                            side="left"
+                          >
+                            In case we need to contact you about your order
+                          </TooltipContent>
+                        </Tooltip>
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage {...field} />
+                </FormItem>
+              )}
+            />
+          </section>
         </div>
       </form>
     </Form>
