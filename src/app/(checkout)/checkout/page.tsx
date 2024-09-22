@@ -1,7 +1,5 @@
+import { ClientLayout } from "./_components/client-layout";
+
 export default function CheckoutPage() {
-  return (
-    <div>
-      <h1>Checkout</h1>
-    </div>
-  );
+  return <ClientLayout />;
 }

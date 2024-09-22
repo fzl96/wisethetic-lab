@@ -5,5 +5,9 @@ export default async function CheckoutLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <ThemeProvider forcedTheme="light">test{children}</ThemeProvider>;
+  return (
+    <ThemeProvider defaultTheme="light" forcedTheme="light" attribute="class">
+      {children}
+    </ThemeProvider>
+  );
 }
