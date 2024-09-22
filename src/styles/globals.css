@@ -17,6 +17,12 @@
 
     --home-cart-banner: 47 29% 94%;
 
+    --checkout-border: 0 0% 85.5%;
+    --checkout-border-focus: 13 26.9% 65.7%;
+    --checkout-border-shadow: 0 0 0 1px hsl(13, 26.9% 65.7%);
+    --checkout-radio-background: 20 17.6% 96.7%;
+    --checkout-secondary-foreground: 0 0% 44%;
+
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -60,6 +66,12 @@
     --home-footer-foreground: 0 0% 50%;
 
     --home-cart-banner: 0 0% 8%;
+
+    --checkout-border: 0 0% 85.5%;
+    --checkout-border-focus: 13 26.9% 65.7%;
+    --checkout-border-shadow: 0 0 0 1px rgb(191, 154, 144);
+    --checkout-radio-background: 20 17.6% 96.7%;
+    --checkout-secondary-foreground: 0 0% 44%;
 
     --background: 0 0% 10%;
     --foreground: 0 0% 85%;
