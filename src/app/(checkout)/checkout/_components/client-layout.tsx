@@ -4,6 +4,7 @@ import { ShoppingBag } from "lucide-react";
 import { Input } from "./ui/input";
 import { getCart } from "@/server/api/carts/queries";
 import { redirect } from "next/navigation";
+import { OrderSummary } from "./order-summary";
 export async function ClientLayout() {
   const cart = await getCart();
 
@@ -33,6 +34,7 @@ export async function ClientLayout() {
       </div>
       <div className="">
         <div className="sticky bottom-0 left-auto right-auto top-0 max-w-[34rem] md:p-10">
+          <OrderSummary cart={cart} />
         </div>
       </div>
     </div>
