@@ -21,6 +21,14 @@ export const locationEnum = pgEnum("location", [
   "online",
 ]);
 
+export const meetingTypeEnum = pgEnum("meeting_type", ["online", "offline"]);
+
+export const paymentStatusEnum = pgEnum("payment_status", [
+  "pending",
+  "completed",
+  "cancelled",
+]);
+
 export const orders = pgTable("order", {
   id: text("id")
     .primaryKey()
@@ -32,8 +40,6 @@ export const orders = pgTable("order", {
   contactName: text("contact_name").notNull(),
   phone: text("phone").notNull(),
   brandName: text("brand_name").notNull(),
-  meetingDate: timestamp("meeting_date", { mode: "date" }).notNull(),
-  location: locationEnum("online"),
   returnAddress: text("return_address"),
 
   notes: text("notes"),
@@ -49,51 +55,42 @@ export const ordersRelations = relations(orders, ({ one, many }) => ({
     fields: [orders.userId],
     references: [users.id],
   }),
+  meeting: one(meetings),
   payment: one(payments),
   orderItems: many(orderItems),
 }));
 
-const orderBaseSchema = createSelectSchema(orders).omit(timestamps);
-export const insertOrderSchema = createInsertSchema(orders).omit(timestamps);
-export const insertOrderParams = insertOrderSchema
-  .extend({
-    returnAddress: z.string().optional(),
-  })
-  .omit({
-    id: true,
-    userId: true,
-    notes: true,
-    total: true,
-    status: true,
-    contentResult: true,
-  });
-export const updateOrderParams = insertOrderSchema
-  .extend({
-    contentResult: z.string().optional(),
-    notes: z.string().optional(),
-  })
-  .omit({
-    id: true,
-    userId: true,
-    total: true,
-    location: true,
-    meetingDate: true,
-    phone: true,
-    brandName: true,
-    contactName: true,
-    returnAddress: true,
-  });
-export const orderIdSchema = orderBaseSchema.pick({ id: true });
-export type Order = typeof orders.$inferSelect;
-export type OrderId = z.infer<typeof orderIdSchema>["id"];
-export type NewOrderParams = z.infer<typeof insertOrderParams>;
-export type UpdateOrderParams = z.infer<typeof updateOrderParams>;
+export const meetings = pgTable("meeting", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  orderId: text("orderId")
+    .notNull()
+    .references(() => orders.id, { onDelete: "cascade" }),
+  type: meetingTypeEnum("online"),
+  date: timestamp("meeting_date", { mode: "date" }).notNull(),
+  locationId: text("locationId").references(() => locations.id),
+});
 
-export const paymentStatusEnum = pgEnum("payment_status", [
-  "pending",
-  "completed",
-  "cancelled",
-]);
+export const meetingRelations = relations(meetings, ({ one }) => ({
+  order: one(orders, {
+    fields: [meetings.orderId],
+    references: [orders.id],
+  }),
+  location: one(locations, {
+    fields: [meetings.locationId],
+    references: [locations.id],
+  }),
+}));
+
+export const locations = pgTable("meeting_location", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  name: text("name").notNull(),
+  address: text("address").notNull(),
+  link: text("link"),
+});
 
 export const payments = pgTable("payment", {
   id: text("id")
@@ -148,6 +145,123 @@ export const orderItemsRelations = relations(orderItems, ({ one }) => ({
     references: [orders.id],
   }),
 }));
+
+export const meetingSchema = z
+  .object({
+    meetingDate: z.date(),
+    meetingType: z.enum(["online", "offline"], { message: "Invalid type" }),
+    locationId: z.string().optional(),
+  })
+  .refine(
+    (data) =>
+      !data.meetingType || data.meetingType === "online" || data.locationId,
+    {
+      message: "Location is required for offline meeting",
+      path: ["locationId"],
+    },
+  );
+
+export const returnSchema = z
+  .object({
+    returnType: z.enum(["yes", "no"], { message: "Option is not valid" }),
+    name: z.string().optional(),
+    address: z.string().optional(),
+    address2: z.string().optional(),
+    city: z.string().optional(),
+    province: z.string().optional(),
+    postalCode: z.string().optional(),
+    phone: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.returnType === "yes") {
+      if (!data.name) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["name"],
+          message: "Name is required when returnType is 'yes'",
+        });
+      }
+      if (!data.address) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["address"],
+          message: "Address is required when returnType is 'yes'",
+        });
+      }
+      if (!data.city) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["city"],
+          message: "City is required when returnType is 'yes'",
+        });
+      }
+      if (!data.province) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["province"],
+          message: "Province is required when returnType is 'yes'",
+        });
+      }
+      if (!data.postalCode) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["postalCode"],
+          message: "Postal Code is required when returnType is 'yes'",
+        });
+      }
+      if (!data.phone) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["phone"],
+          message: "Phone is required when returnType is 'yes'",
+        });
+      }
+    }
+  });
+
+export const createOrderSchema = z
+  .object({
+    contactName: z.string().min(1, { message: "Contact name is required" }),
+    phone: z.string().min(1, { message: "Phone number is reuqired" }),
+    brandName: z.string().min(1, { message: "Brand name is required" }),
+  })
+  .and(meetingSchema)
+  .and(returnSchema);
+
+const orderBaseSchema = createSelectSchema(orders).omit(timestamps);
+export const insertOrderSchema = createInsertSchema(orders).omit(timestamps);
+export const insertOrderParams = insertOrderSchema
+  .extend({
+    returnAddress: z.string().optional(),
+  })
+  .omit({
+    id: true,
+    userId: true,
+    notes: true,
+    total: true,
+    status: true,
+    contentResult: true,
+  });
+export const updateOrderParams = insertOrderSchema
+  .extend({
+    contentResult: z.string().optional(),
+    notes: z.string().optional(),
+  })
+  .omit({
+    id: true,
+    userId: true,
+    total: true,
+    phone: true,
+    brandName: true,
+    contactName: true,
+    returnAddress: true,
+  });
+export const orderIdSchema = orderBaseSchema.pick({ id: true });
+export type Order = typeof orders.$inferSelect;
+export type OrderId = z.infer<typeof orderIdSchema>["id"];
+export type NewOrderParams = z.infer<typeof insertOrderParams>;
+export type UpdateOrderParams = z.infer<typeof updateOrderParams>;
+export type CreateOrderParams = z.infer<typeof createOrderSchema>;
 
 export const orderItemsBaseSchema =
   createSelectSchema(orderItems).omit(timestamps);

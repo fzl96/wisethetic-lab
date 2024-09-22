@@ -15,11 +15,14 @@ import {
 import { carts, cartItems, cartsRelations, cartItemsRelations } from "./cart";
 import {
   orders,
-  orderItems,
-  payments,
   ordersRelations,
+  orderItems,
   orderItemsRelations,
+  payments,
   paymentRelations,
+  meetings,
+  meetingRelations,
+  locations,
 } from "./orders";
 
 export {
@@ -43,4 +46,7 @@ export {
   orderItemsRelations,
   payments,
   paymentRelations,
+  meetings,
+  meetingRelations,
+  locations,
 };
