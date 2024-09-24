@@ -8,12 +8,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input as CustomInput } from "./ui/input";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import {
   Form,
   FormControl,
@@ -22,7 +16,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useState, useTransition } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { useMemo, useState, useTransition } from "react";
 import {
   type CreateOrderParams,
   createOrderSchema,
@@ -36,6 +37,10 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/tooltip";
+import { useQuery } from "@tanstack/react-query";
+import { RadioGroupSkeleton } from "./ui/radio-group-skeleton";
+import { DatePicker } from "./ui/date-picker";
+import { provinces } from "./provinces";
 
 const meetingTypes = [
   {
@@ -47,6 +52,28 @@ const meetingTypes = [
     label: "On person",
   },
 ];
+const returnTypes = [
+  {
+    value: "no",
+    label: "Keep",
+  },
+  {
+    value: "yes",
+    label: "Return",
+  },
+];
+
+type Meeting = {
+  date: Date;
+  hour: number;
+};
+
+type Locations = {
+  id: string;
+  name: string;
+  link: string | null;
+  address: string;
+};
 
 interface CheckoutFormClientProps {
   cart: CartExtended;
@@ -56,7 +83,8 @@ export function CheckoutFormClient({ cart }: CheckoutFormClientProps) {
   const user = useCurrentUser();
 
   const [isPending, startTransition] = useTransition();
-  const [popoverOpen, setPopoverOpen] = useState<boolean>(false);
+  const [selectedDate, setSelectedDate] = useState<Date>();
+  const [provinceOpen, setProvinceOpen] = useState(false);
 
   const form = useForm<CreateOrderParams>({
     resolver: zodResolver(createOrderSchema),
@@ -65,7 +93,44 @@ export function CheckoutFormClient({ cart }: CheckoutFormClientProps) {
     },
   });
 
+  const [date, setDate] = useState({
+    date: selectedDate?.getDay(),
+    month: selectedDate?.getMonth() ? selectedDate.getMonth() + 1 : 1,
+    year: selectedDate?.getFullYear(),
+  });
+
+  const { data, isLoading } = useQuery<Meeting[]>({
+    queryKey: ["meetings", selectedDate],
+    queryFn: () =>
+      fetch(
+        `/api/checkout/meeting/date?date=${date.date}&month=${date.month}&year=${date.year}`,
+      ).then((res) => res.json()),
+    enabled: !!selectedDate,
+  });
+
+  const { data: locations, isLoading: locationsLoading } = useQuery<
+    Locations[]
+  >({
+    queryKey: ["locations"],
+    queryFn: () =>
+      fetch(`/api/checkout/meeting/locations`).then((res) => res.json()),
+    enabled: !!(form.watch("meetingType") === "offline"),
+  });
+
+  const meetingDates = useMemo(() => {
+    if (!selectedDate) return [];
+
+    const dateFor14 = new Date(selectedDate);
+    dateFor14.setHours(14, 0, 0, 0); // Set time to 14:00
+
+    const dateFor20 = new Date(selectedDate);
+    dateFor20.setHours(20, 0, 0, 0); // Set time to 20:00
+
+    return [dateFor14, dateFor20];
+  }, [selectedDate]);
+
   const onSubmit = async (values: CreateOrderParams) => {
+    console.log(values);
     // TODO: add the submit logic
   };
 
@@ -156,6 +221,482 @@ export function CheckoutFormClient({ cart }: CheckoutFormClientProps) {
               )}
             />
           </section>
+          <section className="grid gap-4">
+            <h2 className="text-xl font-bold">Meeting</h2>
+            <DatePicker
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+              setDate={setDate}
+              disabled={isLoading}
+            />
+            {selectedDate && isLoading && (
+              <div className="space-y-4">
+                <h3 className="text-base font-semibold">Meeting time</h3>
+                <RadioGroupSkeleton />
+              </div>
+            )}
+            {selectedDate && !isLoading && (
+              <div className="space-y-4">
+                <h3 className="text-base font-semibold">Meeting time</h3>
+                <FormField
+                  control={form.control}
+                  name="meetingDate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          className="m-0 gap-0"
+                        >
+                          {meetingDates.map((date, index) => {
+                            const disabled = data?.some(
+                              (item) => item.date.getTime() === date.getTime(),
+                            );
+                            return (
+                              <FormItem
+                                key={index}
+                                className={cn(
+                                  "transition-all duration-200 ease-in-out",
+                                  "relative border-x border-t border-checkout-border last:border-b has-[:checked]:bg-radio-background",
+                                  "bg-white first:rounded-t-[5px] first:before:rounded-t-[5px] last:rounded-b-[5px] last:before:rounded-b-[5px]",
+                                  "has-[:checked]:before:transition-all has-[:checked]:before:duration-200 has-[:checked]:before:ease-in-out",
+                                  "before:pointer-events-none has-[:checked]:before:absolute has-[:checked]:before:z-10 has-[:checked]:before:h-full has-[:checked]:before:w-full has-[:checked]:before:ring-1 has-[:checked]:before:ring-checkout-border-focus has-[:checked]:before:content-['']",
+                                )}
+                              >
+                                <FormControl>
+                                  <RadioGroupItem
+                                    value={date.toString()}
+                                    className="hidden"
+                                    disabled={disabled}
+                                  />
+                                </FormControl>
+                                <FormLabel
+                                  className={cn(
+                                    "flex w-full cursor-pointer items-center gap-2 border-none bg-transparent px-3 py-[0.9rem] outline-none",
+                                  )}
+                                >
+                                  <div className="grid h-4 w-4 place-items-center rounded-full bg-checkout-border-focus">
+                                    <div
+                                      className={cn(
+                                        "h-full w-full rounded-full border border-checkout-border bg-white transition-all duration-200 peer-checked:bg-checkout-border-focus",
+                                        new Date(field.value).getTime() ===
+                                          date.getTime() && "h-[50%] w-[50%]",
+                                      )}
+                                    >
+                                      {" "}
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <span className="text-sm font-normal">
+                                      {format(date, "HH:mm")} WIB
+                                    </span>
+                                  </div>
+                                </FormLabel>
+                              </FormItem>
+                            );
+                          })}
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage {...field} />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            )}
+            <FormField
+              control={form.control}
+              name="meetingType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="m-0 gap-0"
+                    >
+                      {meetingTypes.map((type) => (
+                        <FormItem
+                          key={type.value}
+                          className={cn(
+                            "transition-all duration-200 ease-in-out",
+                            "relative border-x border-t border-checkout-border last:border-b has-[:checked]:bg-radio-background",
+                            "bg-white first:rounded-t-[5px] first:before:rounded-t-[5px] last:rounded-b-[5px] last:before:rounded-b-[5px]",
+                            "has-[:checked]:before:transition-all has-[:checked]:before:duration-200 has-[:checked]:before:ease-in-out",
+                            "before:pointer-events-none has-[:checked]:before:absolute has-[:checked]:before:z-10 has-[:checked]:before:h-full has-[:checked]:before:w-full has-[:checked]:before:ring-1 has-[:checked]:before:ring-checkout-border-focus has-[:checked]:before:content-['']",
+                          )}
+                        >
+                          <FormControl>
+                            <RadioGroupItem
+                              value={type.value}
+                              className="sr-only"
+                            />
+                          </FormControl>
+                          <FormLabel
+                            className={cn(
+                              "flex w-full cursor-pointer items-center gap-2 border-none bg-transparent px-3 py-[0.9rem] outline-none",
+                            )}
+                          >
+                            <div className="grid h-4 w-4 place-items-center rounded-full bg-checkout-border-focus">
+                              <div
+                                className={cn(
+                                  "h-full w-full rounded-full border border-checkout-border bg-white transition-all duration-200 peer-checked:bg-checkout-border-focus",
+                                  field.value === type.value &&
+                                    "h-[50%] w-[50%]",
+                                )}
+                              >
+                                {" "}
+                              </div>
+                            </div>
+                            <div className="">
+                              <span className="text-sm font-normal">
+                                {type.label}
+                              </span>
+                            </div>
+                          </FormLabel>
+                        </FormItem>
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            {form.watch("meetingType") === "offline" && (
+              <div className="grid gap-2">
+                <h3 className="text-lg font-bold ">Locations</h3>
+                <p className="text-sm text-[hsl(0,0,44%)]">
+                  You can choose to meet at one of these locations
+                </p>
+                {locationsLoading && <RadioGroupSkeleton />}
+                {locations && !locationsLoading && (
+                  <FormField
+                    control={form.control}
+                    name="locationId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <RadioGroup
+                            onValueChange={field.onChange}
+                            className="m-0 gap-0"
+                          >
+                            {locations.map((location) => {
+                              return (
+                                <FormItem
+                                  key={location.id}
+                                  className={cn(
+                                    "transition-all duration-200 ease-in-out",
+                                    "relative border-x border-t border-checkout-border last:border-b has-[:checked]:bg-radio-background",
+                                    "bg-white first:rounded-t-[5px] first:before:rounded-t-[5px] last:rounded-b-[5px] last:before:rounded-b-[5px]",
+                                    "has-[:checked]:before:transition-all has-[:checked]:before:duration-200 has-[:checked]:before:ease-in-out",
+                                    "before:pointer-events-none has-[:checked]:before:absolute has-[:checked]:before:z-10 has-[:checked]:before:h-full has-[:checked]:before:w-full has-[:checked]:before:ring-1 has-[:checked]:before:ring-checkout-border-focus has-[:checked]:before:content-['']",
+                                  )}
+                                >
+                                  <FormControl>
+                                    <RadioGroupItem
+                                      value={location.id}
+                                      className="hidden"
+                                    />
+                                  </FormControl>
+                                  <FormLabel
+                                    className={cn(
+                                      "flex w-full cursor-pointer items-center gap-2 border-none bg-transparent px-4 py-[0.9rem] outline-none",
+                                      "before:absolute before:z-[1] before:border before:border-checkout-border-focus before:opacity-0 before:content-[''] ",
+                                    )}
+                                  >
+                                    <div className="w-full ">
+                                      <div className="flex items-center justify-between">
+                                        <div className="space-y-1">
+                                          <p className="font-normal">
+                                            {location.name}
+                                          </p>
+                                          <p className="text-[0.8rem] font-normal text-checkout-secondary-foreground">
+                                            {location.address}
+                                          </p>
+                                        </div>
+                                        <Tooltip delayDuration={0}>
+                                          <TooltipTrigger asChild>
+                                            <span className="z-100 text-checkout-secondary-foreground">
+                                              <a
+                                                href={
+                                                  location.link ??
+                                                  "maps.google.com"
+                                                }
+                                                target="_blank"
+                                              >
+                                                <Icons.navigation className="h-4 w-4" />
+                                              </a>
+                                            </span>
+                                          </TooltipTrigger>
+                                          <TooltipContent>
+                                            Go to map
+                                          </TooltipContent>
+                                        </Tooltip>
+                                      </div>
+                                    </div>
+                                  </FormLabel>
+                                </FormItem>
+                              );
+                            })}
+                          </RadioGroup>
+                        </FormControl>
+                        <FormMessage {...field} />
+                      </FormItem>
+                    )}
+                  />
+                )}
+              </div>
+            )}
+          </section>
+          <section className="grid gap-4">
+            <h2 className="text-xl font-bold">Return</h2>
+            <p className="text-sm text-[hsl(0,0,44%)]">
+              You can choose if you want us to keep or return the product
+            </p>
+            <div className="grid gap-4">
+              <FormField
+                control={form.control}
+                name="returnType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="m-0 gap-0"
+                      >
+                        {returnTypes.map((type) => (
+                          <FormItem
+                            key={type.value}
+                            className={cn(
+                              "transition-all duration-200 ease-in-out",
+                              "relative border-x border-t border-checkout-border last:border-b has-[:checked]:bg-radio-background",
+                              "bg-white first:rounded-t-[5px] first:before:rounded-t-[5px] last:rounded-b-[5px] last:before:rounded-b-[5px]",
+                              "has-[:checked]:before:transition-all has-[:checked]:before:duration-200 has-[:checked]:before:ease-in-out",
+                              "before:pointer-events-none has-[:checked]:before:absolute has-[:checked]:before:z-10 has-[:checked]:before:h-full has-[:checked]:before:w-full has-[:checked]:before:ring-1 has-[:checked]:before:ring-checkout-border-focus has-[:checked]:before:content-['']",
+                            )}
+                          >
+                            <FormControl>
+                              <RadioGroupItem
+                                value={type.value}
+                                className="sr-only"
+                              />
+                            </FormControl>
+                            <FormLabel
+                              className={cn(
+                                "flex w-full cursor-pointer items-center gap-2 border-none bg-transparent px-3 py-[0.9rem] outline-none",
+                              )}
+                            >
+                              <div className="grid h-4 w-4 place-items-center rounded-full bg-checkout-border-focus">
+                                <div
+                                  className={cn(
+                                    "h-full w-full rounded-full border border-checkout-border bg-white transition-all duration-200 peer-checked:bg-checkout-border-focus",
+                                    field.value === type.value &&
+                                      "h-[50%] w-[50%]",
+                                  )}
+                                >
+                                  {" "}
+                                </div>
+                              </div>
+                              <div className="">
+                                <span className="text-sm font-normal">
+                                  {type.label}
+                                </span>
+                              </div>
+                            </FormLabel>
+                          </FormItem>
+                        ))}
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage {...field} />
+                  </FormItem>
+                )}
+              />
+              {form.watch("returnType") === "yes" && (
+                <div className="grid gap-2">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <CustomInput
+                            id="name"
+                            htmlFor={field.name}
+                            label="Name"
+                            placeholder="Name"
+                            {...field}
+                            disabled={isPending}
+                            value={field.value!}
+                          />
+                        </FormControl>
+                        <FormMessage {...field} />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="address"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <CustomInput
+                            id="address"
+                            htmlFor={field.name}
+                            label="Address"
+                            placeholder="Address"
+                            {...field}
+                            disabled={isPending}
+                            value={field.value!}
+                          />
+                        </FormControl>
+                        <FormMessage {...field} />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="address2"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <CustomInput
+                            id="address2"
+                            htmlFor={field.name}
+                            label="Apartment, suite, etc. (optional)"
+                            placeholder="Apartment, suite, etc. (optional)"
+                            {...field}
+                            disabled={isPending}
+                            value={field.value!}
+                          />
+                        </FormControl>
+                        <FormMessage {...field} />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="city"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <CustomInput
+                            id="city"
+                            htmlFor={field.name}
+                            label="City"
+                            placeholder="City"
+                            {...field}
+                            disabled={isPending}
+                            value={field.value!}
+                          />
+                        </FormControl>
+                        <FormMessage {...field} />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="grid w-full grid-cols-2 gap-2">
+                    <FormField
+                      control={form.control}
+                      name="province"
+                      render={({ field }) => (
+                        <FormItem className="space-y-0">
+                          <FormLabel className="sr-only">Province</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            open={provinceOpen}
+                            onOpenChange={setProvinceOpen}
+                          >
+                            <FormControl>
+                              <SelectTrigger
+                                className={cn(
+                                  "transition-all duration-200 ease-in-out",
+                                  "relative m-0 flex w-full items-center justify-between rounded-[5px] border border-checkout-border bg-white outline-checkout-border-focus",
+                                  provinceOpen &&
+                                    "border-checkout-border-focus shadow-checkout-border-shadow",
+                                )}
+                              >
+                                <div
+                                  className={cn(
+                                    "absolute left-3 top-3.5 text-[0.75rem] text-checkout-secondary-foreground opacity-0 transition-all duration-200 ease-in-out",
+                                    field.value && "top-1.5 opacity-100",
+                                  )}
+                                >
+                                  <span>Province</span>
+                                </div>
+                                <div
+                                  className={cn(
+                                    "px-3 pb-[0.9rem] pt-[0.9rem] text-sm transition-all duration-200 ease-in-out",
+                                    field.value && "pb-[0.4rem] pt-[1.4rem]",
+                                  )}
+                                >
+                                  <SelectValue
+                                    className=""
+                                    placeholder="Province"
+                                  />
+                                </div>
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {provinces.map((province, index) => (
+                                <SelectItem key={index} value={province}>
+                                  {province}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage {...field} />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="postalCode"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <CustomInput
+                              id="postalCode"
+                              htmlFor={field.name}
+                              label="Postal code"
+                              placeholder="Postal code"
+                              {...field}
+                              disabled={isPending}
+                              value={field.value!}
+                            />
+                          </FormControl>
+                          <FormMessage {...field} />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <FormField
+                    control={form.control}
+                    name="addressPhone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <CustomInput
+                            id="addressPhone"
+                            htmlFor={field.name}
+                            label="Phone"
+                            placeholder="Phone"
+                            {...field}
+                            disabled={isPending}
+                            value={field.value!}
+                          />
+                        </FormControl>
+                        <FormMessage {...field} />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              )}
+            </div>
+          </section>
+          <Button
+            className="bg-[#998373] py-[1.6rem] text-lg"
+            disabled={isPending}
+          >
+            Proceed to payment
+          </Button>
         </div>
       </form>
     </Form>
