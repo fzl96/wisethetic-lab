@@ -13,11 +13,13 @@ import {
   Mail,
   MessageCircle,
   CircleHelp,
+  Navigation,
   Instagram,
   Twitter,
 } from "lucide-react";
 
 export const Icons = {
+  navigation: Navigation,
   help: CircleHelp,
   mail: Mail,
   chat: MessageCircle,

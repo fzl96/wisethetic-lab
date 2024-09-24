@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { db } from "@/server/db";
+import { startOfDay, endOfDay } from "date-fns";
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
@@ -14,7 +15,11 @@ export async function GET(req: NextRequest) {
   const newDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(date));
 
   const meetings = await db.query.meetings.findMany({
-    where: (meetings, { eq }) => eq(meetings.date, newDate),
+    where: (meetings, { gte, lte, and }) =>
+      and(
+        gte(meetings.date, startOfDay(newDate)),
+        lte(meetings.date, endOfDay(newDate)),
+      ),
   });
 
   const meetingDates = meetings.map((meeting) => ({
