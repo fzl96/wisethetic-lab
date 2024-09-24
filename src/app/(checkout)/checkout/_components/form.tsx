@@ -41,6 +41,9 @@ import { useQuery } from "@tanstack/react-query";
 import { RadioGroupSkeleton } from "./ui/radio-group-skeleton";
 import { DatePicker } from "./ui/date-picker";
 import { provinces } from "./provinces";
+import { createOrderAction } from "@/server/actions/orders";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const meetingTypes = [
   {
@@ -80,6 +83,8 @@ interface CheckoutFormClientProps {
 }
 
 export function CheckoutFormClient({ cart }: CheckoutFormClientProps) {
+  const router = useRouter();
+  const { update } = useSession();
   const user = useCurrentUser();
 
   const [isPending, startTransition] = useTransition();
@@ -130,14 +135,18 @@ export function CheckoutFormClient({ cart }: CheckoutFormClientProps) {
   }, [selectedDate]);
 
   const onSubmit = async (values: CreateOrderParams) => {
-    console.log(values);
-    // TODO: add the submit logic
+    startTransition(async () => {
+      const res = await createOrderAction(values, cart);
+
+      // @ts-expect-error res is either { error: string } or { order }
+      router.push(`/checkout/${res.id}/payment`);
+      await update();
+    });
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="">
-        {/* TODO: Add the form components */}
         <div className="grid gap-8">
           <section className="grid grid-cols-1 gap-4">
             <h2 className="text-xl font-bold">Contact</h2>
@@ -250,7 +259,9 @@ export function CheckoutFormClient({ cart }: CheckoutFormClientProps) {
                         >
                           {meetingDates.map((date, index) => {
                             const disabled = data?.some(
-                              (item) => item.date.getTime() === date.getTime(),
+                              (item) =>
+                                new Date(item.date).getTime() ===
+                                date.getTime(),
                             );
                             return (
                               <FormItem
@@ -273,6 +284,7 @@ export function CheckoutFormClient({ cart }: CheckoutFormClientProps) {
                                 <FormLabel
                                   className={cn(
                                     "flex w-full cursor-pointer items-center gap-2 border-none bg-transparent px-3 py-[0.9rem] outline-none",
+                                    disabled && "cursor-not-allowed",
                                   )}
                                 >
                                   <div className="grid h-4 w-4 place-items-center rounded-full bg-checkout-border-focus">
@@ -287,7 +299,13 @@ export function CheckoutFormClient({ cart }: CheckoutFormClientProps) {
                                     </div>
                                   </div>
                                   <div>
-                                    <span className="text-sm font-normal">
+                                    <span
+                                      className={cn(
+                                        "text-sm font-normal",
+                                        disabled &&
+                                          "text-checkout-secondary-foreground",
+                                      )}
+                                    >
                                       {format(date, "HH:mm")} WIB
                                     </span>
                                   </div>
@@ -695,6 +713,11 @@ export function CheckoutFormClient({ cart }: CheckoutFormClientProps) {
             className="bg-[#998373] py-[1.6rem] text-lg"
             disabled={isPending}
           >
+            {isPending && (
+              <span>
+                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              </span>
+            )}
             Proceed to payment
           </Button>
         </div>
