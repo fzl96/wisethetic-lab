@@ -5,17 +5,20 @@ import {
   orders,
   orderItems,
   type NewOrderParams,
+  type CreateOrderParams,
   type OrderId,
   insertOrderParams,
   UpdateOrderParams,
   updateOrderParams,
+  createOrderSchema,
+  meetings,
 } from "@/server/db/schema/orders";
 import { type CartExtended } from "@/server/db/schema/cart";
 import { cartItems } from "@/server/db/schema/cart";
 import { sendNewOrderEmail, sendOrderCompletedEmail } from "@/lib/mail";
 
 export const createOrder = async (
-  order: NewOrderParams,
+  order: CreateOrderParams,
   cart: CartExtended,
 ) => {
   const user = await currentUser();
@@ -23,7 +26,7 @@ export const createOrder = async (
     return { error: "Unauthorized" };
   }
 
-  const newOrder = insertOrderParams.safeParse(order);
+  const newOrder = createOrderSchema.safeParse(order);
 
   if (!newOrder.success) {
     return { error: "Invalid order data" };
@@ -39,11 +42,24 @@ export const createOrder = async (
   );
 
   try {
+    const returnAddress = `${newOrder.data.name}, ${newOrder.data.addressPhone}, ${newOrder.data.address}, ${newOrder.data.address2}, ${newOrder.data.city}, ${newOrder.data.province}, ${newOrder.data.postalCode}`;
+
+    const meetingDate = await db.query.meetings.findFirst({
+      where: (meetings, { eq }) => eq(meetings.date, newOrder.data.meetingDate),
+    });
+
+    if (meetingDate) {
+      return { error: "Metting time is not available" };
+    }
+
     const [order] = await db
       .insert(orders)
       .values({
-        ...newOrder.data,
         userId: user.id,
+        contactName: newOrder.data.contactName,
+        phone: newOrder.data.phone,
+        brandName: newOrder.data.brandName,
+        returnAddress: returnAddress,
         total: total,
         status: "pending",
       })
@@ -65,8 +81,18 @@ export const createOrder = async (
       additionalContentQuantity: item.package.additionalContentQuantity,
     }));
 
-    await db.insert(orderItems).values(items);
-    await db.delete(cartItems).where(eq(cartItems.cartId, user.cartId));
+    const meeting = {
+      orderId: order.id,
+      type: newOrder.data.meetingType,
+      date: newOrder.data.meetingDate,
+      locationId: newOrder.data.locationId,
+    };
+
+    await db.transaction(async (tx) => {
+      await tx.insert(orderItems).values(items);
+      await tx.insert(meetings).values(meeting);
+      await tx.delete(cartItems).where(eq(cartItems.cartId, user.cartId));
+    });
 
     const orderEmail = {
       id: order.id,

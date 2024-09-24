@@ -5,7 +5,9 @@ import { createOrder, updateOrder } from "@/server/api/orders/mutations";
 import {
   insertOrderParams,
   updateOrderParams,
+  createOrderSchema,
   type NewOrderParams,
+  type CreateOrderParams,
   type UpdateOrderParams,
   type OrderId,
 } from "@/server/db/schema/orders";
@@ -27,17 +29,18 @@ const handleErrors = (e: unknown) => {
 const revalidateOrder = () => revalidatePath("/cart");
 
 export const createOrderAction = async (
-  input: NewOrderParams,
+  input: CreateOrderParams,
   cart: CartExtended,
 ) => {
   try {
-    const payload = insertOrderParams.parse(input);
+    const payload = createOrderSchema.parse(input);
     const res = await createOrder(payload, cart);
 
     // if (res.error) throw new Error(res.error);
     revalidateOrder();
     return res;
   } catch (e) {
+    console.log(e);
     return handleErrors(e);
   }
 };

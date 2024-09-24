@@ -148,12 +148,15 @@ export const orderItemsRelations = relations(orderItems, ({ one }) => ({
 
 export const meetingSchema = z
   .object({
-    meetingDate: z
-      .string()
-      .refine((value) => !isNaN(Date.parse(value)), {
-        message: "Invalid date format",
-      })
-      .transform((value) => new Date(value)), // Convert string to Date object
+    meetingDate: z.union([
+      z.date(), // Accept Date object directly
+      z
+        .string()
+        .refine((value) => !isNaN(Date.parse(value)), {
+          message: "Invalid date format",
+        })
+        .transform((value) => new Date(value)), // Transform string to Date
+    ]),
     meetingType: z.enum(["online", "offline"], { message: "Invalid type" }),
     locationId: z.string().optional(),
   })
