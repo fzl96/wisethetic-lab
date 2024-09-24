@@ -19,7 +19,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           type={type}
           className={cn(
             "peer w-full border-none bg-transparent px-3 pb-[0.9rem] pt-[0.9rem] text-sm outline-none transition-all duration-200 ease-in-out placeholder:text-checkout-secondary-foreground",
-            // "focus:pb-[0.4rem] focus:pt-[1.4rem]",
             value && "pb-[0.4rem] pt-[1.4rem]",
             icon && "pr-8",
             className,
