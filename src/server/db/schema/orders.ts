@@ -148,7 +148,12 @@ export const orderItemsRelations = relations(orderItems, ({ one }) => ({
 
 export const meetingSchema = z
   .object({
-    meetingDate: z.date(),
+    meetingDate: z
+      .string()
+      .refine((value) => !isNaN(Date.parse(value)), {
+        message: "Invalid date format",
+      })
+      .transform((value) => new Date(value)), // Convert string to Date object
     meetingType: z.enum(["online", "offline"], { message: "Invalid type" }),
     locationId: z.string().optional(),
   })
@@ -170,7 +175,7 @@ export const returnSchema = z
     city: z.string().optional(),
     province: z.string().optional(),
     postalCode: z.string().optional(),
-    phone: z.string().optional(),
+    addressPhone: z.string().optional(),
   })
   .superRefine((data, ctx) => {
     if (data.returnType === "yes") {
@@ -178,42 +183,42 @@ export const returnSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["name"],
-          message: "Name is required when returnType is 'yes'",
+          message: "Enter a name",
         });
       }
       if (!data.address) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["address"],
-          message: "Address is required when returnType is 'yes'",
+          message: "Enter an address",
         });
       }
       if (!data.city) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["city"],
-          message: "City is required when returnType is 'yes'",
+          message: "Enter a city",
         });
       }
       if (!data.province) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["province"],
-          message: "Province is required when returnType is 'yes'",
+          message: "Enter a province",
         });
       }
       if (!data.postalCode) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["postalCode"],
-          message: "Postal Code is required when returnType is 'yes'",
+          message: "Enter a ZIP / postal code",
         });
       }
-      if (!data.phone) {
+      if (!data.addressPhone) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["phone"],
-          message: "Phone is required when returnType is 'yes'",
+          message: "Enter a phone number",
         });
       }
     }
