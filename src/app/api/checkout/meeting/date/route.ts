@@ -17,5 +17,10 @@ export async function GET(req: NextRequest) {
     where: (meetings, { eq }) => eq(meetings.date, newDate),
   });
 
-  return Response.json(meetings);
+  const meetingDates = meetings.map((meeting) => ({
+    date: meeting.date,
+    hour: meeting.date.getHours(),
+  }));
+
+  return Response.json(meetingDates);
 }
