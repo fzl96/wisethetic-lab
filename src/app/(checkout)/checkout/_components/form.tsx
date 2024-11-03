@@ -149,7 +149,7 @@ export function CheckoutFormClient({ cart }: CheckoutFormClientProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="">
         <div className="grid gap-8">
           <section className="grid grid-cols-1 gap-4">
-            <h2 className="text-xl font-bold">Contact</h2>
+            <h2 className="text-xl font-semibold">Contact</h2>
             <CustomInput
               label="Email"
               htmlFor="email"
@@ -231,7 +231,7 @@ export function CheckoutFormClient({ cart }: CheckoutFormClientProps) {
             />
           </section>
           <section className="grid gap-4">
-            <h2 className="text-xl font-bold">Meeting</h2>
+            <h2 className="text-xl font-semibold">Meeting</h2>
             <DatePicker
               selectedDate={selectedDate}
               setSelectedDate={setSelectedDate}
@@ -465,7 +465,7 @@ export function CheckoutFormClient({ cart }: CheckoutFormClientProps) {
             )}
           </section>
           <section className="grid gap-4">
-            <h2 className="text-xl font-bold">Return</h2>
+            <h2 className="text-xl font-semibold">Return</h2>
             <p className="text-sm text-[hsl(0,0,44%)]">
               You can choose if you want us to keep or return the product
             </p>

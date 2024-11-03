@@ -24,7 +24,7 @@ export function OrderSummary({ cart }: { cart: CartExtended }) {
       <section className="relative">
         <div className="grid gap-8">
           <div className="grid gap-8">
-            <h2 className="text-xl font-bold">Order summary</h2>
+            <h2 className="text-xl font-semibold">Order summary</h2>
             <div className="space-y-4">
               {cart.items.map((item) => (
                 <div key={item.id}>
@@ -91,7 +91,7 @@ export function OrderSummary({ cart }: { cart: CartExtended }) {
                     </div>
                   </div>
                 </div>
-                <div className="flex justify-between text-xl font-bold">
+                <div className="flex justify-between text-xl font-semibold">
                   <div>Total</div>
                   <div className="flex items-baseline gap-2">
                     <div className="text-sm font-normal text-[rgba(0,0,0,0.56)]">
