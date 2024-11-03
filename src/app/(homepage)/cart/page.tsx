@@ -10,9 +10,11 @@ export default async function CartPage() {
         <h1 className="font-accent text-2xl font-medium">review your cart</h1>
       </div>
 
-      <Suspense fallback={<CartSkeleton />}>
-        <CartItems />
-      </Suspense>
+      <div className="px-5">
+        <Suspense fallback={<CartSkeleton />}>
+          <CartItems />
+        </Suspense>
+      </div>
     </MaxWidthWrapper>
   );
 }

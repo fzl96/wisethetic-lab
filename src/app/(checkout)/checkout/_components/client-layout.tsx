@@ -6,6 +6,7 @@ import { CheckoutFormClient } from "./form";
 import { getCart } from "@/server/api/carts/queries";
 import { redirect } from "next/navigation";
 import { OrderSummary } from "./order-summary";
+import { SubmitButton } from "./submit-button";
 
 export async function ClientLayout() {
   const cart = await getCart();
@@ -15,7 +16,7 @@ export async function ClientLayout() {
   }
 
   return (
-    <div className="grid min-h-screen lg:grid-cols-[minmax(min-content,_54%)_1fr]">
+    <div className="grid min-h-screen p-5 md:p-0 lg:grid-cols-[minmax(min-content,_54%)_1fr]">
       <div className="flex justify-end bg-[#fafafa]">
         <div className="h-full w-full max-w-[40rem] border-checkout-border md:border-r md:p-10">
           <header className="mb-20 flex w-full items-center justify-between">
@@ -35,10 +36,13 @@ export async function ClientLayout() {
           <footer></footer>
         </div>
       </div>
-      <div className="">
-        <div className="sticky bottom-0 left-auto right-auto top-0 max-w-[34rem] md:p-10">
+      <div className="mt-5">
+        <div className="left-auto right-auto max-w-[34rem] md:sticky md:bottom-0 md:top-0 md:p-10">
           <OrderSummary cart={cart} />
         </div>
+      </div>
+      <div className="md:hidden">
+        <SubmitButton />
       </div>
     </div>
   );

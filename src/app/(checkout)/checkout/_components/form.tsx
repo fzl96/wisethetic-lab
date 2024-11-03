@@ -146,7 +146,7 @@ export function CheckoutFormClient({ cart }: CheckoutFormClientProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="">
+      <form id="hook-form" onSubmit={form.handleSubmit(onSubmit)} className="">
         <div className="grid gap-8">
           <section className="grid grid-cols-1 gap-4">
             <h2 className="text-xl font-semibold">Contact</h2>
@@ -710,7 +710,7 @@ export function CheckoutFormClient({ cart }: CheckoutFormClientProps) {
             </div>
           </section>
           <Button
-            className="bg-[#998373] py-[1.6rem] text-lg"
+            className="hidden bg-[#998373] py-[1.6rem] text-lg md:flex"
             disabled={isPending}
           >
             {isPending && (

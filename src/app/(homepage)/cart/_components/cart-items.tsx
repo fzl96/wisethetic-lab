@@ -26,7 +26,7 @@ export async function CartItems() {
 
   return (
     <div className="grid gap-10 md:mx-20 lg:grid-cols-3">
-      <div className="rounded-xl  p-5 lg:col-span-2">
+      <div className="rounded-xl py-5 lg:col-span-2">
         <div className="space-y-5">
           {cart.items
             ?.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())
