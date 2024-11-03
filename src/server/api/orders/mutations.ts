@@ -12,6 +12,7 @@ import {
   updateOrderParams,
   createOrderSchema,
   meetings,
+  returnAddress,
 } from "@/server/db/schema/orders";
 import { type CartExtended } from "@/server/db/schema/cart";
 import { cartItems } from "@/server/db/schema/cart";
@@ -42,8 +43,6 @@ export const createOrder = async (
   );
 
   try {
-    const returnAddress = `${newOrder.data.name}, ${newOrder.data.addressPhone}, ${newOrder.data.address}, ${newOrder.data.address2}, ${newOrder.data.city}, ${newOrder.data.province}, ${newOrder.data.postalCode}`;
-
     const meetingDate = await db.query.meetings.findFirst({
       where: (meetings, { eq }) => eq(meetings.date, newOrder.data.meetingDate),
     });
@@ -59,7 +58,6 @@ export const createOrder = async (
         contactName: newOrder.data.contactName,
         phone: newOrder.data.phone,
         brandName: newOrder.data.brandName,
-        returnAddress: returnAddress,
         total: total,
         status: "pending",
       })
@@ -88,9 +86,24 @@ export const createOrder = async (
       locationId: newOrder.data.locationId,
     };
 
+    const returnAdd = {
+      orderId: order.id,
+      name: newOrder.data.name,
+      address: newOrder.data.address,
+      additionalInformation: newOrder.data.address2,
+      city: newOrder.data.city,
+      province: newOrder.data.province,
+      postalCode: newOrder.data.postalCode,
+      phone: newOrder.data.addressPhone,
+    };
+
     await db.transaction(async (tx) => {
       await tx.insert(orderItems).values(items);
       await tx.insert(meetings).values(meeting);
+      if (newOrder.data.returnType === "yes") {
+        // @ts-expect-error returnAddress is contains possibly undefined values
+        await tx.insert(returnAddress).values(returnAdd);
+      }
       await tx.delete(cartItems).where(eq(cartItems.cartId, user.cartId));
     });
 
@@ -116,6 +129,7 @@ export const createOrder = async (
 
     return order;
   } catch (error) {
+    console.log(error);
     return { error: "Error creating order" };
   }
 };

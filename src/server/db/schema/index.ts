@@ -22,6 +22,8 @@ import {
   paymentRelations,
   meetings,
   meetingRelations,
+  returnAddress,
+  returnAddressRelations,
   locations,
 } from "./orders";
 
@@ -48,5 +50,7 @@ export {
   paymentRelations,
   meetings,
   meetingRelations,
+  returnAddress,
+  returnAddressRelations,
   locations,
 };

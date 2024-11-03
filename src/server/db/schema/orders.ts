@@ -40,7 +40,6 @@ export const orders = pgTable("order", {
   contactName: text("contact_name").notNull(),
   phone: text("phone").notNull(),
   brandName: text("brand_name").notNull(),
-  returnAddress: text("return_address"),
 
   notes: text("notes"),
   total: integer("total").notNull(),
@@ -56,8 +55,32 @@ export const ordersRelations = relations(orders, ({ one, many }) => ({
     references: [users.id],
   }),
   meeting: one(meetings),
+  returnAddress: one(returnAddress),
   payment: one(payments),
   orderItems: many(orderItems),
+}));
+
+export const returnAddress = pgTable("return_address", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  orderId: text("orderId")
+    .notNull()
+    .references(() => orders.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  address: text("address").notNull(),
+  additionalInformation: text("additional_information"),
+  city: text("city").notNull(),
+  province: text("province").notNull(),
+  postalCode: text("postal_code").notNull(),
+  phone: text("phone").notNull(),
+});
+
+export const returnAddressRelations = relations(returnAddress, ({ one }) => ({
+  order: one(orders, {
+    fields: [returnAddress.orderId],
+    references: [orders.id],
+  }),
 }));
 
 export const meetings = pgTable("meeting", {
