@@ -4,13 +4,11 @@ import { eq } from "drizzle-orm";
 import {
   orders,
   orderItems,
-  type NewOrderParams,
   type CreateOrderParams,
+  type UpdateOrderParams,
   type OrderId,
-  insertOrderParams,
-  UpdateOrderParams,
-  updateOrderParams,
   createOrderSchema,
+  updateOrderSchema,
   meetings,
   returnAddress,
 } from "@/server/db/schema/orders";
@@ -123,8 +121,6 @@ export const createOrder = async (
     }));
 
     // TODO: use background jobs to send email notification
-
-    console.log(total);
     await sendNewOrderEmail(orderEmail, newOrderItems, total);
 
     return order;
@@ -143,7 +139,7 @@ export const updateOrder = async (
     return { error: "Unauthorized" };
   }
 
-  const updateOrder = updateOrderParams.safeParse(order);
+  const updateOrder = updateOrderSchema.safeParse(order);
 
   if (!updateOrder.success) {
     return { error: "Invalid order data" };
@@ -185,5 +181,113 @@ export const updateOrder = async (
     return updatedOrder;
   } catch (error) {
     return { error: "Error updating order" };
+  }
+};
+
+export const updateCheckout = async (
+  orderId: OrderId,
+  order: CreateOrderParams,
+) => {
+  const user = await currentUser();
+  if (!user?.id) {
+    return { error: "Unauthorized" };
+  }
+
+  const newOrder = createOrderSchema.safeParse(order);
+
+  if (!newOrder.success) {
+    return { error: "Invalid order data" };
+  }
+
+  try {
+    const meetingDate = await db.query.meetings.findFirst({
+      where: (meetings, { eq }) => eq(meetings.date, newOrder.data.meetingDate),
+    });
+
+    if (meetingDate && meetingDate.orderId !== orderId) {
+      return { error: "Metting time is not available" };
+    }
+
+    const [order] = await db
+      .update(orders)
+      .set({
+        userId: user.id,
+        contactName: newOrder.data.contactName,
+        phone: newOrder.data.phone,
+        brandName: newOrder.data.brandName,
+        status: "pending",
+      })
+      .where(eq(orders.id, orderId))
+      .returning();
+
+    if (!order) {
+      return { error: "Error creating order" };
+    }
+
+    const meeting = {
+      orderId: order.id,
+      type: newOrder.data.meetingType,
+      date: newOrder.data.meetingDate,
+      locationId: newOrder.data.locationId,
+    };
+
+    const returnAdd = {
+      orderId: order.id,
+      name: newOrder.data.name,
+      address: newOrder.data.address,
+      additionalInformation: newOrder.data.address2,
+      city: newOrder.data.city,
+      province: newOrder.data.province,
+      postalCode: newOrder.data.postalCode,
+      phone: newOrder.data.addressPhone,
+    };
+
+    console.log(returnAdd);
+
+    await db.transaction(async (tx) => {
+      await tx
+        .update(meetings)
+        .set(meeting)
+        .where(eq(meetings.orderId, orderId));
+      if (newOrder.data.returnType === "yes") {
+        await tx
+          .insert(returnAddress)
+          // @ts-expect-error ReturnAdd contains possibly undefined
+          .values(returnAdd)
+          .onConflictDoUpdate({
+            target: returnAddress.orderId,
+            set: {
+              name: returnAdd.name,
+              address: returnAdd.address,
+              additionalInformation: returnAdd.additionalInformation,
+              city: returnAdd.city,
+              province: returnAdd.province,
+              postalCode: returnAdd.postalCode,
+              phone: returnAdd.phone,
+            },
+          });
+      }
+      if (newOrder.data.returnType === "no") {
+        await tx
+          .delete(returnAddress)
+          .where(eq(returnAddress.orderId, order.id));
+      }
+      await tx.delete(cartItems).where(eq(cartItems.cartId, user.cartId));
+    });
+
+    const orderEmail = {
+      id: order.id,
+      contactName: order.contactName,
+      brandName: order.brandName,
+    };
+
+    // TODO: use background jobs to send email notification
+
+    // await sendNewOrderEmail(orderEmail, newOrderItems, total);
+
+    return order;
+  } catch (error) {
+    console.log(error);
+    return { error: "Error creating order" };
   }
 };
