@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { ShoppingBag } from "lucide-react";
-import { Input } from "./ui/input";
 import { CheckoutFormClient } from "./form";
 import { getCart } from "@/server/api/carts/queries";
 import { redirect } from "next/navigation";
@@ -36,7 +35,7 @@ export async function ClientLayout() {
           <footer></footer>
         </div>
       </div>
-      <div className="mt-5">
+      <div className="mt-5 md:mt-0">
         <div className="left-auto right-auto max-w-[34rem] md:sticky md:bottom-0 md:top-0 md:p-10">
           <OrderSummary cart={cart} />
         </div>
