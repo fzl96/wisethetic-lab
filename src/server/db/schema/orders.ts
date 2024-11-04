@@ -29,6 +29,15 @@ export const paymentStatusEnum = pgEnum("payment_status", [
   "cancelled",
 ]);
 
+export const locations = pgTable("meeting_location", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  name: text("name").notNull(),
+  address: text("address").notNull(),
+  link: text("link"),
+});
+
 export const orders = pgTable("order", {
   id: text("id")
     .primaryKey()
@@ -48,93 +57,6 @@ export const orders = pgTable("order", {
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
 });
-
-export const ordersRelations = relations(orders, ({ one, many }) => ({
-  user: one(users, {
-    fields: [orders.userId],
-    references: [users.id],
-  }),
-  meeting: one(meetings),
-  returnAddress: one(returnAddress),
-  payment: one(payments),
-  orderItems: many(orderItems),
-}));
-
-export const returnAddress = pgTable("return_address", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => createId()),
-  orderId: text("orderId")
-    .notNull()
-    .references(() => orders.id, { onDelete: "cascade" }),
-  name: text("name").notNull(),
-  address: text("address").notNull(),
-  additionalInformation: text("additional_information"),
-  city: text("city").notNull(),
-  province: text("province").notNull(),
-  postalCode: text("postal_code").notNull(),
-  phone: text("phone").notNull(),
-});
-
-export const returnAddressRelations = relations(returnAddress, ({ one }) => ({
-  order: one(orders, {
-    fields: [returnAddress.orderId],
-    references: [orders.id],
-  }),
-}));
-
-export const meetings = pgTable("meeting", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => createId()),
-  orderId: text("orderId")
-    .notNull()
-    .references(() => orders.id, { onDelete: "cascade" }),
-  type: meetingTypeEnum("online"),
-  date: timestamp("meeting_date", { mode: "date" }).notNull(),
-  locationId: text("locationId").references(() => locations.id),
-});
-
-export const meetingRelations = relations(meetings, ({ one }) => ({
-  order: one(orders, {
-    fields: [meetings.orderId],
-    references: [orders.id],
-  }),
-  location: one(locations, {
-    fields: [meetings.locationId],
-    references: [locations.id],
-  }),
-}));
-
-export const locations = pgTable("meeting_location", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => createId()),
-  name: text("name").notNull(),
-  address: text("address").notNull(),
-  link: text("link"),
-});
-
-export const payments = pgTable("payment", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => createId()),
-  orderId: text("orderId")
-    .notNull()
-    .references(() => orders.id, { onDelete: "cascade" }),
-  method: text("method"),
-  status: paymentStatusEnum("pending"),
-  snapToken: text("snap_token"),
-  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
-  updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
-});
-
-export const paymentRelations = relations(payments, ({ one }) => ({
-  order: one(orders, {
-    fields: [payments.orderId],
-    references: [orders.id],
-  }),
-}));
 
 export const orderItems = pgTable("order_item", {
   id: text("id")
@@ -162,6 +84,89 @@ export const orderItems = pgTable("order_item", {
   updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
 });
 
+export const payments = pgTable("payment", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  orderId: text("orderId")
+    .notNull()
+    .references(() => orders.id, { onDelete: "cascade" }),
+  method: text("method"),
+  status: paymentStatusEnum("pending"),
+  snapToken: text("snap_token"),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
+});
+
+export const returnAddress = pgTable("return_address", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  orderId: text("orderId")
+    .notNull()
+    .references(() => orders.id, { onDelete: "cascade" })
+    .unique(),
+  name: text("name").notNull(),
+  address: text("address").notNull(),
+  additionalInformation: text("additional_information"),
+  city: text("city").notNull(),
+  province: text("province").notNull(),
+  postalCode: text("postal_code").notNull(),
+  phone: text("phone").notNull(),
+});
+
+export const meetings = pgTable("meeting", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  orderId: text("orderId")
+    .notNull()
+    .references(() => orders.id, { onDelete: "cascade" })
+    .unique(),
+  type: meetingTypeEnum("online"),
+  date: timestamp("meeting_date", { mode: "date" }).notNull(),
+  locationId: text("locationId").references(() => locations.id),
+});
+
+export const ordersRelations = relations(orders, ({ one, many }) => ({
+  user: one(users, {
+    fields: [orders.userId],
+    references: [users.id],
+  }),
+  meeting: one(meetings, {
+    fields: [orders.id],
+    references: [meetings.orderId],
+  }),
+  returnAddress: one(returnAddress),
+  payment: one(payments),
+  orderItems: many(orderItems),
+}));
+
+export const returnAddressRelations = relations(returnAddress, ({ one }) => ({
+  order: one(orders, {
+    fields: [returnAddress.orderId],
+    references: [orders.id],
+  }),
+}));
+
+export const meetingRelations = relations(meetings, ({ one }) => ({
+  order: one(orders, {
+    fields: [meetings.orderId],
+    references: [orders.id],
+  }),
+  location: one(locations, {
+    fields: [meetings.locationId],
+    references: [locations.id],
+  }),
+}));
+
+export const paymentRelations = relations(payments, ({ one }) => ({
+  order: one(orders, {
+    fields: [payments.orderId],
+    references: [orders.id],
+  }),
+}));
+
 export const orderItemsRelations = relations(orderItems, ({ one }) => ({
   order: one(orders, {
     fields: [orderItems.orderId],
@@ -181,7 +186,7 @@ export const meetingSchema = z
         .transform((value) => new Date(value)), // Transform string to Date
     ]),
     meetingType: z.enum(["online", "offline"], { message: "Invalid type" }),
-    locationId: z.string().optional(),
+    locationId: z.string().nullish(),
   })
   .refine(
     (data) =>
@@ -250,6 +255,9 @@ export const returnSchema = z
     }
   });
 
+const orderBaseSchema = createSelectSchema(orders).omit(timestamps);
+export const insertOrderSchema = createInsertSchema(orders).omit(timestamps);
+
 export const createOrderSchema = z
   .object({
     contactName: z.string().min(1, { message: "Contact name is required" }),
@@ -258,22 +266,9 @@ export const createOrderSchema = z
   })
   .and(meetingSchema)
   .and(returnSchema);
+export type CreateOrderParams = z.infer<typeof createOrderSchema>;
 
-const orderBaseSchema = createSelectSchema(orders).omit(timestamps);
-export const insertOrderSchema = createInsertSchema(orders).omit(timestamps);
-export const insertOrderParams = insertOrderSchema
-  .extend({
-    returnAddress: z.string().optional(),
-  })
-  .omit({
-    id: true,
-    userId: true,
-    notes: true,
-    total: true,
-    status: true,
-    contentResult: true,
-  });
-export const updateOrderParams = insertOrderSchema
+export const updateOrderSchema = insertOrderSchema
   .extend({
     contentResult: z.string().optional(),
     notes: z.string().optional(),
@@ -285,14 +280,20 @@ export const updateOrderParams = insertOrderSchema
     phone: true,
     brandName: true,
     contactName: true,
-    returnAddress: true,
   });
-export const orderIdSchema = orderBaseSchema.pick({ id: true });
-export type Order = typeof orders.$inferSelect;
-export type OrderId = z.infer<typeof orderIdSchema>["id"];
-export type NewOrderParams = z.infer<typeof insertOrderParams>;
-export type UpdateOrderParams = z.infer<typeof updateOrderParams>;
-export type CreateOrderParams = z.infer<typeof createOrderSchema>;
+export type UpdateOrderParams = z.infer<typeof updateOrderSchema>;
 
-export const orderItemsBaseSchema =
-  createSelectSchema(orderItems).omit(timestamps);
+export const orderIdSchema = orderBaseSchema.pick({ id: true });
+export type OrderId = z.infer<typeof orderIdSchema>["id"];
+
+export type Checkout = {
+  id: string;
+  userId: string;
+  contactName: string;
+  phone: string;
+  brandName: string;
+  total: number;
+  status: "pending" | "process" | "completed" | "cancelled" | null;
+  meeting: typeof meetings.$inferSelect;
+  returnAddress?: typeof returnAddress.$inferSelect | null;
+};
