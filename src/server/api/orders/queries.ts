@@ -87,6 +87,36 @@ export const getOrderById = async (id: OrderId) => {
   return order;
 };
 
+export const getCheckoutOrderById = async (id: OrderId) => {
+  const user = await currentUser();
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  const order = await db.query.orders.findFirst({
+    where: (orders, { eq }) => eq(orders.id, id),
+    with: {
+      meeting: true,
+      returnAddress: true,
+    },
+  });
+
+  return order;
+};
+
+export const getCheckoutSummary = async (id: OrderId) => {
+  const user = await currentUser();
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  const orderItems = await db.query.orderItems.findMany({
+    where: (orderItems, { eq }) => eq(orderItems.orderId, id),
+  });
+
+  return orderItems;
+};
+
 export const getPaymentToken = async (order: {
   id: string;
   total: number;
