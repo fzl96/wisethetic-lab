@@ -141,6 +141,9 @@ export const getPaymentToken = async (order: {
       order_id: order.id,
       gross_amount: order.total,
     },
+    credit_card: {
+      secure: true,
+    },
   };
 
   const token = await snap.createTransactionToken(parameter);
@@ -281,3 +284,52 @@ export const getOrdersSummary = async () => {
 
   return ordersCount;
 };
+
+export async function getOrderForPayment(orderId: OrderId) {
+  const user = await currentUser();
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  const order = await db.query.orders.findFirst({
+    columns: {
+      id: true,
+      contactName: true,
+      brandName: true,
+    },
+    where: (orders, { eq }) => eq(orders.id, orderId),
+  });
+
+  return order;
+}
+
+export async function getExistingPaymentToken(orderId: OrderId) {
+  const user = await currentUser();
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  const res = await db.query.payments.findFirst({
+    columns: {
+      snapToken: true,
+    },
+    where: (payments, { eq }) => eq(payments.orderId, orderId),
+  });
+
+  const token = res?.snapToken;
+
+  return token;
+}
+
+export async function getPayment(orderId: OrderId) {
+  const user = await currentUser();
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  const payment = await db.query.payments.findFirst({
+    where: (payments, { eq }) => eq(payments.orderId, orderId),
+  });
+
+  return payment;
+}
