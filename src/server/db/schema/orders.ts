@@ -27,6 +27,7 @@ export const paymentMethodEnum = pgEnum("payment_method", [
   "bank_transfer",
   "other_qris",
 ]);
+
 export const locations = pgTable("meeting_location", {
   id: text("id")
     .primaryKey()
@@ -50,7 +51,7 @@ export const orders = pgTable("order", {
 
   notes: text("notes"),
   total: integer("total").notNull(),
-  status: statusEnum("pending"),
+  status: statusEnum("order_status").default("pending").notNull(),
   contentResult: text("content_result"),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
@@ -89,8 +90,8 @@ export const payments = pgTable("payment", {
   orderId: text("orderId")
     .notNull()
     .references(() => orders.id, { onDelete: "cascade" }),
-  status: paymentStatusEnum("pending"),
   method: paymentMethodEnum("payment_method"),
+  status: paymentStatusEnum("payment_status").default("pending").notNull(),
   snapToken: text("snap_token"),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
@@ -121,7 +122,7 @@ export const meetings = pgTable("meeting", {
     .notNull()
     .references(() => orders.id, { onDelete: "cascade" })
     .unique(),
-  type: meetingTypeEnum("online"),
+  type: meetingTypeEnum("meeting_type").default("online").notNull(),
   date: timestamp("meeting_date", { mode: "date" }).notNull(),
   locationId: text("locationId").references(() => locations.id),
 });
@@ -295,6 +296,7 @@ export type Checkout = {
   meeting: typeof meetings.$inferSelect;
   returnAddress?: typeof returnAddress.$inferSelect | null;
 };
+
 export const paymentSchema = z.object({
   method: z.enum(["credit_card", "bank_transfer", "other_qris"]),
 });
