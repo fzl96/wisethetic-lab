@@ -51,7 +51,7 @@ export const getUserOrderDetails = async (orderId: OrderId) => {
   return order;
 };
 
-export const getOrderByIdWithItemsAndUser = async (id: OrderId) => {
+export const getOrderCardDetails = async (id: OrderId) => {
   const user = await currentUser();
   if (user?.role !== "ADMIN") {
     throw new Error("Unauthorized");
@@ -62,7 +62,22 @@ export const getOrderByIdWithItemsAndUser = async (id: OrderId) => {
     with: {
       orderItems: true,
       payment: true,
-      user: true,
+      meeting: {
+        with: {
+          location: {
+            columns: {
+              name: true,
+              link: true,
+            },
+          },
+        },
+      },
+      returnAddress: true,
+      user: {
+        columns: {
+          email: true,
+        },
+      },
     },
   });
 
