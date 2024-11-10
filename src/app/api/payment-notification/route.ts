@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
   } else if (transaction_status === "settlement") {
     await db
       .update(payments)
-      .set({ status: "completed", method: payment_type })
+      .set({ status: "completed" })
       .where(eq(payments.orderId, order_id));
     await db
       .update(orders)
