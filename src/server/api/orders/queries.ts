@@ -18,9 +18,6 @@ export const getUserOrders = async () => {
       status: true,
       createdAt: true,
     },
-    with: {
-      payment: true,
-    },
     orderBy: (orders, { desc }) => desc(orders.createdAt),
   });
 
