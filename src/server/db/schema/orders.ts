@@ -22,6 +22,11 @@ export const paymentStatusEnum = pgEnum("payment_status", [
   "cancelled",
 ]);
 
+export const paymentMethodEnum = pgEnum("payment_method", [
+  "credit_card",
+  "bank_transfer",
+  "other_qris",
+]);
 export const locations = pgTable("meeting_location", {
   id: text("id")
     .primaryKey()
@@ -84,8 +89,8 @@ export const payments = pgTable("payment", {
   orderId: text("orderId")
     .notNull()
     .references(() => orders.id, { onDelete: "cascade" }),
-  method: text("method"),
   status: paymentStatusEnum("pending"),
+  method: paymentMethodEnum("payment_method"),
   snapToken: text("snap_token"),
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
@@ -290,3 +295,11 @@ export type Checkout = {
   meeting: typeof meetings.$inferSelect;
   returnAddress?: typeof returnAddress.$inferSelect | null;
 };
+export const paymentSchema = z.object({
+  method: z.enum(["credit_card", "bank_transfer", "other_qris"]),
+});
+
+export type PaymentParams = z.infer<typeof paymentSchema>;
+
+export const paymentBaseSchema = createSelectSchema(payments);
+export type Payment = z.infer<typeof paymentBaseSchema>;
