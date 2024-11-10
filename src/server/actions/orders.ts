@@ -5,6 +5,7 @@ import {
   createOrder,
   updateCheckout,
   updateOrder,
+  getPaymentToken,
 } from "@/server/api/orders/mutations";
 import {
   updateOrderSchema,
@@ -12,6 +13,8 @@ import {
   type CreateOrderParams,
   type UpdateOrderParams,
   type OrderId,
+  type PaymentParams,
+  paymentSchema,
 } from "@/server/db/schema/orders";
 import { type CartExtended } from "../db/schema/cart";
 
@@ -74,6 +77,22 @@ export const updateCheckoutAction = async (
 
     // if (res.error) throw new Error(res.error);
     revalidateOrder();
+  } catch (e) {
+    return handleErrors(e);
+  }
+};
+
+export const getPaymentTokenAction = async (
+  orderId: OrderId,
+  payment: PaymentParams,
+) => {
+  try {
+    const payload = paymentSchema.parse(payment);
+    const res = await getPaymentToken(orderId, payload);
+
+    if (res?.error) throw new Error(res.error ?? "");
+
+    return res;
   } catch (e) {
     return handleErrors(e);
   }

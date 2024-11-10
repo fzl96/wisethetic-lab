@@ -3,6 +3,7 @@ import { db } from "@/server/db";
 import { eq } from "drizzle-orm";
 import {
   orders,
+  payments,
   orderItems,
   type CreateOrderParams,
   type UpdateOrderParams,
@@ -11,10 +12,14 @@ import {
   updateOrderSchema,
   meetings,
   returnAddress,
+  PaymentParams,
+  paymentSchema,
 } from "@/server/db/schema/orders";
 import { type CartExtended } from "@/server/db/schema/cart";
 import { cartItems } from "@/server/db/schema/cart";
 import { sendNewOrderEmail, sendOrderCompletedEmail } from "@/lib/mail";
+import { MidtransClient } from "midtrans-node-client";
+import { getExistingPaymentToken } from "./queries";
 
 export const createOrder = async (
   order: CreateOrderParams,
@@ -289,5 +294,85 @@ export const updateCheckout = async (
   } catch (error) {
     console.log(error);
     return { error: "Error creating order" };
+  }
+};
+
+export const getPaymentToken = async (
+  orderId: OrderId,
+  payment: PaymentParams,
+) => {
+  const user = await currentUser();
+  if (!user?.id) {
+    return { error: "Unauthorized" };
+  }
+
+  const newPayment = paymentSchema.safeParse(payment);
+
+  if (!newPayment.success) {
+    return { error: "Invalid order data" };
+  }
+
+  try {
+    const existingToken = await getExistingPaymentToken(orderId);
+    if (existingToken) {
+      return { token: existingToken };
+    }
+
+    const order = await db.query.orders.findFirst({
+      columns: {
+        id: true,
+        total: true,
+        brandName: true,
+        contactName: true,
+        phone: true,
+      },
+      where: (orders, { eq }) => eq(orders.id, orderId),
+    });
+
+    if (!order) throw new Error("Order is not found");
+
+    const snap = new MidtransClient.Snap({
+      isProduction: false,
+      serverKey: process.env.MIDTRANS_SERVER_KEY,
+      clientKey: process.env.MIDTRANS_CLIENT_KEY,
+    });
+
+    const parameter = {
+      transaction_details: {
+        order_id: order.id,
+        gross_amount: order.total,
+      },
+      credit_card: {
+        secure: true,
+      },
+      customer_details: {
+        first_name: "",
+        last_name: order.contactName,
+        email: user.email,
+        phone: order.phone,
+      },
+      enabled_payments: [newPayment.data.method],
+      callbacks: {
+        finish: `${process.env.NEXT_PUBLIC_APP_URL}/account/orders/${orderId}`,
+      },
+    };
+
+    const token = await snap.createTransactionToken(parameter);
+    await db.insert(payments).values({
+      orderId: order.id,
+      status: "pending",
+      snapToken: token,
+      method: newPayment.data.method,
+    });
+
+    return { token: token };
+  } catch (err) {
+    if (err instanceof Error) {
+      const message = err.message;
+      console.log(message);
+      if (message) return { error: message };
+
+      return { error: "Cannot create payment" };
+    }
   }
 };
