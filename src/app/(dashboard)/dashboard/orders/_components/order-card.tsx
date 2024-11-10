@@ -95,14 +95,6 @@ export async function OrderCard({ orderId }: { orderId: string }) {
                   <span className="text-muted-foreground">Subtotal</span>
                   <span>{currencyFormatter.format(order.total)}</span>
                 </li>
-                {/* <li className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Shipping</span>
-                  <span>$5.00</span>
-                </li>
-                <li className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Tax</span>
-                  <span>$25.00</span>
-                </li> */}
                 <li className="flex items-center justify-between font-semibold">
                   <span className="text-muted-foreground">Total</span>
                   <span>{currencyFormatter.format(order.total)}</span>
