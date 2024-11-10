@@ -42,7 +42,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useQuery } from "@tanstack/react-query";
 import { RadioGroupSkeleton } from "@/app/(checkout)/checkout/_components/ui/radio-group-skeleton";
-import { DatePicker } from "@/app/(checkout)/checkout/_components/ui/date-picker";
+import { DatePicker } from "./date-picker";
 import { provinces } from "@/app/(checkout)/checkout/_components/provinces";
 import { updateCheckoutAction } from "@/server/actions/orders";
 import { useRouter } from "next/navigation";
@@ -101,8 +101,8 @@ export function UpdateOrder({ order }: UpdateOrderProps) {
       brandName: order.brandName,
       phone: order.phone,
       meetingDate: order.meeting.date,
-      meetingType: order.meeting.type!,
-      locationId: order.meeting.locationId!,
+      meetingType: order.meeting.type,
+      locationId: order.meeting.locationId,
       returnType: order.returnAddress ? "yes" : "no",
       name: order.returnAddress?.name,
       address: order.returnAddress?.address,

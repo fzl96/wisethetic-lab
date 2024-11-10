@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/form";
 import { useRouter } from "next/navigation";
 import { useMemo, useTransition } from "react";
-import { NewOrderParams, insertOrderParams } from "@/server/db/schema/orders";
+import { NewOrderParams, insertOrderSchema } from "@/server/db/schema/orders";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { createOrderAction } from "@/server/actions/orders";
@@ -78,7 +78,7 @@ export function CheckoutFormClient({ cart }: CheckoutFormClientProps) {
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<NewOrderParams>({
-    resolver: zodResolver(insertOrderParams),
+    resolver: zodResolver(insertOrderSchema),
     defaultValues: {
       contactName: user?.name ?? "",
       brandName: brandName ?? "",
