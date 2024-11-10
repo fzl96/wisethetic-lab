@@ -35,6 +35,11 @@ export const getUserOrderDetails = async (orderId: OrderId) => {
       orderItems: true,
       returnAddress: true,
       payment: true,
+      meeting: {
+        with: {
+          location: true,
+        },
+      },
     },
     where: (orders, { eq }) => eq(orders.id, orderId),
   });
