@@ -18,7 +18,7 @@ type DateState = {
 
 interface DatePickerProps {
   selectedDate?: Date;
-  setSelectedDate: React.Dispatch<React.SetStateAction<Date>>;
+  setSelectedDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
   setDate: React.Dispatch<React.SetStateAction<any>>;
   disabled: boolean;
 }
