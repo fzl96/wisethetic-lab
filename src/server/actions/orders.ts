@@ -1,13 +1,20 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createOrder, updateOrder } from "@/server/api/orders/mutations";
 import {
-  insertOrderParams,
-  updateOrderParams,
-  type NewOrderParams,
+  createOrder,
+  updateCheckout,
+  updateOrder,
+  getPaymentToken,
+} from "@/server/api/orders/mutations";
+import {
+  updateOrderSchema,
+  createOrderSchema,
+  type CreateOrderParams,
   type UpdateOrderParams,
   type OrderId,
+  type PaymentParams,
+  paymentSchema,
 } from "@/server/db/schema/orders";
 import { type CartExtended } from "../db/schema/cart";
 
@@ -27,17 +34,18 @@ const handleErrors = (e: unknown) => {
 const revalidateOrder = () => revalidatePath("/cart");
 
 export const createOrderAction = async (
-  input: NewOrderParams,
+  input: CreateOrderParams,
   cart: CartExtended,
 ) => {
   try {
-    const payload = insertOrderParams.parse(input);
+    const payload = createOrderSchema.parse(input);
     const res = await createOrder(payload, cart);
 
     // if (res.error) throw new Error(res.error);
     revalidateOrder();
     return res;
   } catch (e) {
+    console.log(e);
     return handleErrors(e);
   }
 };
@@ -47,13 +55,44 @@ export const updateOrderAction = async (
   input: UpdateOrderParams,
 ) => {
   try {
-    const payload = updateOrderParams.parse(input);
+    const payload = updateOrderSchema.parse(input);
     await updateOrder(orderId, payload);
 
     // if (res.error) throw new Error(res.error);
     // revalidateOrder();
     revalidatePath("/dashboard/orders");
     return { message: "Order updated" };
+  } catch (e) {
+    return handleErrors(e);
+  }
+};
+
+export const updateCheckoutAction = async (
+  orderId: OrderId,
+  order: CreateOrderParams,
+) => {
+  try {
+    const payload = createOrderSchema.parse(order);
+    const res = await updateCheckout(orderId, payload);
+
+    // if (res.error) throw new Error(res.error);
+    revalidateOrder();
+  } catch (e) {
+    return handleErrors(e);
+  }
+};
+
+export const getPaymentTokenAction = async (
+  orderId: OrderId,
+  payment: PaymentParams,
+) => {
+  try {
+    const payload = paymentSchema.parse(payment);
+    const res = await getPaymentToken(orderId, payload);
+
+    if (res?.error) throw new Error(res.error ?? "");
+
+    return res;
   } catch (e) {
     return handleErrors(e);
   }

@@ -1,11 +1,5 @@
 import Link from "next/link";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardFooter,
-  CardTitle,
-} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { type CartExtended } from "@/server/db/schema/cart";
@@ -30,12 +24,10 @@ export function CartSummary({ cart }: { cart: CartExtended }) {
   });
 
   return (
-    <Card className="border-none bg-home-card-background">
-      <CardHeader>
-        <CardTitle>Cart Total</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-2">
+    <div className="space-y-10 py-5">
+      <h2 className="text-xl tracking-wide">cart details</h2>
+      <div className="space-y-6">
+        <div className="space-y-2 text-muted-foreground">
           <div className="flex w-full items-center justify-between ">
             Package(s)
             <span>{currencyFormatter.format(contentsTotal)}</span>
@@ -44,19 +36,18 @@ export function CartSummary({ cart }: { cart: CartExtended }) {
             Additional content(s)
             <span>{currencyFormatter.format(additionalTotal)}</span>
           </div>
-          <div className="flex w-full items-center justify-between ">
-            Total
-            <span>
-              {currencyFormatter.format(contentsTotal + additionalTotal)}
-            </span>
-          </div>
         </div>
-      </CardContent>
-      <CardFooter>
-        <Link href="/checkout" className={cn(buttonVariants(), "w-full")}>
+        <Separator className="bg-home-border" />
+        <div className="flex w-full items-center justify-between ">
+          Total
+          <span>
+            {currencyFormatter.format(contentsTotal + additionalTotal)}
+          </span>
+        </div>
+        <Link href="/checkout" className={cn(buttonVariants(), "w-full py-6")}>
           Checkout
         </Link>
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   );
 }

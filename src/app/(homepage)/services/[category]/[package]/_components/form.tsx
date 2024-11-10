@@ -69,11 +69,11 @@ export function CartForm({ pkg }: { pkg: PackageWithProducts }) {
               value={product}
               className={({ active, checked }) =>
                 cn(
-                  "relative block cursor-pointer rounded-lg border-2 px-6 py-4 shadow-sm outline-none ring-0 focus:outline-none focus:ring-0 sm:flex sm:justify-between",
+                  "relative block cursor-pointer rounded-lg border-2 border-home-border px-6 py-4 shadow-sm outline-none ring-0 focus:outline-none focus:ring-0 sm:flex sm:justify-between",
                   {
                     "border-primary": active || checked,
                   },
-                  selectedProduct === product && "border-primary",
+                  // selectedProduct === product && "border-primary",
                 )
               }
             >
@@ -146,13 +146,13 @@ export function CartForm({ pkg }: { pkg: PackageWithProducts }) {
         </div>
       </div>
       <div className="mt-10 space-y-4">
-        <div className="flex w-full justify-between text-lg">
+        <div className="flex w-full justify-between text-lg font-medium">
           Subtotal:
           <span>{currencyFormatter.format(total)}</span>
         </div>
         <Button
           size="lg"
-          className="w-full disabled:cursor-pointer"
+          className="w-full py-6 disabled:cursor-pointer"
           disabled={isPending || !selectedProduct || !user}
           onClick={() => {
             if (!user?.cartId) {

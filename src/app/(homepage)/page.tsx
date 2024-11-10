@@ -12,10 +12,9 @@ import { CategoryCardsLoader } from "./services/_components/loader";
 export default function HomePage() {
   return (
     <MaxWidthWrapper className="mt-28 flex flex-col items-center justify-center px-5 pb-12  text-center sm:mt-32">
-      <Badge>Wisethetic</Badge>
       <h1 className="font mt-5 grid max-w-4xl gap-3 font-accent text-5xl leading-none md:text-6xl lg:text-[5rem]">
         <span>
-          Crafting <span className="text-[#ce9651]">Ideas </span>
+          Crafting <span className="text-primary-accent">Ideas </span>
         </span>
         <span>
           With <span>Intentions</span>

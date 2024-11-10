@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { SignOutButton } from "./sign-out";
 
 const Links: { href: string; title: string }[] = [
   { href: "/account", title: "General" },
@@ -18,6 +19,7 @@ export function Nav() {
       {Links.map((link) => {
         return <NavLink key={link.href} href={link.href} title={link.title} />;
       })}
+      <SignOutButton className="mt-5" />
     </nav>
   );
 }

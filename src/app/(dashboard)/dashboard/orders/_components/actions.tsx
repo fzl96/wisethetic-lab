@@ -40,12 +40,6 @@ export function OrderMenu({
           >
             Edit
           </DropdownMenuItem>
-          {/* <DropdownMenuItem
-            onClick={() => setShowDeleteForm(true)}
-            className="cursor-pointer text-destructive"
-          >
-            Delete
-          </DropdownMenuItem> */}
         </DropdownMenuContent>
       </DropdownMenu>
       <DrawerDialog

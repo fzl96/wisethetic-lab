@@ -18,37 +18,40 @@ export const getUserOrders = async () => {
       status: true,
       createdAt: true,
     },
-    with: {
-      payment: true,
-    },
     orderBy: (orders, { desc }) => desc(orders.createdAt),
   });
 
   return orders;
 };
 
-export const getOrderByIdWithItems = async (id: OrderId) => {
+export const getUserOrderDetails = async (orderId: OrderId) => {
   const user = await currentUser();
   if (!user) {
     throw new Error("Unauthorized");
   }
 
   const order = await db.query.orders.findFirst({
-    where: (orders, { eq }) => eq(orders.id, id),
     with: {
       orderItems: true,
+      returnAddress: true,
       payment: true,
+      meeting: {
+        with: {
+          location: true,
+        },
+      },
     },
+    where: (orders, { eq }) => eq(orders.id, orderId),
   });
 
-  if (order?.userId !== user.id && user.role !== "ADMIN") {
+  if (order?.userId !== user.id) {
     throw new Error("Unauthorized");
   }
 
   return order;
 };
 
-export const getOrderByIdWithItemsAndUser = async (id: OrderId) => {
+export const getOrderCardDetails = async (id: OrderId) => {
   const user = await currentUser();
   if (user?.role !== "ADMIN") {
     throw new Error("Unauthorized");
@@ -59,7 +62,22 @@ export const getOrderByIdWithItemsAndUser = async (id: OrderId) => {
     with: {
       orderItems: true,
       payment: true,
-      user: true,
+      meeting: {
+        with: {
+          location: {
+            columns: {
+              name: true,
+              link: true,
+            },
+          },
+        },
+      },
+      returnAddress: true,
+      user: {
+        columns: {
+          email: true,
+        },
+      },
     },
   });
 
@@ -87,6 +105,36 @@ export const getOrderById = async (id: OrderId) => {
   return order;
 };
 
+export const getCheckoutOrderById = async (id: OrderId) => {
+  const user = await currentUser();
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  const order = await db.query.orders.findFirst({
+    where: (orders, { eq }) => eq(orders.id, id),
+    with: {
+      meeting: true,
+      returnAddress: true,
+    },
+  });
+
+  return order;
+};
+
+export const getCheckoutSummary = async (id: OrderId) => {
+  const user = await currentUser();
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  const orderItems = await db.query.orderItems.findMany({
+    where: (orderItems, { eq }) => eq(orderItems.orderId, id),
+  });
+
+  return orderItems;
+};
+
 export const getPaymentToken = async (order: {
   id: string;
   total: number;
@@ -110,6 +158,9 @@ export const getPaymentToken = async (order: {
     transaction_details: {
       order_id: order.id,
       gross_amount: order.total,
+    },
+    credit_card: {
+      secure: true,
     },
   };
 
@@ -177,7 +228,6 @@ export const getOrders = async ({
           brandName: true,
         },
         with: {
-          payment: true,
           user: {
             columns: {
               id: true,
@@ -251,3 +301,52 @@ export const getOrdersSummary = async () => {
 
   return ordersCount;
 };
+
+export async function getOrderForPayment(orderId: OrderId) {
+  const user = await currentUser();
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  const order = await db.query.orders.findFirst({
+    columns: {
+      id: true,
+      contactName: true,
+      brandName: true,
+    },
+    where: (orders, { eq }) => eq(orders.id, orderId),
+  });
+
+  return order;
+}
+
+export async function getExistingPaymentToken(orderId: OrderId) {
+  const user = await currentUser();
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  const res = await db.query.payments.findFirst({
+    columns: {
+      snapToken: true,
+    },
+    where: (payments, { eq }) => eq(payments.orderId, orderId),
+  });
+
+  const token = res?.snapToken;
+
+  return token;
+}
+
+export async function getPayment(orderId: OrderId) {
+  const user = await currentUser();
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  const payment = await db.query.payments.findFirst({
+    where: (payments, { eq }) => eq(payments.orderId, orderId),
+  });
+
+  return payment;
+}

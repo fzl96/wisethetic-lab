@@ -15,17 +15,20 @@ import { ReactQueryProvider } from "@/components/react-query-provider";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
 });
 
 const firaSans = Fira_Sans({
   subsets: ["latin"],
   variable: "--font-fira",
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  display: "swap",
 });
 
 const archivo = Archivo({
   subsets: ["latin"],
   variable: "--font-accent",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -99,22 +102,15 @@ export default async function RootLayout({
           )}
         >
           <ReactQueryProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="dark"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <TooltipProvider>
-                <div
-                  vaul-drawer-wrapper=""
-                  className="min-h-screen bg-background"
-                >
-                  {children}
-                </div>
-              </TooltipProvider>
-              <Toaster closeButton richColors position="top-center" />
-            </ThemeProvider>
+            <TooltipProvider>
+              <div
+                vaul-drawer-wrapper=""
+                className="min-h-screen bg-background"
+              >
+                {children}
+              </div>
+            </TooltipProvider>
+            <Toaster closeButton richColors position="top-center" />
           </ReactQueryProvider>
         </body>
       </html>

@@ -11,11 +11,11 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
-import { getOrderByIdWithItemsAndUser } from "@/server/api/orders/queries";
+import { getOrderCardDetails } from "@/server/api/orders/queries";
 import { OrderMenu } from "./actions";
 
 export async function OrderCard({ orderId }: { orderId: string }) {
-  const order = await getOrderByIdWithItemsAndUser(orderId);
+  const order = await getOrderCardDetails(orderId);
   const currencyFormatter = new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
@@ -95,14 +95,6 @@ export async function OrderCard({ orderId }: { orderId: string }) {
                   <span className="text-muted-foreground">Subtotal</span>
                   <span>{currencyFormatter.format(order.total)}</span>
                 </li>
-                {/* <li className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Shipping</span>
-                  <span>$5.00</span>
-                </li>
-                <li className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Tax</span>
-                  <span>$25.00</span>
-                </li> */}
                 <li className="flex items-center justify-between font-semibold">
                   <span className="text-muted-foreground">Total</span>
                   <span>{currencyFormatter.format(order.total)}</span>
@@ -110,30 +102,12 @@ export async function OrderCard({ orderId }: { orderId: string }) {
               </ul>
             </div>
             <Separator className="my-4" />
-            <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-3">
-                <div className="font-semibold">Return Address</div>
-                <address className="grid gap-0.5 not-italic text-muted-foreground">
-                  <span>{order.returnAddress ?? "-"}</span>
-                  {/* <span>Liam Johnson</span>
-                  <span>1234 Main St.</span>
-                  <span>Anytown, CA 12345</span> */}
-                </address>
-              </div>
-              {/* <div className="grid auto-rows-max gap-3">
-                <div className="font-semibold">Billing Information</div>
-                <div className="text-muted-foreground">
-                  Same as shipping address
-                </div>
-              </div> */}
-            </div>
-            <Separator className="my-4" />
             <div className="grid gap-3">
               <div className="font-semibold">Customer Information</div>
               <dl className="grid gap-3">
                 <div className="flex items-center justify-between">
                   <dt className="text-muted-foreground">Customer</dt>
-                  <dd>{order.user.name}</dd>
+                  <dd>{order.contactName}</dd>
                 </div>
                 <div className="flex items-center justify-between">
                   <dt className="text-muted-foreground">Email</dt>
@@ -160,22 +134,76 @@ export async function OrderCard({ orderId }: { orderId: string }) {
               <dl className="grid gap-3">
                 <div className="flex items-center justify-between">
                   <dt className="flex items-center gap-1 text-muted-foreground">
-                    {/* <CreditCard className="h-4 w-4" /> */}
-                    Payment method
+                    Method
                   </dt>
                   <dd className="capitalize">
                     {order.payment?.method?.replace(/_/g, " ")}
                   </dd>
                 </div>
+                <div className="flex items-center justify-between">
+                  <dt className="flex items-center gap-1 text-muted-foreground">
+                    Status
+                  </dt>
+                  <dd className="capitalize">{order.payment?.status}</dd>
+                </div>
               </dl>
+            </div>
+            <Separator className="my-4" />
+            <div className="grid gap-3">
+              <div className="font-semibold">Meeting</div>
+              <dl className="grid gap-3">
+                <div className="flex items-center justify-between">
+                  <dt className="flex items-center gap-1 text-muted-foreground">
+                    Location
+                  </dt>
+                  <dd className="capitalize">
+                    {order.meeting.type === "online" ? (
+                      "Online"
+                    ) : (
+                      <a href={order.meeting.location?.link ?? "#"}>
+                        <span className="underline">
+                          {order.meeting.location?.name}
+                        </span>
+                      </a>
+                    )}
+                  </dd>
+                </div>
+                <div className="flex items-center justify-between">
+                  <dt className="flex items-center gap-1 text-muted-foreground">
+                    Date
+                  </dt>
+                  <dd className="capitalize">
+                    {format(order.meeting.date, "MMM dd, yyyy - HH:mm")}
+                  </dd>
+                </div>
+              </dl>
+            </div>
+            <Separator className="my-4 h-[0.1rem]" />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-3">
+                <div className="font-semibold">Return Address</div>
+                <address className="grid gap-0.5 not-italic text-muted-foreground">
+                  {!order.returnAddress && "Not provided"}
+                  <span>{order.returnAddress?.name}</span>
+                  <span>{order.returnAddress?.phone}</span>
+                  <span>{order.returnAddress?.address}</span>
+                  <span>{order.returnAddress?.additionalInformation}</span>
+                  <span>
+                    {order.returnAddress?.city}, {order.returnAddress?.province}
+                    , {order.returnAddress?.postalCode}
+                  </span>
+                  {/* <span>{order.returnAddress ?? "-"}</span> */}
+                  {/* <span>Liam Johnson</span>
+                  <span>1234 Main St.</span>
+                  <span>Anytown, CA 12345</span> */}
+                </address>
+              </div>
             </div>
             <Separator className="my-4" />
             <div className="grid gap-3">
               <div className="font-semibold">Notes</div>
               <p className="text-muted-foreground">
-                {!!order.notes
-                  ? order.notes
-                  : "No additional notes provided by the customer."}
+                {!!order.notes ? order.notes : "No additional notes provided."}
               </p>
             </div>
             <Separator className="my-4" />

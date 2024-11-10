@@ -117,7 +117,7 @@ function MobileNavRender() {
             <div className="mt-auto overflow-hidden">
               <motion.div variants={linkVariants}>
                 {/* <h1 className="font-pacifico text-lg">Honeyberry</h1> */}
-                <span className="font-firaSans uppercase tracking-[0.25em] text-[#ce9651] md:text-xl">
+                <span className="font-firaSans uppercase tracking-[0.25em] text-primary-accent md:text-xl">
                   {siteConfig.name}
                 </span>
               </motion.div>

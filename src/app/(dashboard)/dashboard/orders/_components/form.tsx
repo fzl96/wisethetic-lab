@@ -2,7 +2,7 @@
 
 import {
   type UpdateOrderParams,
-  updateOrderParams,
+  updateOrderSchema,
 } from "@/server/db/schema/orders";
 
 import { useForm } from "react-hook-form";
@@ -56,7 +56,7 @@ export function UpdateOrderForm({
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<UpdateOrderParams>({
-    resolver: zodResolver(updateOrderParams),
+    resolver: zodResolver(updateOrderSchema),
     defaultValues: {
       status: order.status ?? "pending",
       notes: order.notes ?? "",
