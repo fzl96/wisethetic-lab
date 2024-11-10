@@ -14,13 +14,6 @@ export const statusEnum = pgEnum("order_status", [
   "cancelled",
 ]);
 
-export const locationEnum = pgEnum("location", [
-  "cafe a",
-  "cafe b",
-  "cafe c",
-  "online",
-]);
-
 export const meetingTypeEnum = pgEnum("meeting_type", ["online", "offline"]);
 
 export const paymentStatusEnum = pgEnum("payment_status", [
