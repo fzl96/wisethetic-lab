@@ -213,7 +213,6 @@ export const getOrders = async ({
           brandName: true,
         },
         with: {
-          payment: true,
           user: {
             columns: {
               id: true,
