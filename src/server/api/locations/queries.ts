@@ -22,7 +22,7 @@ export const getLocation = async (locationId: string) => {
   });
 };
 
-export const getCategoriesPage = async (query = "") => {
+export const getLocationsPage = async (query = "") => {
   const [row] = await db
     .select({
       value: count(),
