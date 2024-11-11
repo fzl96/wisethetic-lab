@@ -305,3 +305,8 @@ export type PaymentParams = z.infer<typeof paymentSchema>;
 
 export const paymentBaseSchema = createSelectSchema(payments);
 export type Payment = z.infer<typeof paymentBaseSchema>;
+
+export const locationBaseSchema = createSelectSchema(locations);
+export type Location = z.infer<typeof locationBaseSchema>;
+export const addLocationSchema = createInsertSchema(locations);
+export type AddLocationParams = z.infer<typeof addLocationSchema>;
