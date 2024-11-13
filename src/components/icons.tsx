@@ -14,11 +14,13 @@ import {
   MessageCircle,
   CircleHelp,
   Navigation,
+  MapPin,
   Instagram,
   Twitter,
 } from "lucide-react";
 
 export const Icons = {
+  mapPin: MapPin,
   navigation: Navigation,
   help: CircleHelp,
   mail: Mail,

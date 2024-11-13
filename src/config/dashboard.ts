@@ -23,5 +23,10 @@ export const dashboardConfig: DashboardConfig = {
       href: "/dashboard/packages",
       icon: "package",
     },
+    {
+      title: "Locations",
+      href: "/dashboard/locations",
+      icon: "mapPin",
+    },
   ],
 };
